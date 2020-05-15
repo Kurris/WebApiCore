@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ligy.Project.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:Ligy.Project.WebApi.Controllers.WeatherForecastController.Get">
+            <summary>
+            初始方法
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Ligy.Project.WebApi.CustomClass.CustomResourceFilterAttribute">
+            <summary>
+            缓存作用,在控制器实例化前被调用
+            </summary>
+        </member>
+        <member name="T:Ligy.Project.WebApi.CustomClass.ResultModel">
+            <summary>
+            结果实体
+            </summary>
+        </member>
+        <member name="P:Ligy.Project.WebApi.CustomClass.ResultModel.Code">
+            <summary>
+            代号
+            </summary>
+        </member>
+        <member name="P:Ligy.Project.WebApi.CustomClass.ResultModel.Message">
+            <summary>
+            信息
+            </summary>
+        </member>
+        <member name="P:Ligy.Project.WebApi.CustomClass.ResultModel.Result">
+            <summary>
+            结果内容
+            </summary>
+        </member>
+        <member name="P:Ligy.Project.WebApi.CustomClass.ResultModel.ReturnStatus">
+            <summary>
+            状态
+            </summary>
+        </member>
+        <member name="P:Ligy.Project.WebApi.CustomClass.ValidationError.Field">
+            <summary>
+            字段
+            </summary>
+        </member>
+        <member name="P:Ligy.Project.WebApi.CustomClass.ValidationError.Message">
+            <summary>
+            提醒内容
+            </summary>
+        </member>
+    </members>
+</doc>

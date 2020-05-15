@@ -1,0 +1,46 @@
+--------------------------------------------------------------------------------------------
+【调用时间】:2020-04-03 12:13:29,654 [4]
+【消息级别】:INFO 
+【Controller】:First
+【Action】:Get
+【Paras】：{"iPara":0}
+--------------------------------------------------------------------------------------------
+【调用时间】:2020-04-03 12:13:48,494 [4]
+【消息级别】:ERROR
+【Source】:Void OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)
+【StackTrace】:   at Ligy.Project.WebApi.CustomClass.CustomActionFilterAttribute.OnActionExecuted(ActionExecutedContext context) in F:\Ligy Git Code\Ligy.Project.WebApi\Ligy.Project.WebApi\CustomClass\CustomActionFilter.cs:line 35
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+【ErrorMessage】:yichang
+
+--------------------------------------------------------------------------------------------
+【调用时间】:2020-04-03 12:15:04,319 [4]
+【消息级别】:INFO 
+【Controller】:First
+【Action】:Get
+【Paras】：{"iPara":0}
+--------------------------------------------------------------------------------------------
+【调用时间】:2020-04-03 12:15:06,741 [4]
+【消息级别】:ERROR
+【Source】:Microsoft.AspNetCore.Mvc.IActionResult Get(Int32)
+【StackTrace】:   at Ligy.Project.WebApi.Controllers.FirstController.Get(Int32 iPara) in F:\Ligy Git Code\Ligy.Project.WebApi\Ligy.Project.WebApi\Controllers\FirstController.cs:line 31
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+【ErrorMessage】:yichang
+
