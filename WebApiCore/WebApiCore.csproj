@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Ligy.Project.WebApi</RootNamespace>
+    <AssemblyName>Ligy.Project.WebApi</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -9,6 +11,17 @@
     <NoWarn>1701;1702;1591</NoWarn>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="WebApiCore.ModelsTests\**" />
+    <Compile Remove="WebApiCore.Models\**" />
+    <Content Remove="WebApiCore.ModelsTests\**" />
+    <Content Remove="WebApiCore.Models\**" />
+    <EmbeddedResource Remove="WebApiCore.ModelsTests\**" />
+    <EmbeddedResource Remove="WebApiCore.Models\**" />
+    <None Remove="WebApiCore.ModelsTests\**" />
+    <None Remove="WebApiCore.Models\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Ligy.Project.WebApi.xml" />

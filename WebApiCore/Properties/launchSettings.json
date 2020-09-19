@@ -4,7 +4,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:57470",
+      "applicationUrl": "http://localhost:8080",
       "sslPort": 0
     }
   },
@@ -20,8 +20,8 @@
     "Ligy.Project.WebApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "WeatherForecast",
-      "applicationUrl": "http://localhost:5000",
+      "launchUrl": "swagger/index.html",
+      "applicationUrl": "http://localhost:8080",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -1,16 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Ligy.Project.WebApi.CustomClass;
 
 namespace Ligy.Project.WebApi
@@ -44,11 +39,11 @@ namespace Ligy.Project.WebApi
                 });
 
 #if DEBUG
-                // 使用反射获取xml文件。并构造出文件的路径
+                //// 使用反射获取xml文件。并构造出文件的路径
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory , xmlFile);
-                // 启用xml注释. 该方法第二个参数启用控制器的注释，默认为false.
-                option.IncludeXmlComments(xmlPath , true);
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                //// 启用xml注释. 该方法第二个参数启用控制器的注释，默认为false.
+                option.IncludeXmlComments(xmlPath, true);
 #endif
             });
             #endregion
