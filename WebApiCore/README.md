@@ -7,3 +7,6 @@ some AOP class+swagger+cors+nginx
   * 日志处理
   * 全局异常处理
   * 封装数据返回的标准结构
+
+
+* 20200919 增加EFCore+NUnit
