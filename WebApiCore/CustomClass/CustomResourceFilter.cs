@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
@@ -17,9 +14,9 @@ namespace Ligy.Project.WebApi.CustomClass
         }
         public void OnResourceExecuted(ResourceExecutedContext context)
         {
-         
+
         }
 
-        
+
     }
 }

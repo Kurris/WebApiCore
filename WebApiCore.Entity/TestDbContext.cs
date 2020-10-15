@@ -1,27 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using WebApiCore.Entity.Models;
 
 namespace WebApiCore.Entity
 {
-    public class MyDbContext : DbContext
+    public class TestDbContext : DbContext
     {
-        public MyDbContext(DbContextOptions options) : base(options)
+        public TestDbContext()
         {
 
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Persist Security Info=False;User ID=sa;Password=a123456!;Initial Catalog=EFDemo;Data Source=.");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<WishOrder>().HasKey(x => new { x.GameId, x.UserId });
-
-            modelBuilder.Entity<User>()
-                .HasOne(x => x.HomePage)
-                .WithOne(x => x.User)
-                .HasForeignKey<HomePage>(x => x.UserId);
         }
-
 
         public DbSet<Game> Games { get; set; }
         public DbSet<WishOrder> WishOrders { get; set; }

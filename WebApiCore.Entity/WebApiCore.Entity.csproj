@@ -5,8 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="microsoft.entityframeworkcore" Version="3.1.8" />
-    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="3.1.8" />
+    <Compile Remove="Migrations\20201015024855_AddPlatForm.cs" />
+    <Compile Remove="Migrations\20201015024855_AddPlatForm.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

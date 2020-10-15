@@ -1,12 +1,15 @@
-using System;
-using System.IO;
-using System.Reflection;
+using Ligy.Project.WebApi.CustomClass;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Ligy.Project.WebApi.CustomClass;
+using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
+using System.Reflection;
+using WebApiCore.Entity;
 
 namespace Ligy.Project.WebApi
 {
@@ -25,16 +28,16 @@ namespace Ligy.Project.WebApi
             #region Swagger UI
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("V1" , new Microsoft.OpenApi.Models.OpenApiInfo()
+                option.SwaggerDoc("V1", new Microsoft.OpenApi.Models.OpenApiInfo()
                 {
-                    Title = "Ligy.Project.WebApi" ,
-                    Version = "version-01" ,
-                    Description = ".net core webapi by ligy" ,
+                    Title = "Ligy.Project.WebApi",
+                    Version = "version-01",
+                    Description = ".net core webapi by ligy",
 
                     Contact = new Microsoft.OpenApi.Models.OpenApiContact()
                     {
-                        Name = "Ligy" ,
-                        Email = "Ligy.97@foxmail"
+                        Name = "Ligy",
+                        Email = "Ligy.97@foxmail.com"
                     }
                 });
 
@@ -58,26 +61,36 @@ namespace Ligy.Project.WebApi
                 option.Filters.Add(typeof(CustomActionFilterAttribute));
             });
 
-
             #region ¿çÓòÎÊÌâ
 
             services.AddCors(option =>
             {
-                option.AddPolicy("AllowCors" , builder =>
-                {
-                    builder.AllowAnyOrigin().AllowAnyMethod();
-                });
+                option.AddPolicy("AllowCors", builder =>
+               {
+                   builder.AllowAnyOrigin().AllowAnyMethod();
+               });
             });
 
             #endregion
 
 
+            services.AddDbContext<MyDbContext>(op =>
+            {
+                op.UseLoggerFactory(LoggerFactory.Create(builder =>
+                {
+                    builder.AddFilter((string category, LogLevel level) =>
+                    category == DbLoggerCategory.Database.Command.Name
+                    && level == LogLevel.Information
+                 ).AddConsole();
+                }))
+                .UseSqlServer(Configuration.GetConnectionString("LocalDB"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app , IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if( env.IsDevelopment() )
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -86,7 +99,7 @@ namespace Ligy.Project.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
-                option.SwaggerEndpoint("/swagger/V1/swagger.json" , "Ligy.Project.WebApi");
+                option.SwaggerEndpoint("/swagger/V1/swagger.json", "Ligy.Project.WebApi");
             });
             #endregion
 

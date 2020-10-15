@@ -1,7 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
@@ -16,7 +16,7 @@ namespace Ligy.Project.WebApi.CustomClass
 
         public void OnException(ExceptionContext context)
         {
-            var sLog =  $"【Source】:{context.Exception.TargetSite}\r\n" + 
+            var sLog = $"【Source】:{context.Exception.TargetSite}\r\n" +
                         $"【StackTrace】:{context.Exception.StackTrace}\r\n" +
                         $"【ErrorMessage】:{context.Exception.Message}\r\n";
             _ilogger.LogError(sLog);
@@ -26,7 +26,7 @@ namespace Ligy.Project.WebApi.CustomClass
             context.Result = new ObjectResult(
                 new ResultModel(
                     code: 500,
-                    message:context.Exception.Message,
+                    message: context.Exception.Message,
                     result: string.Empty,
                     returnStatus: ReturnStatus.Error
                     )

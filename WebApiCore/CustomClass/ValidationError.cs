@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
@@ -19,7 +15,7 @@ namespace Ligy.Project.WebApi.CustomClass
         /// </summary>
         public string Message { get; }
 
-        public ValidationError(string field , string message)
+        public ValidationError(string field, string message)
         {
             Field = !string.IsNullOrEmpty(field) ? field : string.Empty;
             Message = message;

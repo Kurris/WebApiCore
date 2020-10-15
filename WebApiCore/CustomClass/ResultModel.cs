@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Ligy.Project.WebApi.CustomClass
+﻿namespace Ligy.Project.WebApi.CustomClass
 {
     /// <summary>
     /// 结果实体
     /// </summary>
     public class ResultModel
     {
-        public ResultModel(int? code = null , 
-                          string message = null ,
-                          object result = null , 
+        public ResultModel(int? code = null,
+                          string message = null,
+                          object result = null,
                           ReturnStatus returnStatus = ReturnStatus.Success)
         {
             this.Code = code;

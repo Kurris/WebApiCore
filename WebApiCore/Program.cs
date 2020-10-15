@@ -15,9 +15,9 @@ namespace Ligy.Project.WebApi
             Host.CreateDefaultBuilder(args)
             .ConfigureLogging(Logging =>
             {
-                Logging.AddFilter("System" , LogLevel.None);
-                Logging.AddFilter("Microsoft" , LogLevel.None);
-                
+                Logging.AddFilter("System", LogLevel.None);
+                Logging.AddFilter("Microsoft", LogLevel.None);
+
                 Logging.AddLog4Net();
             })
             .ConfigureWebHostDefaults(webBuilder =>
