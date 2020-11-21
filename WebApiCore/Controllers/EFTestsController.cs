@@ -25,19 +25,5 @@ namespace Ligy.Project.WebApi.Controllers
         {
             return context.Users.Where(x => x.Name == user.Name).FirstOrDefault();
         }
-
-        [HttpPost]
-        public ActionResult<int> AddWishOrder(WishOrder order)
-        {
-            context.WishOrders.Add(order);
-            return context.SaveChanges();
-        }
-
-        [HttpPost]
-        public ActionResult<int> PulbishGame(Game game)
-        {
-            context.Games.Add(game);
-            return context.SaveChanges();
-        }
     }
 }

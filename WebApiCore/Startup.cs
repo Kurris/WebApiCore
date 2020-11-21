@@ -82,8 +82,7 @@ namespace Ligy.Project.WebApi
                     category == DbLoggerCategory.Database.Command.Name
                     && level == LogLevel.Information
                  ).AddConsole();
-                }))
-                .UseSqlServer(Configuration.GetConnectionString("LocalDB"));
+                })).UseMySql(Configuration.GetConnectionString("MySqlDB"));
             });
         }
 

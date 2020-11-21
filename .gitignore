@@ -2,14 +2,9 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
-/bin/Debug/netcoreapp3.1
-/.vs/WebApiCore
-/obj
-/NUnitTestProjectForWebApi/bin/Debug/netcoreapp3.1
-/NUnitTestProjectForWebApi/obj
-/WebApiCore/bin/Debug/netcoreapp3.1
-/WebApiCore/obj
-/WebApiCore/log/log.txt
-/WebApiCore.Entity/obj
-/WebApiCore.Entity/bin/Debug/netstandard2.0
-/WebApiCore/.vs/WebApiCore/v16
+.vs
+.vscode
+config
+bin
+obj
+.user
