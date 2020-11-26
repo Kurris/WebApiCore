@@ -13,12 +13,11 @@ namespace Ligy.Project.WebApi
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            .ConfigureLogging(Logging =>
+            .ConfigureLogging(logbuilder =>
             {
-                Logging.AddFilter("System", LogLevel.None);
-                Logging.AddFilter("Microsoft", LogLevel.None);
-
-                Logging.AddLog4Net();
+                logbuilder.AddFilter("System", LogLevel.Warning);
+                logbuilder.AddFilter("Microsoft", LogLevel.Warning);
+                logbuilder.AddLog4Net();
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Entity;
 using Newtonsoft.Json;
+using WebApiCore.Entity.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Ligy.Project.WebApi.Controllers
 {
@@ -14,16 +16,20 @@ namespace Ligy.Project.WebApi.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly MyDbContext context;
+        private readonly ILogger<ValuesController> ilogger;
 
-        public ValuesController(MyDbContext context)
+        public ValuesController(MyDbContext context,ILogger<ValuesController> ilogger)
         {
             this.context = context;
+            this.ilogger = ilogger;
         }
 
         [HttpPost]
-        public void Add()
+        public int Add(User user)
         {
-
+            context.Users.Add(user);
+            context.SaveChanges();
+            return 1;
         }
 
         [HttpPost]
@@ -35,6 +41,7 @@ namespace Ligy.Project.WebApi.Controllers
         [HttpGet]
         public string Get()
         {
+            ilogger.LogInformation("77777777777777777");
             return JsonConvert.SerializeObject(context.Users);
         }
     }

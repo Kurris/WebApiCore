@@ -31,8 +31,6 @@ namespace Ligy.Project.WebApi.CustomClass
                     returnStatus: ReturnStatus.Error
                     )
                 );
-
-            Console.WriteLine(context.Exception.Message);
         }
     }
 }

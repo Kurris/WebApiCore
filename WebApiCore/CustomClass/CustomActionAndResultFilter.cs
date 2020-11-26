@@ -7,18 +7,18 @@ using System.Linq;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
-    public class CustomActionFilterAttribute : Attribute, IActionFilter, IResultFilter
+    public class CustomActionAndResultFilter : Attribute, IActionFilter, IResultFilter
     {
-        private readonly ILogger<CustomActionFilterAttribute> _logger = null;
+        private readonly ILogger<CustomActionAndResultFilter> _logger = null;
 
-        public CustomActionFilterAttribute(ILogger<CustomActionFilterAttribute> logger)
+        public CustomActionAndResultFilter(ILogger<CustomActionAndResultFilter> logger)
         {
             _logger = logger;
         }
         public void OnActionExecuting(ActionExecutingContext context)
         {
             var sLog = $"【Controller】:{context.RouteData.Values["controller"].ToString()}\r\n" +
-                       $"【Action】:{context.RouteData.Values["action"].ToString()}\r\n" +
+                       $"【Action】:{context.RouteData.Values["action"]}\r\n" +
                        $"【Paras】：{(context.ActionArguments.Count != 0 ? JsonConvert.SerializeObject(context.ActionArguments) : "None")}";
 
             _logger.LogInformation(sLog);
@@ -35,8 +35,8 @@ namespace Ligy.Project.WebApi.CustomClass
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
-            var sLog = $"【Controller】:{context.RouteData.Values["controller"].ToString()}\r\n" +
-                       $"【Action】:{context.RouteData.Values["action"].ToString()}\r\n";
+            var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
+                       $"【Action】:{context.RouteData.Values["action"]}\r\n";
 
             _logger.LogInformation(sLog);
 
@@ -45,7 +45,6 @@ namespace Ligy.Project.WebApi.CustomClass
             {
                 var result = context.ModelState.Keys
                     .SelectMany(key => context.ModelState[key].Errors.Select(x => new ValidationError(key, x.ErrorMessage)));
-
 
                 context.Result = new ObjectResult(
                     new ResultModel(
