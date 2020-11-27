@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.IO;
 using System.Reflection;
 using WebApiCore.Entity;
 
@@ -79,10 +80,12 @@ namespace Ligy.Project.WebApi
         /// <param name="containerBuilder"></param>
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
-            Assembly service = Assembly.Load("WebApiCore.IOC.Service");
+            string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Assembly service = Assembly.LoadFrom(Path.Combine(localPath, "WebApiCore.IOC.Service.dll"));
+
             Assembly iservice = Assembly.Load("WebApiCore.IOC.Interface");
-         
-            containerBuilder.RegisterAssemblyTypes(service,iservice)
+
+            containerBuilder.RegisterAssemblyTypes(service, iservice)
                 .InstancePerLifetimeScope()
                 .AsImplementedInterfaces()
                 .PropertiesAutowired();
