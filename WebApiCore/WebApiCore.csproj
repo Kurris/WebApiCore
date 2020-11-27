@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.10">
       <PrivateAssets>all</PrivateAssets>
@@ -40,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApiCore.Entity\WebApiCore.Entity.csproj" />
+    <ProjectReference Include="..\WebApiCore.IOC.Interface\WebApiCore.IOC.Interface.csproj" />
   </ItemGroup>
 
   <ItemGroup>

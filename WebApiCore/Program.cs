@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Autofac.Extensions.DependencyInjection;
 
 namespace Ligy.Project.WebApi
 {
@@ -13,11 +14,12 @@ namespace Ligy.Project.WebApi
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .ConfigureLogging(logbuilder =>
             {
-                logbuilder.AddFilter("System", LogLevel.Warning);
-                logbuilder.AddFilter("Microsoft", LogLevel.Warning);
-                logbuilder.AddLog4Net();
+                logbuilder.AddFilter("System", LogLevel.Warning)
+                          .AddFilter("Microsoft", LogLevel.Warning)
+                          .AddLog4Net();
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {

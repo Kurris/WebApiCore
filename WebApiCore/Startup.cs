@@ -1,3 +1,4 @@
+using Autofac;
 using Ligy.Project.WebApi.CustomClass;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 using WebApiCore.Entity;
 
 namespace Ligy.Project.WebApi
@@ -22,6 +24,8 @@ namespace Ligy.Project.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+
             services.AddSwaggerGen(setupAction =>
                {
                    setupAction.SwaggerDoc("V1", new Microsoft.OpenApi.Models.OpenApiInfo()
@@ -37,8 +41,6 @@ namespace Ligy.Project.WebApi
                    });
                });
 
-            services.AddControllers();
-
             //自定义特性
             services.AddMvc(option =>
             {
@@ -47,7 +49,6 @@ namespace Ligy.Project.WebApi
                 option.Filters.Add<CustomActionAndResultFilter>();
             });
 
-            #region 跨域问题
 
             services.AddCors(option =>
             {
@@ -56,9 +57,6 @@ namespace Ligy.Project.WebApi
                    builder.AllowAnyOrigin().AllowAnyMethod();
                });
             });
-
-            #endregion
-
 
             services.AddDbContext<MyDbContext>(op =>
             {
@@ -75,6 +73,21 @@ namespace Ligy.Project.WebApi
             });
         }
 
+        /// <summary>
+        /// 依赖注入Autofac
+        /// </summary>
+        /// <param name="containerBuilder"></param>
+        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        {
+            Assembly service = Assembly.Load("WebApiCore.IOC.Service");
+            Assembly iservice = Assembly.Load("WebApiCore.IOC.Interface");
+         
+            containerBuilder.RegisterAssemblyTypes(service,iservice)
+                .InstancePerLifetimeScope()
+                .AsImplementedInterfaces()
+                .PropertiesAutowired();
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -83,19 +96,16 @@ namespace Ligy.Project.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            #region Swagger UI
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
                 option.SwaggerEndpoint("/swagger/V1/swagger.json", "Ligy.Project.WebApi");
             });
-            #endregion
 
             app.UseRouting();
 
-            #region 跨域 必须在UseRouting之后,UseAuthorization之前
+            //跨域 必须在UseRouting之后,UseAuthorization之前
             app.UseCors("AllowCors");
-            #endregion
 
             app.UseAuthorization();
 
