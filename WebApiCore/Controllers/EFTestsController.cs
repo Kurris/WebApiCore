@@ -1,9 +1,5 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using WebApiCore.Entity;
-using WebApiCore.Entity.Models;
-using WebApiCore.IOC.Interface;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ligy.Project.WebApi.Controllers
 {
@@ -11,22 +7,17 @@ namespace Ligy.Project.WebApi.Controllers
     [ApiController]
     public class EFTestsController : ControllerBase
     {
-        private readonly MyDbContext _context;
-        public IClock Clock { get; set; }
-        private readonly ILogger<EFTestsController> _logger;
+        public DbContext MyContext { get; set; }
 
-        public EFTestsController(MyDbContext context, ILogger<EFTestsController> logger)
+        public EFTestsController()
         {
-            this._context = context;
-            this._logger = logger;
+
         }
 
-        [HttpPost]
-        public User GetUserInfo(User user)
+        [HttpGet]
+        public void GetAAAA()
         {
-            string type = Clock.GetType().ToString();
-            _logger.LogInformation(_logger.GetType().ToString());
-            return _context.Users.Where(x => x.Name == user.Name).FirstOrDefault();
+
         }
     }
 }

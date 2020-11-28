@@ -1,7 +1,7 @@
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Autofac.Extensions.DependencyInjection;
 
 namespace Ligy.Project.WebApi
 {

@@ -7,8 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.IO;
-using System.Reflection;
 using WebApiCore.Entity;
 
 namespace Ligy.Project.WebApi
@@ -25,7 +23,7 @@ namespace Ligy.Project.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddControllersAsServices();
 
             services.AddSwaggerGen(setupAction =>
                {
@@ -77,18 +75,10 @@ namespace Ligy.Project.WebApi
         /// <summary>
         /// “¿¿µ◊¢»ÎAutofac
         /// </summary>
-        /// <param name="containerBuilder"></param>
-        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        /// <param name="builder"></param>
+        public void ConfigureContainer(ContainerBuilder builder)
         {
-            string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Assembly service = Assembly.LoadFrom(Path.Combine(localPath, "WebApiCore.IOC.Service.dll"));
-
-            Assembly iservice = Assembly.Load("WebApiCore.IOC.Interface");
-
-            containerBuilder.RegisterAssemblyTypes(service, iservice)
-                .InstancePerLifetimeScope()
-                .AsImplementedInterfaces()
-                .PropertiesAutowired();
+            builder.RegisterModule<CustomAutofacModule>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
