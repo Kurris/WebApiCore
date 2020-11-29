@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore", "WebApiCore\We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Entity", "WebApiCore.Entity\WebApiCore.Entity.csproj", "{49CEE576-4C02-4F11-A544-532EC10BC962}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.IOC.Service", "WebApiCore.IOC.Service\WebApiCore.IOC.Service.csproj", "{06CC4B94-A0AE-4F58-B175-7EF83B6E9002}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.IOC.Service", "WebApiCore.IOC.Service\WebApiCore.IOC.Service.csproj", "{06CC4B94-A0AE-4F58-B175-7EF83B6E9002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.IOC.Interface", "WebApiCore.IOC.Interface\WebApiCore.IOC.Interface.csproj", "{462BC7EF-9894-45BE-9920-3BEC1F0662C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.IOC.Interface", "WebApiCore.IOC.Interface\WebApiCore.IOC.Interface.csproj", "{462BC7EF-9894-45BE-9920-3BEC1F0662C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.IdGenerator", "WebApiCore.IdGenerator\WebApiCore.IdGenerator.csproj", "{4778BFDD-3F5B-4B29-9FFE-89A82FB45FB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Utils", "WebApiCore.Utils\WebApiCore.Utils.csproj", "{B98E06B3-6EC7-41E0-8D44-ED6C35FC4593}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{462BC7EF-9894-45BE-9920-3BEC1F0662C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{462BC7EF-9894-45BE-9920-3BEC1F0662C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{462BC7EF-9894-45BE-9920-3BEC1F0662C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4778BFDD-3F5B-4B29-9FFE-89A82FB45FB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4778BFDD-3F5B-4B29-9FFE-89A82FB45FB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4778BFDD-3F5B-4B29-9FFE-89A82FB45FB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4778BFDD-3F5B-4B29-9FFE-89A82FB45FB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B98E06B3-6EC7-41E0-8D44-ED6C35FC4593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B98E06B3-6EC7-41E0-8D44-ED6C35FC4593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B98E06B3-6EC7-41E0-8D44-ED6C35FC4593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B98E06B3-6EC7-41E0-8D44-ED6C35FC4593}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

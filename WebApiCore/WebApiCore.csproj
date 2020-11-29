@@ -5,6 +5,7 @@
     <RootNamespace>Ligy.Project.WebApi</RootNamespace>
     <AssemblyName>Ligy.Project.WebApi</AssemblyName>
     <UserSecretsId>00782c90-4d6c-41f3-9df9-8b045634e972</UserSecretsId>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

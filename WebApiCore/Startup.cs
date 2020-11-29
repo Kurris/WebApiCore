@@ -30,13 +30,7 @@ namespace Ligy.Project.WebApi
                    setupAction.SwaggerDoc("V1", new Microsoft.OpenApi.Models.OpenApiInfo()
                    {
                        Version = "Ver 1",
-                       Description = "Ligy WebApi",
                        Title = "Ligy WebApi",
-                       Contact = new Microsoft.OpenApi.Models.OpenApiContact()
-                       {
-                           Email = "Ligy.97@foxmail.com",
-                           Name = "Ligy",
-                       }
                    });
                });
 
