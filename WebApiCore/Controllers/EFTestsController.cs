@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Ligy.Project.WebApi.Controllers
 {
@@ -7,7 +6,6 @@ namespace Ligy.Project.WebApi.Controllers
     [ApiController]
     public class EFTestsController : ControllerBase
     {
-        public DbContext MyContext { get; set; }
 
         public EFTestsController()
         {

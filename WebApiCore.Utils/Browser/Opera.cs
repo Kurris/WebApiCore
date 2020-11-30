@@ -3,7 +3,7 @@
 
 namespace WebApiCore.Utils.Browser
 {
-    public class Opera : BaseBrowser
+    internal class Opera : BaseBrowser
     {
         private readonly string _agent;
 

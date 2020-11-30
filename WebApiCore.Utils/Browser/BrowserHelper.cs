@@ -1,44 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WebApiCore.Utils.Browser
 {
-    public class BaseBrowser
-    {
-        public string Name { get; set; }
-        public string Maker { get; set; }
-        public BrowserType Type { get; set; } = BrowserType.Generic;
-        public Version Version { get; set; }
-
-        public BaseBrowser() { }
-        public BaseBrowser(BrowserType browserType) => Type = browserType;
-        public BaseBrowser(BrowserType browserType, Version version) : this(browserType) => Version = version;
-
-        public BaseBrowser(string name)
-        {
-
-        }
-        public Version ToVersion(string version)
-        {
-            version = RemoveWhitespace(version);
-            return Version.TryParse(version, out var parsedVersion) ? parsedVersion : new Version(0, 0);
-        }
-        public string RemoveWhitespace(string version) => version?.Replace(" ", "", StringComparison.OrdinalIgnoreCase);
-    }
-
-    public enum BrowserType
-    {
-        IE,
-        Chrome,
-        Safari,
-        Firefox,
-        Edge,
-        Opera,
-        Generic
-    }
-
-    public class BrowserHelper
+    internal class BrowserHelper
     {
         public static string GetBrwoserInfo(string userAgent)
         {
@@ -60,7 +24,8 @@ namespace WebApiCore.Utils.Browser
             var safari = new Safari(userAgent);
             if (safari.Type == BrowserType.Safari)
                 return string.Format("{0} {1}", safari.Type.ToString(), safari.Version);
-            return string.Empty;
+
+            throw new ArgumentException("找不到符合的浏览器类型!");
         }
     }
 }

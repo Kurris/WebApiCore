@@ -1,9 +1,7 @@
 ﻿using Autofac;
-using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using WebApiCore.Entity;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
@@ -20,8 +18,6 @@ namespace Ligy.Project.WebApi.CustomClass
                 .InstancePerLifetimeScope()
                 .AsImplementedInterfaces()
                 .PropertiesAutowired();
-
-            builder.RegisterType<MyDbContext>().As<DbContext>();
 
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(x => x.Name.EndsWith("Controller")).PropertiesAutowired();
         }

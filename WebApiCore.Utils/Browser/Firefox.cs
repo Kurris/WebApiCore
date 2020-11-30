@@ -3,7 +3,7 @@
 
 namespace WebApiCore.Utils.Browser
 {
-    public class Firefox : BaseBrowser
+    internal class Firefox : BaseBrowser
     {
         private readonly string _agent;
 

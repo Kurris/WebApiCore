@@ -3,7 +3,7 @@
 
 namespace WebApiCore.Utils.Browser
 {
-    public class Safari : BaseBrowser
+    internal class Safari : BaseBrowser
     {
         private readonly string _agent;
 

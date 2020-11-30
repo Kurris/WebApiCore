@@ -3,7 +3,7 @@
 
 namespace WebApiCore.Utils.Browser
 {
-    public class InternetExplorer : BaseBrowser
+    internal class InternetExplorer : BaseBrowser
     {
         private readonly string _agent;
 

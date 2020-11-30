@@ -3,7 +3,7 @@
 
 namespace WebApiCore.Utils.Browser
 {
-    public class Chrome : BaseBrowser
+    internal class Chrome : BaseBrowser
     {
         private readonly string _agent;
 

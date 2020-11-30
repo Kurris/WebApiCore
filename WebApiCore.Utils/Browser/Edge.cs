@@ -3,7 +3,7 @@
 
 namespace WebApiCore.Utils.Browser
 {
-    public class Edge : BaseBrowser
+    internal class Edge : BaseBrowser
     {
         private readonly string _agent;
 

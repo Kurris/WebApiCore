@@ -56,13 +56,11 @@ namespace Ligy.Project.WebApi
                 op.UseLoggerFactory(
                     LoggerFactory.Create(builder =>
                 {
-                    builder.AddFilter(
-                        (string category, LogLevel level) =>
-                    category == DbLoggerCategory.Database.Command.Name
-                    && level == LogLevel.Information
-                                      ).AddConsole();
-
-                })).UseMySql(Configuration.GetConnectionString("MySqlDB"));
+                    builder.AddFilter((string category, LogLevel level) =>
+                      category == DbLoggerCategory.Database.Command.Name
+                      && level == LogLevel.Information
+                    ).AddConsole();
+                })).UseMySql(Configuration.GetConnectionString("DevMySqlDB"));
             });
         }
 
