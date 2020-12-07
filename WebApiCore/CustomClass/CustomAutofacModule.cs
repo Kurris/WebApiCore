@@ -9,17 +9,17 @@ namespace Ligy.Project.WebApi.CustomClass
     {
         protected override void Load(ContainerBuilder builder)
         {
-            string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Assembly service = Assembly.LoadFrom(Path.Combine(localPath, "WebApiCore.IOC.Service.dll"));
+            //string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //Assembly service = Assembly.LoadFrom(Path.Combine(localPath, "WebApiCore.IOC.Service.dll"));
 
-            Assembly iservice = Assembly.Load("WebApiCore.IOC.Interface");
+            //Assembly iservice = Assembly.Load("WebApiCore.IOC.Interface");
 
-            builder.RegisterAssemblyTypes(service, iservice)
-                .InstancePerLifetimeScope()
-                .AsImplementedInterfaces()
-                .PropertiesAutowired();
+            //builder.RegisterAssemblyTypes(service, iservice)
+            //    .InstancePerLifetimeScope()
+            //    .AsImplementedInterfaces()
+            //    .PropertiesAutowired();
 
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(x => x.Name.EndsWith("Controller")).PropertiesAutowired();
+            //builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(x => x.Name.EndsWith("Controller")).PropertiesAutowired();
         }
     }
 }

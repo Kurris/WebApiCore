@@ -60,7 +60,7 @@ namespace Ligy.Project.WebApi.CustomClass
                                   new ResultModel(
                                   code: 100,
                                   message: "成功",
-                                  result: (context.Result as ObjectResult).Value,
+                                  result: (context.Result as ObjectResult)?.Value,
                                   returnStatus: ReturnStatus.Success)
                                   );
             }

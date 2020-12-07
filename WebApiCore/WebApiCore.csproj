@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Ligy.Project.WebApi</RootNamespace>
     <AssemblyName>Ligy.Project.WebApi</AssemblyName>
     <UserSecretsId>00782c90-4d6c-41f3-9df9-8b045634e972</UserSecretsId>
@@ -44,6 +44,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WebApiCore.Entity\WebApiCore.Entity.csproj" />
     <ProjectReference Include="..\WebApiCore.IOC.Interface\WebApiCore.IOC.Interface.csproj" />
+    <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>

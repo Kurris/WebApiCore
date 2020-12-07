@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WebApiCore.Entity.Model
 {
-    [Table("t_sys_post")]
-    public class Post:BaseEntity
+    [Table("t_sys_profile")]
+    public class Profile :BaseEntity
     {
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public DateTime EditTime { get; set; }
+
+        public string Name { get; set; }
 
         public Blog Blog { get; set; }
     }

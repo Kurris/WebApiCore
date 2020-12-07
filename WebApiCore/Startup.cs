@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Entity;
+using WebApiCore.Utils;
 
 namespace Ligy.Project.WebApi
 {
@@ -51,16 +52,24 @@ namespace Ligy.Project.WebApi
                });
             });
 
+
+            var global = Configuration.GetSection("SystemConfig").Get<GlobalInvariant>();
+
             services.AddDbContext<MyDbContext>(op =>
             {
-                op.UseLoggerFactory(
-                    LoggerFactory.Create(builder =>
+                string provider = global.SystemConfig.DBConfig.Provider;
+
+                switch (provider)
                 {
-                    builder.AddFilter((string category, LogLevel level) =>
-                      category == DbLoggerCategory.Database.Command.Name
-                      && level == LogLevel.Information
-                    ).AddConsole();
-                })).UseMySql(Configuration.GetConnectionString("DevMySqlDB"));
+                    case "SqlServer":
+                        op.UseSqlServer(global.SystemConfig.DBConfig.SqlServerConnectionString);
+                        break;
+
+
+
+
+                        throw new System.ArgumentException("未知的数据库引擎!");
+                }
             });
         }
 

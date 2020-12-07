@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.IdGenerator", "W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Utils", "WebApiCore.Utils\WebApiCore.Utils.csproj", "{B98E06B3-6EC7-41E0-8D44-ED6C35FC4593}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Test.DB", "WebApiCode.Test.DB\WebApiCore.Test.DB.csproj", "{9A294145-E7B1-43EA-8B7A-EA70668B4E88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Test.DB", "WebApiCode.Test.DB\WebApiCore.Test.DB.csproj", "{9A294145-E7B1-43EA-8B7A-EA70668B4E88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Entity", "WebApiCore.Entity\WebApiCore.Entity.csproj", "{D882F16C-BE1A-4796-8370-D5BFDAEC8283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Entity", "WebApiCore.Entity\WebApiCore.Entity.csproj", "{D882F16C-BE1A-4796-8370-D5BFDAEC8283}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Data", "WebApiCore.Data\WebApiCore.Data.csproj", "{236A24A4-4384-4841-8095-5D5C6D7DE2C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{D882F16C-BE1A-4796-8370-D5BFDAEC8283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D882F16C-BE1A-4796-8370-D5BFDAEC8283}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D882F16C-BE1A-4796-8370-D5BFDAEC8283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236A24A4-4384-4841-8095-5D5C6D7DE2C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236A24A4-4384-4841-8095-5D5C6D7DE2C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236A24A4-4384-4841-8095-5D5C6D7DE2C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236A24A4-4384-4841-8095-5D5C6D7DE2C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
