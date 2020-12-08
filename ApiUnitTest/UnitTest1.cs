@@ -13,15 +13,7 @@ namespace ApiUnitTest
         [TestMethod]
         public async Task<IDataBaseOperation> GetInterface()
         {
-            var sqlServer = new SqlServerDB("Data Source=.;DataBase=LigyApi;Trusted_Connection=True;");
-            if (delete == 1)
-            {
-                await sqlServer.GetDataBase().EnsureDeletedAsync();
-                delete = 0;
-            }
-
-            return await sqlServer.GetDataBase().EnsureCreatedAsync();
-
+            return null;
         }
 
 

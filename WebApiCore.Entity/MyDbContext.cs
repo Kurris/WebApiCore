@@ -7,36 +7,34 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 using WebApiCore.Entity;
-using WebApiCore.Utils;
 
 namespace WebApiCore.EF
 {
     public sealed class MyDbContext : DbContext, IDisposable
     {
+
+
         //依赖注入则将OnConfiguring方法添加到Startup的ConfigureServices
         //public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         //{
-
         //}
 
+        private readonly string _provider;
         private readonly string _connStr;
 
-        public MyDbContext(string connStr = null)
+        public MyDbContext(string provider, string connStr)
         {
+            this._provider = provider;
             this._connStr = connStr;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string provider = GlobalInvariant.SystemConfig?.DBConfig?.Provider ?? "SqlServer";
-            string connStr = this._connStr ?? GlobalInvariant.SystemConfig.DBConfig.SqlServerConnectionString;
-            int? timeout = GlobalInvariant.SystemConfig?.DBConfig?.Timeout ?? 5;
-
-            if (provider.Equals("sqlserver", StringComparison.OrdinalIgnoreCase))
+            if (this._provider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
             {
-                optionsBuilder.UseSqlServer(connStr, x => x.CommandTimeout(timeout));
+                optionsBuilder.UseSqlServer(this._connStr, x => x.CommandTimeout(5));
             }
-            else if (provider.Equals("mysql", StringComparison.OrdinalIgnoreCase))
+            else if (this._provider.Equals("MySql", StringComparison.OrdinalIgnoreCase))
             {
                 //optionsBuilder.(GlobalInvariant.SystemConfig.DBConfig.MySqlConnectionString);
                 throw new NotImplementedException("MySql尚未实现!");

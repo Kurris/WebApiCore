@@ -53,23 +53,6 @@ namespace Ligy.Project.WebApi
 
 
             GlobalInvariant.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
-
-            //services.AddDbContext<MyDbContext>(op =>
-            //{
-            //    string provider = global.SystemConfig.DBConfig.Provider;
-
-            //    switch (provider)
-            //    {
-            //        case "SqlServer":
-            //            op.UseSqlServer(global.SystemConfig.DBConfig.SqlServerConnectionString);
-            //            break;
-
-
-
-
-            //            throw new System.ArgumentException("未知的数据库引擎!");
-            //    }
-            //});
         }
 
         /// <summary>

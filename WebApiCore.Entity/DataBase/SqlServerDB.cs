@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebApiCore.EF.DataBase
 {
-    public class SqlServerDB : BaseDatabase
+    internal class SqlServerDB : BaseDatabase
     {
-        public SqlServerDB()
-        {
-
-        }
-
-        public SqlServerDB(string connStr) : base(connStr)
+        internal SqlServerDB(string provider, string connStr) : base(provider, connStr)
         {
         }
     }

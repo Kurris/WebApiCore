@@ -17,26 +17,21 @@ namespace WebApiCore.EF.DataBase
 {
     public abstract class BaseDatabase : IDataBaseOperation
     {
-        public BaseDatabase()
+
+        public BaseDatabase(string provider, string connStr)
         {
-            _dbContext = new MyDbContext();
+            _dbContext = new MyDbContext(provider, connStr);
         }
 
-        public BaseDatabase(string connStr)
+        public IDataBaseOperation GetIDataBaseOperation()
         {
-            _dbContext = new MyDbContext(connStr);
+            return this;
         }
 
         #region Fields
         private readonly DbContext _dbContext = null;
         private IDbContextTransaction _dbContextTransaction = null;
         #endregion
-
-
-        public IDataBaseOperation GetDataBase()
-        {
-            return this;
-        }
 
         #region Properties
         public DbContext DbContext { get => _dbContext; }
@@ -358,5 +353,7 @@ namespace WebApiCore.EF.DataBase
                 ? await this.CommitTransAsync() //没有事务立即提交
                 : 0;                            //有事务就返回0;
         }
+
+
     }
 }

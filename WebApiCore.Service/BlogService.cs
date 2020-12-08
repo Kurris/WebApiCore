@@ -12,7 +12,7 @@ namespace WebApiCore.Service
     {
         public async Task<IEnumerable<Blog>> GetBlogs()
         {
-            return await new SqlServerDB().FindListAsync<Blog>();
+            return null;
         }
     }
 }

@@ -24,6 +24,8 @@ namespace WebApiCore.EF.DataBase
 
         #endregion
 
+
+        IDataBaseOperation GetIDataBaseOperation();
         Task<IDataBaseOperation> EnsureDeletedAsync();
         Task<IDataBaseOperation> EnsureCreatedAsync();
 

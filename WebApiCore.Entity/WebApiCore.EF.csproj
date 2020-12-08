@@ -4,6 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>D:\Github\WebApiCore\WebApiCore\bin\Debug\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Migrations\20201130063354_changeRequire.cs" />
     <Compile Remove="Migrations\20201130063354_changeRequire.Designer.cs" />
@@ -37,8 +41,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApiCore.EF\WebApiCore.Entity.csproj" />
-    <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj" />
+    <ProjectReference Include="..\WebApiCore.EF\WebApiCore.Entity.csproj">
+      <Private>true</Private>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

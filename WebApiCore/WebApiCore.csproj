@@ -42,6 +42,7 @@
       <Private>true</Private>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
     </ProjectReference>
+    <ProjectReference Include="..\WebApiCore.Service\WebApiCore.Service.csproj" />
     <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj">
       <Private>true</Private>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>

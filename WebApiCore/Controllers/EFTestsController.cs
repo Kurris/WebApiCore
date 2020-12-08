@@ -11,6 +11,7 @@ namespace Ligy.Project.WebApi.Controllers
     public class EFTestsController : ControllerBase
     {
         public IBlogService BlogService { get; set; }
+
         [HttpGet]
         public async Task<IEnumerable<Blog>> GetBlogs()
         {
