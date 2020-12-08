@@ -1,14 +1,13 @@
 using Autofac;
 using Ligy.Project.WebApi.CustomClass;
+using WebApiCore.Utils;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using WebApiCore.Entity;
-using WebApiCore.Utils;
+using Microsoft.AspNetCore.Hosting;
+using WebApiCore.Utils.Model;
 
 namespace Ligy.Project.WebApi
 {
@@ -53,24 +52,24 @@ namespace Ligy.Project.WebApi
             });
 
 
-            var global = Configuration.GetSection("SystemConfig").Get<GlobalInvariant>();
+            GlobalInvariant.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
 
-            services.AddDbContext<MyDbContext>(op =>
-            {
-                string provider = global.SystemConfig.DBConfig.Provider;
+            //services.AddDbContext<MyDbContext>(op =>
+            //{
+            //    string provider = global.SystemConfig.DBConfig.Provider;
 
-                switch (provider)
-                {
-                    case "SqlServer":
-                        op.UseSqlServer(global.SystemConfig.DBConfig.SqlServerConnectionString);
-                        break;
-
-
+            //    switch (provider)
+            //    {
+            //        case "SqlServer":
+            //            op.UseSqlServer(global.SystemConfig.DBConfig.SqlServerConnectionString);
+            //            break;
 
 
-                        throw new System.ArgumentException("未知的数据库引擎!");
-                }
-            });
+
+
+            //            throw new System.ArgumentException("未知的数据库引擎!");
+            //    }
+            //});
         }
 
         /// <summary>

@@ -7,6 +7,6 @@ namespace WebApiCore.Utils
 {
     public class GlobalInvariant
     {
-        public SystemConfig SystemConfig { get; set; }
+        public static SystemConfig SystemConfig { get; set; }
     }
 }

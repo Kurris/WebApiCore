@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApiCore.Entity.Model
+namespace WebApiCore.Entity.BlogInfos
 {
     [Table("t_sys_profile")]
     public class Profile :BaseEntity

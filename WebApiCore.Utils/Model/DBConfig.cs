@@ -12,6 +12,8 @@ namespace WebApiCore.Utils.Model
 
         public string MySqlConnectionString { get; set; }
 
+        public int Timeout { get; set; }
+
         public int DBSlowSqlLogTime { get; set; }
     }
 }

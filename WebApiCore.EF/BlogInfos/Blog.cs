@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace WebApiCore.Entity.Model
+namespace WebApiCore.Entity.BlogInfos
 {
     [Table("t_sys_blog")]
     public class Blog :BaseEntity
@@ -14,7 +14,6 @@ namespace WebApiCore.Entity.Model
         public BlogType BlogType { get; set; }
 
         public List<Post> Posts { get; set; }
-        public DateTime EditTime { get; set; }
     }
 
     public enum BlogType

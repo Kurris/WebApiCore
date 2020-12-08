@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace WebApiCore.Entity.Model
+namespace WebApiCore.Entity.BlogInfos
 {
     [Table("t_sys_post")]
     public class Post:BaseEntity

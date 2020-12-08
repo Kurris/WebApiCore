@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using WebApiCore.Entity.BlogInfos;
+using WebApiCore.Interface;
 
 namespace Ligy.Project.WebApi.Controllers
 {
@@ -6,16 +10,11 @@ namespace Ligy.Project.WebApi.Controllers
     [ApiController]
     public class EFTestsController : ControllerBase
     {
-
-        public EFTestsController()
-        {
-
-        }
-
+        public IBlogService BlogService { get; set; }
         [HttpGet]
-        public void GetAAAA()
+        public async Task<IEnumerable<Blog>> GetBlogs()
         {
-
+            return await BlogService.GetBlogs();
         }
     }
 }
