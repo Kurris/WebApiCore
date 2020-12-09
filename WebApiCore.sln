@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "数据库访问", "数据�
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Entity", "WebApiCore.EF\WebApiCore.Entity.csproj", "{6AB1CA32-7D71-4078-A03C-39214C9B0917}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiUnitTest", "ApiUnitTest\ApiUnitTest.csproj", "{68A7719A-EBCB-4EE4-813D-1E9C4903DC07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiUnitTest", "ApiUnitTest\ApiUnitTest.csproj", "{68A7719A-EBCB-4EE4-813D-1E9C4903DC07}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "测试", "测试", "{78BF3298-1B9B-4DE4-8FE5-5811345811CA}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "基础库", "基础库", "{535F0BCF-AD7F-40D6-B94B-0C54142AEE95}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "业务服务层", "业务服务层", "{C6EE3DD0-6819-4160-A7A0-9A0EE2710414}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "缓存", "缓存", "{B2EEBED3-F185-4731-81CD-05D15C1BF4FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,14 +5,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>D:\Github\WebApiCore\WebApiCore\bin\Debug\</OutputPath>
+    <OutputPath></OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApiCore.Entity\WebApiCore.EF.csproj">
-      <Private>true</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\WebApiCore.Entity\WebApiCore.EF.csproj" />
     <ProjectReference Include="..\WebApiCore.Interface\WebApiCore.Interface.csproj" />
+    <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj" />
   </ItemGroup>
 
 </Project>

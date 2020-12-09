@@ -269,59 +269,54 @@ namespace WebApiCore.EF.DataBase
 
         public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sort, bool isAsc, int pageSize, int pageIndex) where T : class, new()
         {
-            throw new NotImplementedException();
+            var tmpData = _dbContext.Set<T>().AsQueryable();
+            return await FindListAsync<T>(tmpData, sort, isAsc, pageSize, pageIndex);
         }
 
-        public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(Expression<Func<T, bool>> condition, string sort, bool isAsc, int pageSize, int pageIndex) where T : class, new()
+        private async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(IQueryable<T> tmpdata, string sort, bool isAsc,
+                                                                              int pageSize, int pageIndex) where T : class, new()
         {
-            throw new NotImplementedException();
+            tmpdata = DBExtension.PaginationSort<T>(tmpdata, sort, isAsc);
+
+            var list = await tmpdata.ToListAsync();
+            if (list?.Count > 0)
+            {
+                var currentData = list.Skip<T>(pageSize * (pageIndex - 1)).Take<T>(pageSize);
+                return (list.Count, currentData);
+            }
+            else
+            {
+                return (0, new List<T>());
+            }
         }
 
-        public virtual async Task<(int total, IEnumerable<T>)> FindListAsync<T>(string strSql, string sort, bool isAsc, int pageSize, int pageIndex) where T : class
+        public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(Expression<Func<T, bool>> condition, string sort,
+                                                                                     bool isAsc, int pageSize, int pageIndex) where T : class, new()
         {
-            throw new NotImplementedException();
+            var tempData = _dbContext.Set<T>().Where(condition);
+            return await FindListAsync<T>(tempData, sort, isAsc, pageSize, pageIndex);
         }
 
-        public virtual async Task<(int total, IEnumerable<T>)> FindListAsync<T>(string strSql, DbParameter[] dbParameter, string sort, bool isAsc, int pageSize, int pageIndex) where T : class
-        {
-            throw new NotImplementedException();
-        }
 
         public virtual async Task<object> FindObjectAsync(string strSql)
         {
-            throw new NotImplementedException();
+            return await this.FindObjectAsync(strSql, null);
         }
 
         public virtual async Task<object> FindObjectAsync(string strSql, DbParameter[] dbParameter)
         {
-            throw new NotImplementedException();
-        }
-
-        public virtual async Task<T> FindObjectAsync<T>(string strSql) where T : class
-        {
-            throw new NotImplementedException();
+            return await DBHelper.GetInstance(_dbContext).GetScalar(strSql, dbParameter);
         }
 
         public virtual async Task<DataTable> FindTableAsync(string strSql)
         {
-            throw new NotImplementedException();
+            return await this.FindTableAsync(strSql, null);
         }
 
         public virtual async Task<DataTable> FindTableAsync(string strSql, DbParameter[] dbParameter)
         {
-            throw new NotImplementedException();
+            return await DBHelper.GetInstance(_dbContext).GetDataTable(strSql, dbParameter);
         }
-
-        public virtual async Task<(int total, DataTable)> FindTableAsync(string strSql, string sort, bool isAsc, int pageSize, int pageIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual async Task<(int total, DataTable)> FindTableAsync(string strSql, DbParameter[] dbParameter, string sort, bool isAsc, int pageSize, int pageIndex)
-        {
-            throw new NotImplementedException();
-        }
-
 
         public virtual IQueryable<T> IQueryableAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
@@ -353,7 +348,5 @@ namespace WebApiCore.EF.DataBase
                 ? await this.CommitTransAsync() //没有事务立即提交
                 : 0;                            //有事务就返回0;
         }
-
-
     }
 }

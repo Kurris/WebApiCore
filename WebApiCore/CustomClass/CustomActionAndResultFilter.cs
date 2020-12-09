@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
+
     public class CustomActionAndResultFilter : Attribute, IActionFilter, IResultFilter
     {
         private readonly ILogger<CustomActionAndResultFilter> _logger = null;
@@ -17,7 +18,7 @@ namespace Ligy.Project.WebApi.CustomClass
         }
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var sLog = $"【Controller】:{context.RouteData.Values["controller"].ToString()}\r\n" +
+            var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
                        $"【Action】:{context.RouteData.Values["action"]}\r\n" +
                        $"【Paras】：{(context.ActionArguments.Count != 0 ? JsonConvert.SerializeObject(context.ActionArguments) : "None")}";
 
