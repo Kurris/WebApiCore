@@ -208,7 +208,9 @@ namespace WebApiCore.EF.DataBase
             var tempData = _dbContext.Set<T>().Where(condition);
             return await this.FindListAsync<T>(tempData, sortColumn, isAsc, pageSize, pageIndex);
         }
+#pragma warning disable CA1822 // 将成员标记为 static
         private async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(IQueryable<T> tmpdata, string sortColumn, bool isAsc,
+#pragma warning restore CA1822 // 将成员标记为 static
                                                                               int pageSize, int pageIndex) where T : class
         {
             tmpdata = DBExtension.PaginationSort<T>(tmpdata, sortColumn, isAsc);
@@ -229,16 +231,38 @@ namespace WebApiCore.EF.DataBase
 
         public virtual async Task<int> UpdateAsync<T>(T entity) where T : class
         {
-            _dbContext.Set<T>().Update(entity);
+            this._dbContext.Set<T>().Update(entity);
             return await GetReuslt();
         }
         public virtual async Task<int> UpdateAsync<T>(IEnumerable<T> entities) where T : class
         {
-            _dbContext.Set<T>().UpdateRange(entities);
+            this._dbContext.Set<T>().UpdateRange(entities);
             return await GetReuslt();
         }
 
 
+        public virtual async Task<int> AttachAsync<T>(T entity, params string[] props) where T : class
+        {
+            var entityType = this._dbContext.Set<T>().Attach(entity);
+            foreach (var prop in props)
+            {
+                entityType.Property(prop).IsModified = true;
+            }
+            return await GetReuslt();
+        }
+        public virtual async Task<int> AttachAsync<T>(IEnumerable<T> entities, params string[] props) where T : class
+        {
+            foreach (var entity in entities)
+            {
+                var entityType = this._dbContext.Set<T>().Attach(entity);
+                foreach (var prop in props)
+                {
+                    entityType.Property(prop).IsModified = true;
+                }
+            }
+
+            return await GetReuslt();
+        }
 
 
 
@@ -303,6 +327,18 @@ namespace WebApiCore.EF.DataBase
             return _dbContextTransaction == null//如果没有事务
                 ? await this.CommitTransAsync() //那么立即提交
                 : 0;                            //否则返回0;
+        }
+
+
+
+
+        public virtual async ValueTask DisposeAsync()
+        {
+            await this.CloseAsync();
+        }
+        public virtual async void Dispose()
+        {
+            await this.CloseAsync();
         }
 
 

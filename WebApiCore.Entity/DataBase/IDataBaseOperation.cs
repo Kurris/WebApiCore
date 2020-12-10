@@ -15,7 +15,7 @@ namespace WebApiCore.EF.DataBase
     /// <summary>
     /// 数据库操作
     /// </summary>
-    public interface IDataBaseOperation
+    public interface IDataBaseOperation : IAsyncDisposable, IDisposable
     {
 
         /// <summary>
@@ -132,6 +132,23 @@ namespace WebApiCore.EF.DataBase
         /// <returns>返回受影响行<see cref="int"/></returns>
         Task<int> AddAsync<T>(IEnumerable<T> entities) where T : class;
 
+        /// <summary>
+        /// 附加一个实体
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实例</param>
+        /// <param name="props">变化字段</param>
+        /// <returns>返回受影响行<see cref="int"/></returns>
+        Task<int> AttachAsync<T>(T entity, params string[] props) where T : class;
+
+        /// <summary>
+        /// 附加一组实体
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entities">一组实例</param>
+        /// <param name="props">变化字段</param>
+        /// <returns>返回受影响行<see cref="int"/></returns>
+        Task<int> AttachAsync<T>(IEnumerable<T> entities, params string[] props) where T : class;
 
         /// <summary>
         /// 更新一个实体

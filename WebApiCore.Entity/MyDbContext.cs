@@ -50,21 +50,21 @@ namespace WebApiCore.EF
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {      
+        {
             var entityTypes = Assembly.Load(new AssemblyName("WebApiCore.Entity"))
                 .GetTypes().Where(x => x.IsSubclassOf(typeof(BaseEntity))
                                && x.IsDefined(typeof(TableAttribute)));
 
-            
+
             foreach (var entityType in entityTypes)
             {
-                if (modelBuilder.Model.GetEntityTypes().Any(x=>x.Name.Equals(entityType.FullName)))
+                if (modelBuilder.Model.GetEntityTypes().Any(x => x.Name.Equals(entityType.FullName)))
                 {
                     continue;
                 }
                 modelBuilder.Entity(entityType);
             }
-            
+
             ConfigModel.Build(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
@@ -85,6 +85,7 @@ namespace WebApiCore.EF
                 }
                 else if (item.State == EntityState.Modified)
                 {
+                    item.Property("CreateTime").IsModified = false;
                     item.Property("ModifyTime").CurrentValue = DateTime.Now;
                 }
             }

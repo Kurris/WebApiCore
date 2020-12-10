@@ -13,7 +13,7 @@ namespace WebApiCore.Service
     {
         public async Task<IEnumerable<Blog>> GetBlogs()
         {
-            var page = new PaginationParam();
+            //var page = new PaginationParam();
 
 
             return null;
