@@ -15,8 +15,8 @@ namespace WebApiCore.Service
         {
             var page = new PaginationParam();
 
-            var (total, lis) = await InitDB.Create().FindListAsync<Blog>(page.SortColumn, page.IsASC, page.PageSize, page.CurrentPage);
-            return lis;
+
+            return null;
         }
     }
 }

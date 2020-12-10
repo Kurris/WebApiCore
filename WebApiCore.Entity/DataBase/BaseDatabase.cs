@@ -15,10 +15,10 @@ using WebApiCore.Entity.BlogInfos;
 
 namespace WebApiCore.EF.DataBase
 {
-    public abstract class BaseDatabase //IDataBaseOperation
+    internal abstract class BaseDatabase : IDataBaseOperation
     {
 
-        public BaseDatabase(string provider, string connStr)
+        internal BaseDatabase(string provider, string connStr)
         {
             _dbContext = new MyDbContext(provider, connStr);
         }
@@ -28,17 +28,13 @@ namespace WebApiCore.EF.DataBase
             return this;
         }
 
-        #region Fields
         private readonly DbContext _dbContext = null;
         private IDbContextTransaction _dbContextTransaction = null;
-        #endregion
 
-        #region Properties
         public DbContext DbContext { get => _dbContext; }
         public IDbContextTransaction DbContextTransaction { get => _dbContextTransaction; }
-        #endregion
 
-        #region Transcation Operate
+
 
         public virtual async Task<IDataBaseOperation> EnsureDeletedAsync()
         {
@@ -50,6 +46,7 @@ namespace WebApiCore.EF.DataBase
             await _dbContext.Database.EnsureCreatedAsync();
             return this;
         }
+
 
 
         public virtual async Task<IDataBaseOperation> BeginTransAsync()
@@ -118,153 +115,103 @@ namespace WebApiCore.EF.DataBase
         {
             await _dbContext.DisposeAsync();
         }
-        #endregion
 
-        #region Sql Exec
 
-        public virtual async Task<int> ExecuteSqlRawAsync(string strSql, params DbParameter[] dbParameter)
+
+        public IQueryable<T> AsQueryable<T>() where T : class
+        {
+            return this._dbContext.Set<T>().AsQueryable();
+        }
+
+
+
+        public virtual async Task<int> RunSqlAsync(string strSql, params DbParameter[] dbParameter)
         {
             await _dbContext.Database.ExecuteSqlRawAsync(strSql, dbParameter);
             return await GetReuslt();
         }
-        public virtual async Task<int> ExecuteSqlInterpolatedAsync(FormattableString strSql)
+        public virtual async Task<int> RunSqlInterAsync(FormattableString strSql)
         {
             await _dbContext.Database.ExecuteSqlInterpolatedAsync(strSql);
             return await GetReuslt();
         }
-
-        public virtual async Task<int> ExecuteByProcAsync(string procName, params DbParameter[] dbParameter)
+        public virtual async Task<int> ExecProcAsync(string procName, params DbParameter[] dbParameter)
         {
-            await this.ExecuteSqlRawAsync($"EXEC {procName}", dbParameter);
+            await this.RunSqlAsync($"EXEC {procName}", dbParameter);
             return await GetReuslt();
         }
 
-        #endregion
 
-        #region Insert
 
-        public virtual async Task<int> InsertAsync<T>(T entity) where T : class
-        {
-            _dbContext.Set<T>().Add(entity);
-            return await GetReuslt();
-        }
-
-        public virtual async Task<int> InsertAsync<T>(IEnumerable<T> entities) where T : class
-        {
-            await _dbContext.Set<T>().AddRangeAsync(entities);
-            return await GetReuslt();
-        }
-
-        #endregion
-
-        #region Delete
         public virtual async Task<int> DeleteAsync<T>(T entity) where T : class
         {
             _dbContext.Set<T>().Remove(entity);
             return await GetReuslt();
         }
-
-        public virtual async Task<int> DeleteAsync(params object[] entities)
-        {
-            _dbContext.RemoveRange(entities);
-            return await GetReuslt();
-        }
-
         public virtual async Task<int> DeleteAsync<T>(IEnumerable<T> entities) where T : class
         {
             _dbContext.Set<T>().RemoveRange(entities);
             return await GetReuslt();
         }
-
-        public virtual async Task<int> DeleteAsync<T>(int id) where T : class
+        public virtual async Task<int> DeleteAsync<T>(int keyValue) where T : class
         {
             IEntityType entityType = _dbContext.Set<T>().EntityType;
             if (entityType == null)
             {
-                throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
+                throw new NotSupportedException($"类型{entityType.Name}不符合跟踪要求!");
             }
             string tableNae = entityType.GetTableName();
             IKey key = entityType.FindPrimaryKey();
-            string fieldKey = key.GetName();
+            string fieldKey = key.Properties[0].Name;
 
-            return await this.ExecuteSqlRawAsync($"Delete From {tableNae} where {fieldKey}={id};");
+            return await this.RunSqlAsync($"Delete From {tableNae} where {fieldKey}={keyValue};");
         }
-
-        public virtual async Task<int> DeleteAsync<T>(IEnumerable<int> ids) where T : class
+        public virtual async Task<int> DeleteAsync<T>(IEnumerable<int> keyValues) where T : class
         {
             IEntityType entityType = _dbContext.Set<T>().EntityType;
             if (entityType == null)
             {
                 throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
             }
-            string tableNae = entityType.GetTableName();
+            string tableName = entityType.GetTableName();
             IKey key = entityType.FindPrimaryKey();
             string fieldKey = key.GetName();
 
-            StringBuilder sb = new StringBuilder(ids.Count() + 1);
-            sb.Append($"Delete From {tableNae} \r\n where 1=1 and ( ");
-            sb.AppendJoin(" or ", ids.Select(x => $" {fieldKey} = {x} "));
+            StringBuilder sb = new StringBuilder(keyValues.Count() + 1);
+            sb.Append($"Delete From {tableName} \r\n where 1=1 and ( ");
+            sb.AppendJoin(" or ", keyValues.Select(x => $" {fieldKey} = {x} "));
             sb.Append(" );");
 
-            return await this.ExecuteSqlRawAsync(sb.ToString());
+            return await this.RunSqlAsync(sb.ToString());
         }
-
-        public virtual async Task<int> DeleteAsync<T, TProp>(TProp propertyName, TProp propertyValue) where TProp : MemberInfo where T : class
+        public virtual async Task<int> DeleteAsync<T>(string propName, object propValue) where T : class
         {
             IEntityType entityType = _dbContext.Set<T>().EntityType;
             if (entityType == null)
             {
                 throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
             }
-            string tableNae = entityType.GetTableName();
+            string tableName = entityType.GetTableName();
 
-            return await this.ExecuteSqlRawAsync($"Delete From {tableNae} where {propertyName.Name}='{propertyValue}';");
+            return await this.RunSqlAsync($"Delete From {tableName} where {propName}='{propValue}';");
         }
 
-        #endregion
 
-
-
-        public virtual async Task<T> FindEntityAsync<T>(object KeyValue) where T : class
+        public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sortColumn, bool isAsc, int pageSize, int pageIndex) where T : class
         {
-            return await _dbContext.Set<T>().FindAsync(KeyValue);
+            var tempData = _dbContext.Set<T>().AsQueryable();
+            return await this.FindListAsync<T>(tempData, sortColumn, isAsc, pageSize, pageIndex);
         }
-
-        public virtual async Task<T> FindEntityAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(Expression<Func<T, bool>> condition, string sortColumn,
+                                                                                     bool isAsc, int pageSize, int pageIndex) where T : class
         {
-            return await _dbContext.Set<T>().Where(predicate).FirstOrDefaultAsync();
+            var tempData = _dbContext.Set<T>().Where(condition);
+            return await this.FindListAsync<T>(tempData, sortColumn, isAsc, pageSize, pageIndex);
         }
-
-        public virtual async Task<IEnumerable<T>> FindListAsync<T>() where T : class, new()
+        private async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(IQueryable<T> tmpdata, string sortColumn, bool isAsc,
+                                                                              int pageSize, int pageIndex) where T : class
         {
-            return await _dbContext.Set<T>().ToListAsync();
-        }
-
-        public virtual async Task<IEnumerable<T>> FindListASCAsync<T>(Expression<Func<T, object>> predicate) where T : class, new()
-        {
-            return await _dbContext.Set<T>().OrderBy(predicate).ToListAsync();
-        }
-
-        public virtual async Task<IEnumerable<T>> FindListDESCAsync<T>(Expression<Func<T, object>> predicate) where T : class, new()
-        {
-            return await _dbContext.Set<T>().OrderByDescending(predicate).ToListAsync();
-        }
-
-        public virtual async Task<IEnumerable<T>> FindListAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
-        {
-            return await _dbContext.Set<T>().Where(predicate).ToListAsync();
-        }
-
-        public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sort, bool isAsc, int pageSize, int pageIndex) where T : class, new()
-        {
-            var tmpData = _dbContext.Set<T>().AsQueryable();
-            return await FindListAsync<T>(tmpData, sort, isAsc, pageSize, pageIndex);
-        }
-
-        private async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(IQueryable<T> tmpdata, string sort, bool isAsc,
-                                                                              int pageSize, int pageIndex) where T : class, new()
-        {
-            tmpdata = DBExtension.PaginationSort<T>(tmpdata, sort, isAsc);
+            tmpdata = DBExtension.PaginationSort<T>(tmpdata, sortColumn, isAsc);
 
             var list = await tmpdata.ToListAsync();
             if (list?.Count > 0)
@@ -278,63 +225,86 @@ namespace WebApiCore.EF.DataBase
             }
         }
 
-        public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(Expression<Func<T, bool>> condition, string sort,
-                                                                                     bool isAsc, int pageSize, int pageIndex) where T : class, new()
-        {
-            var tempData = _dbContext.Set<T>().Where(condition);
-            return await FindListAsync<T>(tempData, sort, isAsc, pageSize, pageIndex);
-        }
 
-
-        public virtual async Task<object> FindObjectAsync(string strSql)
-        {
-            return await this.FindObjectAsync(strSql, null);
-        }
-
-        public virtual async Task<object> FindObjectAsync(string strSql, DbParameter[] dbParameter)
-        {
-            return await DBHelper.GetInstance(_dbContext).GetScalar(strSql, dbParameter);
-        }
-
-        public virtual async Task<DataTable> FindTableAsync(string strSql)
-        {
-            return await this.FindTableAsync(strSql, null);
-        }
-
-        public virtual async Task<DataTable> FindTableAsync(string strSql, DbParameter[] dbParameter)
-        {
-            return await DBHelper.GetInstance(_dbContext).GetDataTable(strSql, dbParameter);
-        }
-
-        public virtual IQueryable<T> AsQueryableAsync<T>() where T : class, new()
-        {
-            return _dbContext.Set<T>().AsQueryable<T>();
-        }
 
         public virtual async Task<int> UpdateAsync<T>(T entity) where T : class
         {
             _dbContext.Set<T>().Update(entity);
             return await GetReuslt();
         }
-
         public virtual async Task<int> UpdateAsync<T>(IEnumerable<T> entities) where T : class
         {
             _dbContext.Set<T>().UpdateRange(entities);
             return await GetReuslt();
         }
 
-        public virtual async Task<int> UpdateAllFieldAsync<T>(T entity) where T : class
+
+
+
+
+        public virtual async Task<int> AddAsync<T>(T entity) where T : class
         {
-            _dbContext.Set<T>().Update(entity);
+            this._dbContext.Set<T>().Add(entity);
+            return await GetReuslt();
+        }
+        public virtual async Task<int> AddAsync<T>(IEnumerable<T> entities) where T : class
+        {
+            await this._dbContext.Set<T>().AddRangeAsync(entities);
             return await GetReuslt();
         }
 
 
+
+        public virtual async Task<T> FindAsync<T>(params object[] keyValues) where T : class
+        {
+            return await _dbContext.Set<T>().FindAsync(keyValues);
+        }
+        public virtual async Task<T> FindAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return await _dbContext.Set<T>().FindAsync(predicate);
+        }
+        public virtual async Task<IEnumerable<T>> FindListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            if (predicate == null)
+            {
+                return await _dbContext.Set<T>().ToListAsync();
+            }
+            return await _dbContext.Set<T>().Where(predicate).ToListAsync();
+        }
+        public virtual async Task<IEnumerable<T>> FindListByOrderAsync<T>(Expression<Func<T, object>> predicate, bool isAsc) where T : class
+        {
+            if (isAsc)
+            {
+                return await _dbContext.Set<T>().OrderBy(predicate).ToListAsync();
+            }
+            return await _dbContext.Set<T>().OrderByDescending(predicate).ToListAsync();
+        }
+
+
+
+        public virtual async Task<DataTable> GetTableAsync(string strSql, params DbParameter[] dbParameter)
+        {
+            return await DBHelper.GetInstance(this._dbContext).GetDataTable(strSql, dbParameter);
+        }
+        public virtual async Task<IDataReader> GetReaderAsync(string strSql, params DbParameter[] dbParameter)
+        {
+            return await DBHelper.GetInstance(this._dbContext).GetDataReader(strSql, dbParameter);
+        }
+        public virtual async Task<object> GetScalarAsync(string strSql, params DbParameter[] dbParameter)
+        {
+            return await DBHelper.GetInstance(this._dbContext).GetScalar(strSql, dbParameter);
+        }
+
+
+
+
         private async Task<int> GetReuslt()
         {
-            return _dbContextTransaction == null//当前事务
-                ? await this.CommitTransAsync() //没有事务立即提交
-                : 0;                            //有事务就返回0;
+            return _dbContextTransaction == null//如果没有事务
+                ? await this.CommitTransAsync() //那么立即提交
+                : 0;                            //否则返回0;
         }
+
+
     }
 }

@@ -46,8 +46,6 @@ namespace WebApiCore.EF
                 throw new NotImplementedException("未知的数据引擎");
 
             optionsBuilder.AddInterceptors(new DbCommandCustomInterceptor());
-
-
         }
 
 
@@ -66,7 +64,7 @@ namespace WebApiCore.EF
                 }
                 modelBuilder.Entity(entityType);
             }
-
+            
             ConfigModel.Build(modelBuilder);
 
             base.OnModelCreating(modelBuilder);

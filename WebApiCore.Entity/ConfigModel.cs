@@ -15,6 +15,11 @@ namespace WebApiCore.EF
             modelBuilder.Entity<Blog>()
                 .OwnsOne(x => x.Profile)
                 .WithOwner(x => x.Blog);
+
+            modelBuilder.Entity<Blog>()
+                .HasMany(x => x.Posts)
+                .WithOne(x => x.Blog)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

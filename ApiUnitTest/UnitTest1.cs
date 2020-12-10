@@ -50,7 +50,7 @@ namespace ApiUnitTest
                  }
             };
 
-            await GetInterface().InsertAsync<Blog>(blog);
+            await GetInterface().AddAsync<Blog>(blog);
         }
 
 
@@ -61,15 +61,12 @@ namespace ApiUnitTest
 
             try
             {
-                op.IQueryableAsync<Blog>(x => x.BlogId == 1).Include(
-                Blog blog = await op.FindEntityAsync<Blog>(x => x.BlogId == 2);
-                await op.DbContext.Entry(blog).Collection(x => x.Posts).LoadAsync();
 
-                var a = await op.CommitTransAsync();
             }
-            catch (System.Exception)
+            catch
             {
                 await op.RollbackTransAsync();
+                throw;
             }
         }
 
@@ -80,9 +77,9 @@ namespace ApiUnitTest
 
             try
             {
-                Blog blog = await op.FindEntityAsync<Blog>(2);
-                blog.Url = Guid.NewGuid().ToString();
-                var a = await op.CommitTransAsync();
+                //Blog blog = await op.FindEntityAsync<Blog>(2);
+                //blog.Url = Guid.NewGuid().ToString();
+                //var a = await op.CommitTransAsync();
             }
             catch (System.Exception)
             {

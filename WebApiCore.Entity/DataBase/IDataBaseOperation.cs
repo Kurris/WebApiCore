@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -89,7 +90,7 @@ namespace WebApiCore.EF.DataBase
         /// </summary>
         /// <typeparam name="T">类型</typeparam>
         /// <returns></returns>
-        IQueryable<T> AsQueryable<T>() where T : class, new();
+        IQueryable<T> AsQueryable<T>() where T : class;
 
         /// <summary>
         /// 执行SQL
@@ -181,12 +182,20 @@ namespace WebApiCore.EF.DataBase
         Task<int> DeleteAsync<T>(IEnumerable<int> keyValues) where T : class;
 
         /// <summary>
+        /// 删除
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="predicate">表达式</param>
+        /// <returns>返回受影响行<see cref="int"/></returns>
+        Task<int> DeleteAsync<TEntity>(string propName, object propValue) where TEntity : class;
+
+        /// <summary>
         /// 查找实体
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="KeyValue">主键</param>
         /// <returns>实体<see cref="{T}"/></returns>
-        Task<T> FindAsync<T>(params object[] keyValue) where T : class;
+        Task<T> FindAsync<T>(params object[] keyValues) where T : class;
 
         /// <summary>
         /// 查找实体
@@ -253,7 +262,6 @@ namespace WebApiCore.EF.DataBase
         /// <param name="dbParameter">参数</param>
         /// <returns>首行<see cref="IDataReader"/></returns>
         Task<IDataReader> GetReaderAsync(string strSql, params DbParameter[] dbParameter);
-
 
         /// <summary>
         /// 获取首行首列值

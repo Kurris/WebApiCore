@@ -17,7 +17,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="sort"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public static IQueryable<T> PaginationSort<T>(IQueryable<T> tmpData, string sort, bool isAsc) where T : class, new()
+        public static IQueryable<T> PaginationSort<T>(IQueryable<T> tmpData, string sort, bool isAsc) where T : class
         {
             string[] sortArr = sort.Split(',');
 
