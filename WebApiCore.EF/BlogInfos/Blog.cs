@@ -6,19 +6,15 @@ using System.Text;
 
 namespace WebApiCore.Entity.BlogInfos
 {
-    [Table("t_sys_blog")]
-    public class Blog :BaseEntity
+    [Table("Blogs")]
+    public class Blog : BaseEntity
     {
+        [Key]
+        public int BlogId { get; set; }
         public string Url { get; set; }
 
-        public BlogType BlogType { get; set; }
-
+        public Profile Profile { get; set; }
+       
         public List<Post> Posts { get; set; }
-    }
-
-    public enum BlogType
-    {
-        CSDN = 0,
-        MSDN = 1
     }
 }

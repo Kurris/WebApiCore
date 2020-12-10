@@ -25,7 +25,7 @@ namespace WebApiCore.Utils.Model
         /// <summary>
         /// 排序列
         /// </summary>
-        public string SortColumn { get; set; } = "Id"; //默认Id为排序列
+        public string SortColumn { get; set; }
 
         /// <summary>
         /// 排序类型

@@ -30,7 +30,7 @@ namespace Ligy.Project.WebApi
                    setupAction.SwaggerDoc("V1", new Microsoft.OpenApi.Models.OpenApiInfo()
                    {
                        Version = "Ver 1",
-                       Title = "Ligy WebApi",
+                       Title = "MyBlog WebApi",
                    });
                });
 
@@ -75,7 +75,7 @@ namespace Ligy.Project.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
-                option.SwaggerEndpoint("/swagger/V1/swagger.json", "Ligy.Project.WebApi");
+                option.SwaggerEndpoint("/swagger/V1/swagger.json", "MyBlog WebApi");
             });
 
             app.UseRouting();

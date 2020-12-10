@@ -15,7 +15,7 @@ using WebApiCore.Entity.BlogInfos;
 
 namespace WebApiCore.EF.DataBase
 {
-    public abstract class BaseDatabase : IDataBaseOperation
+    public abstract class BaseDatabase //IDataBaseOperation
     {
 
         public BaseDatabase(string provider, string connStr)
@@ -121,11 +121,7 @@ namespace WebApiCore.EF.DataBase
         #endregion
 
         #region Sql Exec
-        public virtual async Task<int> ExecuteSqlRawAsync(string strSql)
-        {
-            await _dbContext.Database.ExecuteSqlRawAsync(strSql);
-            return await GetReuslt();
-        }
+
         public virtual async Task<int> ExecuteSqlRawAsync(string strSql, params DbParameter[] dbParameter)
         {
             await _dbContext.Database.ExecuteSqlRawAsync(strSql, dbParameter);
@@ -136,14 +132,10 @@ namespace WebApiCore.EF.DataBase
             await _dbContext.Database.ExecuteSqlInterpolatedAsync(strSql);
             return await GetReuslt();
         }
-        public virtual async Task<int> ExecuteByProcAsync(string procName)
+
+        public virtual async Task<int> ExecuteByProcAsync(string procName, params DbParameter[] dbParameter)
         {
-            await this.ExecuteSqlRawAsync($"EXEC {procName}");
-            return await GetReuslt();
-        }
-        public virtual async Task<int> ExecuteByProcAsync(string procName, DbParameter[] dbParameter)
-        {
-            await this.ExecuteSqlRawAsync(procName, dbParameter);
+            await this.ExecuteSqlRawAsync($"EXEC {procName}", dbParameter);
             return await GetReuslt();
         }
 
@@ -154,12 +146,6 @@ namespace WebApiCore.EF.DataBase
         public virtual async Task<int> InsertAsync<T>(T entity) where T : class
         {
             _dbContext.Set<T>().Add(entity);
-            return await GetReuslt();
-        }
-
-        public virtual async Task<int> InsertAsync(params object[] entities)
-        {
-            await _dbContext.AddRangeAsync(entities);
             return await GetReuslt();
         }
 
@@ -198,7 +184,8 @@ namespace WebApiCore.EF.DataBase
                 throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
             }
             string tableNae = entityType.GetTableName();
-            string fieldKey = "Id";
+            IKey key = entityType.FindPrimaryKey();
+            string fieldKey = key.GetName();
 
             return await this.ExecuteSqlRawAsync($"Delete From {tableNae} where {fieldKey}={id};");
         }
@@ -211,7 +198,8 @@ namespace WebApiCore.EF.DataBase
                 throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
             }
             string tableNae = entityType.GetTableName();
-            string fieldKey = "Id";
+            IKey key = entityType.FindPrimaryKey();
+            string fieldKey = key.GetName();
 
             StringBuilder sb = new StringBuilder(ids.Count() + 1);
             sb.Append($"Delete From {tableNae} \r\n where 1=1 and ( ");
@@ -318,9 +306,9 @@ namespace WebApiCore.EF.DataBase
             return await DBHelper.GetInstance(_dbContext).GetDataTable(strSql, dbParameter);
         }
 
-        public virtual IQueryable<T> IQueryableAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        public virtual IQueryable<T> AsQueryableAsync<T>() where T : class, new()
         {
-            return _dbContext.Set<T>().Where(predicate);
+            return _dbContext.Set<T>().AsQueryable<T>();
         }
 
         public virtual async Task<int> UpdateAsync<T>(T entity) where T : class

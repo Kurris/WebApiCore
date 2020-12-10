@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using WebApiCore.Entity;
+using WebApiCore.Entity.BlogInfos;
 
 namespace WebApiCore.EF
 {
@@ -43,33 +46,52 @@ namespace WebApiCore.EF
                 throw new NotImplementedException("未知的数据引擎");
 
             optionsBuilder.AddInterceptors(new DbCommandCustomInterceptor());
+
+
         }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            Assembly entityAssembly = Assembly.Load(new AssemblyName("WebApiCore.Entity"));
-            IEnumerable<Type> typesToRegister = entityAssembly.GetTypes().Where(p => !string.IsNullOrEmpty(p.Namespace))
-                                                                         .Where(p => !string.IsNullOrEmpty(p.GetCustomAttribute<TableAttribute>()?.Name))
-                                                                         .Where(p => p.IsSubclassOf(typeof(BaseEntity)));
-            foreach (Type type in typesToRegister)
+        {      
+            var entityTypes = Assembly.Load(new AssemblyName("WebApiCore.Entity"))
+                .GetTypes().Where(x => x.IsSubclassOf(typeof(BaseEntity))
+                               && x.IsDefined(typeof(TableAttribute)));
+
+            
+            foreach (var entityType in entityTypes)
             {
-                if (modelBuilder.Model.GetEntityTypes().Any(x => x.Name == type.FullName))
+                if (modelBuilder.Model.GetEntityTypes().Any(x=>x.Name.Equals(entityType.FullName)))
                 {
                     continue;
                 }
-                dynamic configurationInstance = Activator.CreateInstance(type);
-                modelBuilder.Model.AddEntityType(type);
+                modelBuilder.Entity(entityType);
             }
-            foreach (var entity in modelBuilder.Model.GetEntityTypes())
-            {
-                string currentTableName = modelBuilder.Entity(entity.Name).Metadata.GetTableName();
-                modelBuilder.Entity(entity.Name).ToTable(currentTableName);
 
-                modelBuilder.Entity(entity.Name)
-                    .Property("Id");
-            }
+            ConfigModel.Build(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        /// <summary>
+        /// 重写SaveChangesAsync
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var item in this.ChangeTracker.Entries())
+            {
+                if (item.State == EntityState.Added)
+                {
+                    item.Property("CreateTime").CurrentValue = DateTime.Now;
+                }
+                else if (item.State == EntityState.Modified)
+                {
+                    item.Property("ModifyTime").CurrentValue = DateTime.Now;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

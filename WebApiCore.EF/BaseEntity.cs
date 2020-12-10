@@ -11,11 +11,8 @@ namespace WebApiCore.Entity
     public class BaseEntity
     {
 
-        [Key]
-        public int Id { get; set; }
-
         public DateTime CreateTime { get; set; }
 
-        public DateTime ModifyTime { get; set; }
+        public DateTime? ModifyTime { get; set; }
     }
 }

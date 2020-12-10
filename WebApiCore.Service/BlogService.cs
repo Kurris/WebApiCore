@@ -13,14 +13,10 @@ namespace WebApiCore.Service
     {
         public async Task<IEnumerable<Blog>> GetBlogs()
         {
-            //var page = new PaginationParam();
+            var page = new PaginationParam();
 
-            //var (total, lis) = await InitDB.Create().FindListAsync<Blog>(page.SortColumn, page.IsASC, page.PageSize, page.CurrentPage);
-            //return lis;
-
-
-            var aaa = await InitDB.Create().FindObjectAsync("delete from t_sys_blog");
-            return (IEnumerable<Blog>)aaa;
+            var (total, lis) = await InitDB.Create().FindListAsync<Blog>(page.SortColumn, page.IsASC, page.PageSize, page.CurrentPage);
+            return lis;
         }
     }
 }
