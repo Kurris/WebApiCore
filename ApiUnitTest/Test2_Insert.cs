@@ -97,5 +97,28 @@ namespace ApiUnitTest
                 throw;
             }
         }
+
+        [TestMethod]
+        public async Task Insert3_5000()
+        {
+            var op = await Interface.BeginTransAsync();
+            try
+            {
+                for (int i = 0; i < 5000; i++)
+                {
+                    await op.AddAsync(new Blog()
+                    {
+                        Url = Guid.NewGuid().ToString()
+                    });
+                }
+               
+                await op.CommitTransAsync();
+            }
+            catch (Exception)
+            {
+                await op.RollbackTransAsync();
+                throw;
+            }
+        }
     }
 }

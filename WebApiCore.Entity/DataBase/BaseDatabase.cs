@@ -118,6 +118,7 @@ namespace WebApiCore.EF.DataBase
         }
 
 
+
         public virtual IQueryable<T> AsQueryable<T>(Expression<Func<T, bool>> predicate) where T : class
         {
             return this.AsQueryable<T>().Where(predicate);
@@ -131,7 +132,6 @@ namespace WebApiCore.EF.DataBase
 
         public virtual async Task<int> RunSqlAsync(string strSql, IDictionary<string, object> keyValues = null)
         {
-
             if (keyValues != null)
             {
                 DbParameterBuilder dbParameterBuilder = new DbParameterBuilder(this._dbContext);
@@ -193,7 +193,7 @@ namespace WebApiCore.EF.DataBase
             }
             string tableName = entityType.GetTableName();
             IKey key = entityType.FindPrimaryKey();
-            string fieldKey = key.GetName();
+            string fieldKey = key.Properties[0].Name;
 
             StringBuilder sb = new StringBuilder(keyValues.Count() + 1);
             sb.Append($"Delete From {tableName} \r\n where 1=1 and ( ");
@@ -211,9 +211,15 @@ namespace WebApiCore.EF.DataBase
             }
             string tableName = entityType.GetTableName();
 
-            return await this.RunSqlAsync($"Delete From {tableName} where {propName}='{propValue}';");
+            return await this.RunSqlAsync($"Delete From {tableName} where {propName}=@" + propName + ";", new Dictionary<string, object>()
+            {
+                [propName] = propValue
+            });
         }
-
+        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            throw new NotImplementedException();
+        }
 
         public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sortColumn, bool isAsc, int pageSize, int pageIndex) where T : class
         {
@@ -291,7 +297,7 @@ namespace WebApiCore.EF.DataBase
         }
         public virtual async Task<T> FindAsync<T>(Expression<Func<T, bool>> predicate) where T : class
         {
-            return await _dbContext.Set<T>().FindAsync(predicate);
+            return await _dbContext.Set<T>().FirstOrDefaultAsync(predicate);
         }
         public virtual async Task<IEnumerable<T>> FindListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
         {

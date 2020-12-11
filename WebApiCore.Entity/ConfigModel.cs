@@ -15,7 +15,8 @@ namespace WebApiCore.EF
             modelBuilder.Entity<Blog>()
                 .HasOne(x => x.Profile)
                 .WithOne(x => x.Blog)
-                .HasForeignKey<Profile>("BlogId");
+                .HasForeignKey<Profile>("BlogId")
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Blog>()
                 .HasMany(x => x.Posts)

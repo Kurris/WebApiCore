@@ -195,13 +195,22 @@ namespace WebApiCore.EF.DataBase
         /// <summary>
         /// 删除
         /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="predicate">表达式</param>
-        /// <returns>返回受影响行<see cref="int"/></returns>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="propName">字段</param>
+        /// <param name="propValue">值</param>
+        /// <returns></returns>
         Task<int> DeleteAsync<TEntity>(string propName, object propValue) where TEntity : class;
 
         /// <summary>
-        /// 查找实体
+        /// 删除
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="predicate">表达式</param>
+        /// <returns>返回受影响行<see cref="int"/></returns>
+        Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class;
+
+        /// <summary>
+        /// 根据主键查找实体
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="KeyValue">主键</param>
