@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,55 +10,49 @@ using System.Threading.Tasks;
 
 namespace WebApiCore.EF.DataBase
 {
-    public sealed class DBHelper
+    internal sealed class DBHelper
     {
-        private DBHelper() { }
+        private readonly DbContext _dbContext = null;
+        private readonly DbProviderFactory _dbProviderFactory = null;
 
-        private static DbContext _dbContext = null;
-        private readonly static DBHelper _dbHelper = new DBHelper();
-
-        public static DBHelper GetInstance(DbContext dbContext)
+        internal DBHelper(DbContext dbContext)
         {
             _dbContext = dbContext;
 
-            return _dbHelper;
+            _dbProviderFactory = DbProviderFactories.GetFactory(_dbContext.Database.GetDbConnection());
         }
-
 
         /// <summary>
         /// 创建DbCommand对象,打开连接,打开事务
         /// </summary>
         /// <param name="sql">执行语句</param>
         /// <param name="parameters">参数数组</param>
-        /// <returns>DbCommand</returns>
+        /// <returns>IDbCommand</returns>
         private async Task<DbCommand> CreateDbCommand(string sql, DbParameter[] parameters)
         {
             try
             {
-                DbConnection dbConnection = _dbContext.Database.GetDbConnection();
-                DbCommand command = dbConnection.CreateCommand();
+                var dbConnection = _dbContext.Database.GetDbConnection();
+                var cmd = dbConnection.CreateCommand();
 
-                command.CommandText = sql;
+                cmd.CommandText = sql;
+                cmd.Transaction = _dbContext.Database.CurrentTransaction.GetDbTransaction();
 
                 if (parameters != null && parameters.Length != 0)
                 {
-                    command.Parameters.AddRange(parameters);
+                    cmd.Parameters.AddRange(parameters);
                 }
 
-                if (command.Connection.State == ConnectionState.Closed)
+                if (cmd.Connection.State == ConnectionState.Closed)
                 {
-                    await command.Connection.OpenAsync();
+                    await cmd.Connection.OpenAsync();
                 }
 
-                return command;
+                return cmd;
             }
             catch
             {
                 throw;
-            }
-            finally
-            {
-                await this.CloseAsync();
             }
         }
 
@@ -66,7 +61,7 @@ namespace WebApiCore.EF.DataBase
         /// </summary>
         /// <param name="sql">sql</param>
         /// <returns>返回受影响行数<see cref="int"/></returns>
-        public async Task<int> RunSql(string sql)
+        internal async Task<int> RunSql(string sql)
         {
             return await RunSql(sql, null);
         }
@@ -77,7 +72,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="sql">执行语句</param>
         /// <param name="parameters">参数数组</param>
         /// <returns>受影响的行数<see cref="int"/></returns>
-        public async Task<int> RunSql(string sql, DbParameter[] parameters)
+        internal async Task<int> RunSql(string sql, DbParameter[] parameters)
         {
             using DbCommand cmd = await CreateDbCommand(sql, parameters);
             try
@@ -108,7 +103,7 @@ namespace WebApiCore.EF.DataBase
         /// </summary>
         /// <param name="sql">执行语句</param>
         /// <returns>DbDataReader对象</returns>
-        public async Task<IDataReader> GetDataReader(string sql)
+        internal async Task<IDataReader> GetDataReader(string sql)
         {
             return await GetDataReader(sql, null);
         }
@@ -120,7 +115,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="commandType">执行命令类型</param>
         /// <param name="parameters">参数数组</param>
         /// <returns>DbDataReader对象</returns>
-        public async Task<IDataReader> GetDataReader(string sql, DbParameter[] parameters)
+        internal async Task<IDataReader> GetDataReader(string sql, DbParameter[] parameters)
         {
             DbCommand cmd = await CreateDbCommand(sql, parameters);
 
@@ -153,7 +148,7 @@ namespace WebApiCore.EF.DataBase
         /// </summary>
         /// <param name="sql">执行语句</param>
         /// <returns>DataTable</returns>
-        public async Task<DataTable> GetDataTable(string sql)
+        internal async Task<DataTable> GetDataTable(string sql)
         {
             return await GetDataTable(sql, null);
         }
@@ -164,38 +159,29 @@ namespace WebApiCore.EF.DataBase
         /// <param name="sql">执行语句</param>
         /// <param name="parameters">参数数组</param>
         /// <returns><see cref="DataTable"</returns>
-        public async Task<DataTable> GetDataTable(string sql, DbParameter[] parameters)
+        internal async Task<DataTable> GetDataTable(string sql, DbParameter[] parameters)
         {
             using DbCommand cmd = await CreateDbCommand(sql, parameters);
             using IDataReader reader = await cmd.ExecuteReaderAsync();
             try
             {
-                DataTable dt = reader.GetSchemaTable();
-                object[] drs = new object[reader.FieldCount];
-                dt.BeginLoadData();
-                while (reader.Read())
-                {
-                    reader.GetValues(drs);
-                    dt.Rows.Add(drs);
-                }
-                dt.EndLoadData();
+                using var adapter = _dbProviderFactory.CreateDataAdapter();
+                adapter.SelectCommand = cmd;
 
-                if (cmd.Transaction != null)
-                {
-                    await cmd.Transaction.CommitAsync();
-                }
-
-                await this.CloseAsync();
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
                 return dt;
             }
             catch
             {
+                await cmd.DisposeAsync();
+                reader.Dispose();
                 throw;
             }
             finally
             {
-                if (cmd.Transaction == null)
+                if (_dbContext.Database.CurrentTransaction == null)
                 {
                     await this.CloseAsync();
                 }
@@ -208,7 +194,7 @@ namespace WebApiCore.EF.DataBase
         /// </summary>
         /// <param name="sql">执行语句</param>
         /// <returns>首行首列</returns>
-        public async Task<object> GetScalar(string sql)
+        internal async Task<object> GetScalar(string sql)
         {
             return await GetScalar(sql, null);
         }
@@ -219,7 +205,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="sql">执行语句</param>
         /// <param name="parameters">参数数组</param>
         /// <returns>首行首列object</returns>
-        public async Task<object> GetScalar(string sql, DbParameter[] parameters)
+        internal async Task<object> GetScalar(string sql, DbParameter[] parameters)
         {
             using DbCommand cmd = await CreateDbCommand(sql, parameters);
             try
@@ -246,6 +232,21 @@ namespace WebApiCore.EF.DataBase
             }
         }
 
+        private readonly DbParameterBuilder _dbParameterBuilder = new DbParameterBuilder();
+
+        internal DbParameterBuilder SetParam(string name, object value)
+        {
+            var para = _dbProviderFactory.CreateParameter();
+            para.ParameterName = name;
+            para.Value = value;
+
+            _dbParameterBuilder.SetParams(para);
+
+            return _dbParameterBuilder;
+        }
+
+        internal DbParameter[] GetParams() => _dbParameterBuilder.GetParams();
+
         /// <summary>
         /// 释放上下文对象
         /// </summary>
@@ -255,6 +256,54 @@ namespace WebApiCore.EF.DataBase
 #pragma warning restore CA1822 // 将成员标记为 static
         {
             await _dbContext.DisposeAsync();
+        }
+    }
+
+    class DbParameterBuilder
+    {
+        internal DbParameterBuilder()
+        {
+
+        }
+
+        internal DbParameterBuilder(DbContext dbContext)
+        {
+            this._dbContext = dbContext;
+        }
+        private List<DbParameter> _dbParameters = new List<DbParameter>();
+        private readonly DbContext _dbContext;
+        private DbProviderFactory _dbProviderFactory = null;
+
+        internal DbProviderFactory DbProviderFactory
+        {
+            get
+            {
+                if (_dbProviderFactory == null)
+                {
+                    _dbProviderFactory = DbProviderFactories.GetFactory(_dbContext.Database.GetDbConnection());
+                }
+                return _dbProviderFactory;
+            }
+        }
+
+        internal DbParameter[] GetParams()
+        {
+            return _dbParameters.ToArray();
+        }
+        internal void SetParams(DbParameter dbParameter)
+        {
+            _dbParameters.Add(dbParameter);
+        }
+
+        internal DbParameterBuilder SetParams(string name,object value)
+        {
+            var para = _dbProviderFactory.CreateParameter();
+            para.ParameterName = name;
+            para.Value = value;
+
+            _dbParameters.Add(para);
+
+            return this;
         }
     }
 }

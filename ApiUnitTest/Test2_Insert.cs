@@ -16,7 +16,7 @@ namespace ApiUnitTest
         public IDataBaseOperation Interface { get => Test1_ConnectionAndDBGenerate.GetInterface(); }
 
         [TestMethod]
-        public async Task InsertSingleEntity()
+        public async Task Insert1_Single()
         {
             var op = await Interface.BeginTransAsync();
             try
@@ -28,7 +28,7 @@ namespace ApiUnitTest
                     {
                         Age = 23,
                         Name = "Ligy",
-                        Gender = Gender.ÄÐ,
+                        Gender = Gender.Å®,
                         Email = "Ligy.97@foxmail.com",
                     },
                     Posts = new List<Post>()
@@ -48,7 +48,7 @@ namespace ApiUnitTest
         }
 
         [TestMethod]
-        public async Task InsertEntitites()
+        public async Task Insert2_Multi()
         {
             var op = await Interface.BeginTransAsync();
             try

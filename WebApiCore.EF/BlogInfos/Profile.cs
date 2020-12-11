@@ -15,7 +15,7 @@ namespace WebApiCore.Entity.BlogInfos
         public int ProfileId { get; set; }
         public byte[] Avatar { get; set; }
         public string Name { get; set; }
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         public int Age { get; set; }
         public string Email { get; set; }
         public Blog Blog { get; set; }

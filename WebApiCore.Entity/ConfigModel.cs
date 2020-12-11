@@ -13,13 +13,21 @@ namespace WebApiCore.EF
         public static void Build(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Blog>()
-                .OwnsOne(x => x.Profile)
-                .WithOwner(x => x.Blog);
+                .HasOne(x => x.Profile)
+                .WithOne(x => x.Blog)
+                .HasForeignKey<Profile>("BlogId");
 
             modelBuilder.Entity<Blog>()
                 .HasMany(x => x.Posts)
                 .WithOne(x => x.Blog)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Profile>()
+                .Property(x => x.Gender)
+                .HasConversion(
+                v => v.ToString(),
+                v => (Gender)Enum.Parse(typeof(Gender), v)
+                );
         }
     }
 }

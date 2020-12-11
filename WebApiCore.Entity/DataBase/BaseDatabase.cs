@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
@@ -117,17 +118,30 @@ namespace WebApiCore.EF.DataBase
         }
 
 
-
-        public IQueryable<T> AsQueryable<T>() where T : class
+        public virtual IQueryable<T> AsQueryable<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return this.AsQueryable<T>().Where(predicate);
+        }
+        public virtual IQueryable<T> AsQueryable<T>() where T : class
         {
             return this._dbContext.Set<T>().AsQueryable();
         }
 
 
 
-        public virtual async Task<int> RunSqlAsync(string strSql, params DbParameter[] dbParameter)
+        public virtual async Task<int> RunSqlAsync(string strSql, IDictionary<string, object> keyValues = null)
         {
-            await _dbContext.Database.ExecuteSqlRawAsync(strSql, dbParameter);
+            DbParameter[] parameters = null;
+            if (keyValues != null)
+            {
+                DbParameterBuilder dbParameterBuilder = new DbParameterBuilder();
+                foreach (var item in keyValues)
+                {
+                    dbParameterBuilder.SetParams(item.Key, item.Value);
+                }
+                parameters = dbParameterBuilder.GetParams();
+            }
+            await _dbContext.Database.ExecuteSqlRawAsync(strSql, parameters);
             return await GetReuslt();
         }
         public virtual async Task<int> RunSqlInterAsync(FormattableString strSql)
@@ -135,9 +149,9 @@ namespace WebApiCore.EF.DataBase
             await _dbContext.Database.ExecuteSqlInterpolatedAsync(strSql);
             return await GetReuslt();
         }
-        public virtual async Task<int> ExecProcAsync(string procName, params DbParameter[] dbParameter)
+        public virtual async Task<int> ExecProcAsync(string procName, IDictionary<string, object> keyValues = null)
         {
-            await this.RunSqlAsync($"EXEC {procName}", dbParameter);
+            await this.RunSqlAsync($"EXEC {procName}", keyValues);
             return await GetReuslt();
         }
 
@@ -229,36 +243,24 @@ namespace WebApiCore.EF.DataBase
 
 
 
-        public virtual async Task<int> UpdateAsync<T>(T entity) where T : class
+        public virtual async Task<int> UpdateAsync<T>(T entity, bool updateAll = false) where T : class
         {
-            this._dbContext.Set<T>().Update(entity);
-            return await GetReuslt();
-        }
-        public virtual async Task<int> UpdateAsync<T>(IEnumerable<T> entities) where T : class
-        {
-            this._dbContext.Set<T>().UpdateRange(entities);
-            return await GetReuslt();
-        }
-
-
-        public virtual async Task<int> AttachAsync<T>(T entity, params string[] props) where T : class
-        {
-            var entityType = this._dbContext.Set<T>().Attach(entity);
-            foreach (var prop in props)
+            if (updateAll)
             {
-                entityType.Property(prop).IsModified = true;
+                this._dbContext.Update<T>(entity);
             }
+            else
+            {
+                DBExtension.RecursionAttach(this._dbContext, entity);
+            }
+
             return await GetReuslt();
         }
-        public virtual async Task<int> AttachAsync<T>(IEnumerable<T> entities, params string[] props) where T : class
+        public virtual async Task<int> UpdateAsync<T>(IEnumerable<T> entities, bool updateAll = false) where T : class
         {
             foreach (var entity in entities)
             {
-                var entityType = this._dbContext.Set<T>().Attach(entity);
-                foreach (var prop in props)
-                {
-                    entityType.Property(prop).IsModified = true;
-                }
+                await UpdateAsync<T>(entity, updateAll);
             }
 
             return await GetReuslt();
@@ -306,17 +308,27 @@ namespace WebApiCore.EF.DataBase
 
 
 
-        public virtual async Task<DataTable> GetTableAsync(string strSql, params DbParameter[] dbParameter)
+        public virtual async Task<DataTable> GetTableAsync(string strSql, IDictionary<string, object> keyValues = null)
         {
-            return await DBHelper.GetInstance(this._dbContext).GetDataTable(strSql, dbParameter);
+            DBHelper helper = new DBHelper(this._dbContext);
+            return await helper.GetDataTable(strSql, helper.GetParams());
         }
-        public virtual async Task<IDataReader> GetReaderAsync(string strSql, params DbParameter[] dbParameter)
+        public virtual async Task<IDataReader> GetReaderAsync(string strSql, IDictionary<string, object> keyValues = null)
         {
-            return await DBHelper.GetInstance(this._dbContext).GetDataReader(strSql, dbParameter);
+            DBHelper helper = new DBHelper(this._dbContext);
+            return await helper.GetDataReader(strSql, helper.GetParams());
         }
-        public virtual async Task<object> GetScalarAsync(string strSql, params DbParameter[] dbParameter)
+        public virtual async Task<object> GetScalarAsync(string strSql, IDictionary<string, object> keyValues = null)
         {
-            return await DBHelper.GetInstance(this._dbContext).GetScalar(strSql, dbParameter);
+            DBHelper helper = new DBHelper(this._dbContext);
+            if (keyValues != null)
+            {
+                foreach (var item in keyValues)
+                {
+                    helper.SetParam(item.Key, item.Value);
+                }
+            }
+            return await helper.GetScalar(strSql, helper.GetParams());
         }
 
 
@@ -340,7 +352,5 @@ namespace WebApiCore.EF.DataBase
         {
             await this.CloseAsync();
         }
-
-
     }
 }

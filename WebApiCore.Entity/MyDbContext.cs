@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -46,8 +47,16 @@ namespace WebApiCore.EF
                 throw new NotImplementedException("未知的数据引擎");
 
             optionsBuilder.AddInterceptors(new DbCommandCustomInterceptor());
+            optionsBuilder.LogTo(Write, (eveid, level) =>
+             {
+                 return level == LogLevel.Information;
+             });
         }
 
+        private void Write(string log)
+        {
+            Debug.WriteLine(log);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -85,7 +94,11 @@ namespace WebApiCore.EF
                 }
                 else if (item.State == EntityState.Modified)
                 {
+                    //Update的情况,创建时间不能修改
+                    item.Property("Creator").IsModified = false;
                     item.Property("CreateTime").IsModified = false;
+
+                    item.Property("Modifier").CurrentValue = item.Property("Modifier").CurrentValue ?? "System";
                     item.Property("ModifyTime").CurrentValue = DateTime.Now;
                 }
             }

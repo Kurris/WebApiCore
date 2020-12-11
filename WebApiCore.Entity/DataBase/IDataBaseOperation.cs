@@ -85,20 +85,30 @@ namespace WebApiCore.EF.DataBase
         /// <returns><see cref="Task"/></returns>
         Task CloseAsync();
 
+
         /// <summary>
         /// 转成IQueryable
         /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="predicate">表达式</param>
+        /// <returns><see cref="IQueryable{T}"/></returns>
+        IQueryable<T> AsQueryable<T>(Expression<Func<T, bool>> predicate) where T : class;
+
+
+        /// <summary>
+        /// 转成IQueryable
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <returns><see cref="IQueryable{T}"/></returns>
         IQueryable<T> AsQueryable<T>() where T : class;
 
         /// <summary>
         /// 执行SQL
         /// </summary>
         /// <param name="strSql">sql字符串</param>
-        /// <param name="dbParameter">参数</param>
+        /// <param name="keyValues">参数</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> RunSqlAsync(string strSql, params DbParameter[] dbParameter);
+        Task<int> RunSqlAsync(string strSql, IDictionary<string, object> keyValues = null);
 
         /// <summary>
         /// 执行SQL
@@ -111,9 +121,9 @@ namespace WebApiCore.EF.DataBase
         /// 执行存储过程
         /// </summary>
         /// <param name="procName">存储过程名称</param>
-        /// <param name="dbParameter">参数</param>
+        /// <param name="keyValues">参数</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> ExecProcAsync(string procName, params DbParameter[] dbParameter);
+        Task<int> ExecProcAsync(string procName, IDictionary<string, object> keyValues = null);
 
 
         /// <summary>
@@ -133,38 +143,22 @@ namespace WebApiCore.EF.DataBase
         Task<int> AddAsync<T>(IEnumerable<T> entities) where T : class;
 
         /// <summary>
-        /// 附加一个实体
-        /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="entity">实例</param>
-        /// <param name="props">变化字段</param>
-        /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> AttachAsync<T>(T entity, params string[] props) where T : class;
-
-        /// <summary>
-        /// 附加一组实体
-        /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="entities">一组实例</param>
-        /// <param name="props">变化字段</param>
-        /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> AttachAsync<T>(IEnumerable<T> entities, params string[] props) where T : class;
-
-        /// <summary>
         /// 更新一个实体
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="entity">实例</param>
+        /// <param name="updateAll">全部更新</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> UpdateAsync<T>(T entity) where T : class;
+        Task<int> UpdateAsync<T>(T entity, bool updateAll = false) where T : class;
 
         /// <summary>
         /// 更新一组实体
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="entities">一组实例</param>
+        /// <param name="updateAll">全部更新</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> UpdateAsync<T>(IEnumerable<T> entities) where T : class;
+        Task<int> UpdateAsync<T>(IEnumerable<T> entities, bool updateAll = false) where T : class;
 
         /// <summary>
         /// 删除一个实体
@@ -267,25 +261,25 @@ namespace WebApiCore.EF.DataBase
         /// 获取DataTable
         /// </summary>
         /// <param name="strSql">sql字符串</param>
-        /// <param name="dbParameter">参数</param>
+        /// <param name="keyValues">参数</param>
         /// <returns><see cref="DataTable"/></returns>
-        Task<DataTable> GetTableAsync(string strSql, params DbParameter[] dbParameter);
+        Task<DataTable> GetTableAsync(string strSql, IDictionary<string, object> keyValues = null);
 
 
         /// <summary>
         /// 获取首行数据
         /// </summary>
         /// <param name="strSql">sql字符串</param>
-        /// <param name="dbParameter">参数</param>
+        /// <param name="keyValues">参数</param>
         /// <returns>首行<see cref="IDataReader"/></returns>
-        Task<IDataReader> GetReaderAsync(string strSql, params DbParameter[] dbParameter);
+        Task<IDataReader> GetReaderAsync(string strSql, IDictionary<string, object> keyValues = null);
 
         /// <summary>
         /// 获取首行首列值
         /// </summary>
         /// <param name="strSql">sql字符串</param>
-        /// <param name="dbParameter">参数</param>
+        /// <param name="keyValues">参数</param>
         /// <returns>首行首列<see cref="object"/></returns>
-        Task<object> GetScalarAsync(string strSql, params DbParameter[] dbParameter);
+        Task<object> GetScalarAsync(string strSql, IDictionary<string, object> keyValues = null);
     }
 }
