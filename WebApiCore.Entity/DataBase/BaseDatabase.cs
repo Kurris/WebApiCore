@@ -131,17 +131,21 @@ namespace WebApiCore.EF.DataBase
 
         public virtual async Task<int> RunSqlAsync(string strSql, IDictionary<string, object> keyValues = null)
         {
-            DbParameter[] parameters = null;
+
             if (keyValues != null)
             {
-                DbParameterBuilder dbParameterBuilder = new DbParameterBuilder();
+                DbParameterBuilder dbParameterBuilder = new DbParameterBuilder(this._dbContext);
                 foreach (var item in keyValues)
                 {
                     dbParameterBuilder.SetParams(item.Key, item.Value);
                 }
-                parameters = dbParameterBuilder.GetParams();
+                await _dbContext.Database.ExecuteSqlRawAsync(strSql, dbParameterBuilder.GetParams());
             }
-            await _dbContext.Database.ExecuteSqlRawAsync(strSql, parameters);
+            else
+            {
+                await _dbContext.Database.ExecuteSqlRawAsync(strSql);
+            }
+
             return await GetReuslt();
         }
         public virtual async Task<int> RunSqlInterAsync(FormattableString strSql)
@@ -311,11 +315,25 @@ namespace WebApiCore.EF.DataBase
         public virtual async Task<DataTable> GetTableAsync(string strSql, IDictionary<string, object> keyValues = null)
         {
             DBHelper helper = new DBHelper(this._dbContext);
+            if (keyValues != null)
+            {
+                foreach (var item in keyValues)
+                {
+                    helper.SetParam(item.Key, item.Value);
+                }
+            }
             return await helper.GetDataTable(strSql, helper.GetParams());
         }
         public virtual async Task<IDataReader> GetReaderAsync(string strSql, IDictionary<string, object> keyValues = null)
         {
             DBHelper helper = new DBHelper(this._dbContext);
+            if (keyValues != null)
+            {
+                foreach (var item in keyValues)
+                {
+                    helper.SetParam(item.Key, item.Value);
+                }
+            }
             return await helper.GetDataReader(strSql, helper.GetParams());
         }
         public virtual async Task<object> GetScalarAsync(string strSql, IDictionary<string, object> keyValues = null)

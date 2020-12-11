@@ -12,7 +12,10 @@ using WebApiCore.Entity;
 
 namespace WebApiCore.EF.DataBase
 {
-    public class DBExtension
+    /// <summary>
+    /// DataBase操作扩展帮助
+    /// </summary>
+    internal class DBExtension
     {
         /// <summary>
         /// 分页帮助
@@ -22,7 +25,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="sort"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public static IQueryable<T> PaginationSort<T>(IQueryable<T> tmpData, string sort, bool isAsc) where T : class
+        internal static IQueryable<T> PaginationSort<T>(IQueryable<T> tmpData, string sort, bool isAsc) where T : class
         {
             string[] sortArr = sort.Split(',');
 
@@ -70,7 +73,7 @@ namespace WebApiCore.EF.DataBase
         /// </summary>
         /// <param name="dbContext">当前上下文</param>
         /// <param name="entity">实例</param>
-        public static void RecursionAttach(DbContext dbContext, object entity)
+        internal static void RecursionAttach(DbContext dbContext, object entity)
         {
 
             var entityType = FindTrackingEntity(dbContext, entity);

@@ -74,28 +74,26 @@ namespace WebApiCore.EF.DataBase
         /// <returns>受影响的行数<see cref="int"/></returns>
         internal async Task<int> RunSql(string sql, DbParameter[] parameters)
         {
-            using DbCommand cmd = await CreateDbCommand(sql, parameters);
-            try
+            using (DbCommand cmd = await CreateDbCommand(sql, parameters))
             {
-                int iRes = await cmd.ExecuteNonQueryAsync();
-                if (cmd.Transaction != null)
+                try
                 {
-                    await cmd.Transaction.CommitAsync();
+                    return await cmd.ExecuteNonQueryAsync();
                 }
-                await this.CloseAsync();
-                return iRes;
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (cmd.Transaction == null)
+                catch
                 {
-                    await this.CloseAsync();
+                    await cmd.DisposeAsync();
+                    throw;
+                }
+                finally
+                {
+                    if (cmd.Transaction == null)
+                    {
+                        await this.CloseAsync();
+                    }
                 }
             }
+          
         }
 
         /// <summary>
@@ -117,28 +115,23 @@ namespace WebApiCore.EF.DataBase
         /// <returns>DbDataReader对象</returns>
         internal async Task<IDataReader> GetDataReader(string sql, DbParameter[] parameters)
         {
-            DbCommand cmd = await CreateDbCommand(sql, parameters);
-
-            try
+            using (DbCommand cmd = await CreateDbCommand(sql, parameters))
             {
-                IDataReader reader = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow);
-                if (cmd.Transaction != null)
+                try
                 {
-                    await cmd.Transaction.CommitAsync();
+                    return await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow);
                 }
-                await this.CloseAsync();
-                return reader;
-            }
-            catch
-            {
-                cmd.Dispose();
-                throw;
-            }
-            finally
-            {
-                if (cmd.Transaction == null)
+                catch
                 {
-                    await this.CloseAsync();
+                    await cmd.DisposeAsync();
+                    throw;
+                }
+                finally
+                {
+                    if (cmd.Transaction == null)
+                    {
+                        await this.CloseAsync();
+                    }
                 }
             }
         }
@@ -161,29 +154,29 @@ namespace WebApiCore.EF.DataBase
         /// <returns><see cref="DataTable"</returns>
         internal async Task<DataTable> GetDataTable(string sql, DbParameter[] parameters)
         {
-            using DbCommand cmd = await CreateDbCommand(sql, parameters);
-            using IDataReader reader = await cmd.ExecuteReaderAsync();
-            try
+            using (DbCommand cmd = await CreateDbCommand(sql, parameters))
             {
-                using var adapter = _dbProviderFactory.CreateDataAdapter();
-                adapter.SelectCommand = cmd;
-
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                return dt;
-            }
-            catch
-            {
-                await cmd.DisposeAsync();
-                reader.Dispose();
-                throw;
-            }
-            finally
-            {
-                if (_dbContext.Database.CurrentTransaction == null)
+                try
                 {
-                    await this.CloseAsync();
+                    using var adapter = _dbProviderFactory.CreateDataAdapter();
+                    adapter.SelectCommand = cmd;
+
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    return dt;
+                }
+                catch
+                {
+                    await cmd.DisposeAsync();
+                    throw;
+                }
+                finally
+                {
+                    if (_dbContext.Database.CurrentTransaction == null)
+                    {
+                        await this.CloseAsync();
+                    }
                 }
             }
         }
@@ -207,29 +200,26 @@ namespace WebApiCore.EF.DataBase
         /// <returns>首行首列object</returns>
         internal async Task<object> GetScalar(string sql, DbParameter[] parameters)
         {
-            using DbCommand cmd = await CreateDbCommand(sql, parameters);
-            try
+            using (DbCommand cmd = await CreateDbCommand(sql, parameters))
             {
-                object obj = await cmd.ExecuteScalarAsync();
+                try
+                {
+                    return await cmd.ExecuteScalarAsync();
+                }
+                catch
+                {
+                    await cmd.DisposeAsync();
+                    throw;
+                }
+                finally
+                {
+                    if (cmd.Transaction == null)
+                    {
+                        await this.CloseAsync();
+                    }
+                }
+            }
 
-                if (cmd.Transaction != null)
-                {
-                    await cmd.Transaction.CommitAsync();
-                }
-                await this.CloseAsync();
-                return obj;
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (cmd.Transaction == null)
-                {
-                    await this.CloseAsync();
-                }
-            }
         }
 
         private readonly DbParameterBuilder _dbParameterBuilder = new DbParameterBuilder();
@@ -295,9 +285,9 @@ namespace WebApiCore.EF.DataBase
             _dbParameters.Add(dbParameter);
         }
 
-        internal DbParameterBuilder SetParams(string name,object value)
+        internal DbParameterBuilder SetParams(string name, object value)
         {
-            var para = _dbProviderFactory.CreateParameter();
+            var para = DbProviderFactory.CreateParameter();
             para.ParameterName = name;
             para.Value = value;
 
