@@ -216,10 +216,6 @@ namespace WebApiCore.EF.DataBase
                 [propName] = propValue
             });
         }
-        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class
-        {
-            throw new NotImplementedException();
-        }
 
         public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sortColumn, bool isAsc, int pageSize, int pageIndex) where T : class
         {
