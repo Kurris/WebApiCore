@@ -91,12 +91,37 @@ namespace ApiUnitTest
             var op = await Interface.BeginTransAsync();
             try
             {
-                var (total, lis) = await op.FindListAsync<Blog>("BlogId", true, 10, 2);
+                var (total, lis) = await op.FindListAsync<Blog>("BlogId", true, 7, 3);
 
                 var (total1, lis1) = await op.FindListAsync<Blog>("BlogId", true, 10, 5);
 
 
                 var (total2, lis2) = await op.FindListAsync<Blog>(x => x.Creator == "System", "BlogId desc", false, 20, 1);
+
+                await op.CommitTransAsync();
+            }
+            catch (Exception)
+            {
+                await op.RollbackTransAsync();
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public async Task Find6_TableBySQLPagaination()
+        {
+            var op = await Interface.BeginTransAsync();
+            try
+            {
+                IDictionary<string, object> paras = new Dictionary<string, object>()
+                {
+                    ["m"] = "system"
+                };
+
+                var (total2, lis2) = await op.FindTableAsync("select * from blogs where modifier=@m", paras, "blogid", true, 10, 1);
+
+
+                var (count, table) = await op.FindTableAsync("select * from blogs", null, "blogid", true, 7, 3);
 
                 await op.CommitTransAsync();
             }

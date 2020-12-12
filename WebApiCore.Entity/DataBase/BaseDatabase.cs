@@ -246,7 +246,34 @@ namespace WebApiCore.EF.DataBase
                 return (0, new List<T>());
             }
         }
+        public async Task<(int total, DataTable)> FindTableAsync(string strSql, IDictionary<string, object> dbParameters, string sort, bool isAsc, int pageSize, int pageIndex)
+        {
+            if (pageIndex == 0) pageIndex = 1;
+            int numLeft = (pageIndex - 1) * pageSize + 1;
+            int numRight = (pageIndex) * pageSize;
+            string OrderBy = string.Empty;
 
+            if (!string.IsNullOrEmpty(sort))
+            {
+                if (sort.ToUpper().IndexOf("ASC") + sort.ToUpper().IndexOf("DESC") > 0)
+                    OrderBy = " ORDER BY " + sort;
+                else
+                    OrderBy = " ORDER BY " + sort + " " + (isAsc ? "ASC" : "DESC");
+            }
+            else
+            {
+                OrderBy = "ORDERE BY (SELECT 0)";
+            }
+
+            string sql = $@"
+SELECT * FROM 
+(SELECT  ROW_NUMBER () OVER({OrderBy}) AS ROWNUM, * FROM ({strSql})t1 ) T2
+WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
+
+            object res = await this.GetScalarAsync($"SELECT COUNT(1) FROM ({strSql}) t", dbParameters);
+            int total = Convert.ToInt32(res);
+            return (total, await this.GetTableAsync(sql, dbParameters));
+        }
 
 
         public virtual async Task<int> UpdateAsync<T>(T entity, bool updateAll = false) where T : class

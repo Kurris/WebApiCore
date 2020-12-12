@@ -103,15 +103,5 @@ namespace ApiUnitTest
                 throw;
             }
         }
-
-
-        [TestMethod]
-        public async Task TestExp()
-        {
-
-            //var op = await Interface.BeginTransAsync();
-            //int val = 6;
-            //await op.DeleteAsync<Blog>(x => x.BlogId > val);
-        }
     }
 }

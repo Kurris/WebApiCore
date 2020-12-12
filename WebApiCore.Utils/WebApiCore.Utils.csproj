@@ -4,4 +4,12 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Extensions\Extensions.Validate.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Extensions\Extensions.Validate.cs" />
+  </ItemGroup>
+
 </Project>

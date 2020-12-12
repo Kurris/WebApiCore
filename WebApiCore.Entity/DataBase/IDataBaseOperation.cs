@@ -258,6 +258,19 @@ namespace WebApiCore.EF.DataBase
         Task<(int total, IEnumerable<T> list)> FindListAsync<T>(Expression<Func<T, bool>> predicate, string sortColumn, bool isAsc,
                                                                 int pageSize, int pageIndex) where T : class;
 
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="strSql">数据源</param>
+        /// <param name="dbParameters">参数</param>
+        /// <param name="sortColumn">排序列</param>
+        /// <param name="isAsc">ASC排序</param>
+        /// <param name="pageSize">页行数</param>
+        /// <param name="pageIndex">当前页</param>
+        /// <returns>总数<see cref="int"/> 当前页<see cref="DataTable"/></returns>
+        Task<(int total, DataTable)> FindTableAsync(string strSql, IDictionary<string, object> dbParameters, string sortColumn, bool isAsc, int pageSize, int pageIndex);
+
         /// <summary>
         /// 获取DataTable
         /// </summary>
