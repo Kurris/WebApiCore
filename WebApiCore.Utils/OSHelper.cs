@@ -18,7 +18,9 @@ namespace WebApiCore.Utils
         /// </summary>
         public static bool IsUnix { get => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux); }
 
+#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
         public static async Task<OSInfo> GetOSInfo()
+#pragma warning restore CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
         {
             OSInfo computerInfo = new OSInfo();
             try

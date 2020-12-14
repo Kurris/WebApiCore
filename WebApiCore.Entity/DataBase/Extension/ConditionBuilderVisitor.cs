@@ -97,29 +97,14 @@ namespace WebApiCore.EF.DataBase.Extension
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             string methodName = node.Method.Name;
-            string format = string.Empty;
-
-            switch (methodName)
+            string format = methodName switch
             {
-                case "Contains":
-                    format = "({0} LIKE '%'+{1}+'%')";
-                    break;
-
-                case "StartsWith":
-                    format = "({0} LIKE {1}+'%')";
-                    break;
-
-                case "EndsWith":
-                    format = "({0} LIKE '%'+{1})";
-                    break;
-
-                case "Equals":
-                    format = "({0} = {1})";
-                    break;
-                default:
-                    throw new NotSupportedException(node.Method.Name);
-            }
-
+                "Contains" => "({0} LIKE '%'+{1}+'%')",
+                "StartsWith" => "({0} LIKE {1}+'%')",
+                "EndsWith" => "({0} LIKE '%'+{1})",
+                "Equals" => "({0} = {1})",
+                _ => throw new NotSupportedException(node.Method.Name),
+            };
             this.Visit(node.Object);
             this.Visit(node.Arguments[0]);
             string right = this._stringStack.Pop();
