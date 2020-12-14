@@ -21,7 +21,7 @@ namespace Ligy.Project.WebApi
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             DateTime dtNow = DateTime.Now;
-            DateTime dtExpiresAt = DateTime.Now.AddMinutes(1);
+            DateTime dtExpiresAt = DateTime.Now.AddMinutes(60);
 
             var descriptor = new SecurityTokenDescriptor()
             {
@@ -31,7 +31,7 @@ namespace Ligy.Project.WebApi
                     new Claim(JwtClaimTypes.Issuer,"ligy.site"),
                     new Claim(JwtClaimTypes.Id, user.UserId.ParseToString()),
                     new Claim(JwtClaimTypes.Name, user.Name),
-                    new Claim( JwtClaimTypes.Role, user.Name),
+                    new Claim("permission", user.Name),
                     new Claim(JwtClaimTypes.NotBefore, dtNow.ParseToString()),
                     new Claim(JwtClaimTypes.Expiration,dtExpiresAt.ParseToString())
                 }),

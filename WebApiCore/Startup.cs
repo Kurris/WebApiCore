@@ -1,17 +1,17 @@
 using Autofac;
 using Ligy.Project.WebApi.CustomClass;
-using WebApiCore.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Hosting;
-using WebApiCore.Utils.Model;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.Tasks;
+using WebApiCore.Utils;
+using WebApiCore.Utils.Extensions;
+using WebApiCore.Utils.Model;
 
 namespace Ligy.Project.WebApi
 {
@@ -55,6 +55,8 @@ namespace Ligy.Project.WebApi
                });
             });
 
+            services.AddMemoryCache();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(op =>
                 {
@@ -62,7 +64,7 @@ namespace Ligy.Project.WebApi
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies["access_token"];
+                            context.Token = context.Request.Headers["usr_access_token"].ParseToString();
                             return Task.CompletedTask;
                         }
                     };

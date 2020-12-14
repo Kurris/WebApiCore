@@ -15,11 +15,14 @@ namespace Ligy.Project.WebApi.CustomClass
 
     public class ApiAuthAttribute : AuthorizeAttribute, IAuthorizationFilter
     {
-        private readonly string[] _roles;
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly string[] _permission;
 
         public ApiAuthAttribute(params string[] roles)
         {
-            this._roles = roles;
+            this._permission = roles;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -37,25 +40,23 @@ namespace Ligy.Project.WebApi.CustomClass
                 {
                     context.HttpContext.Response.Cookies.Append("access_token", JwtHelper.GenerateToken(new WebApiCore.Entity.SystemManager.User() { UserId = 1, Name = "ligy" }));
                 }
+
+                if (this._permission == null || this._permission.Length == 0) return;
+                var claimJson = context.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "permission")?.Value;
+
+                //TODO Check Permission
                 bool roleFlag = false;
-
-                var claimJson = context.HttpContext.User.Claims.FirstOrDefault(x => x.Type.EndsWith("role"))?.Value;
-
-
-                if (claimJson == null || !roleFlag)
+                if (!roleFlag)
                 {
                     context.Result = new ObjectResult(
-                                       new ResultModel(
-                                       code: 401,
-                                       message: "当前没有操作权限",
-                                       result: null,
-                                       returnStatus: ReturnStatus.Fail)
-                                       );
+                                                       new ResultModel(
+                                                       code: 401,
+                                                       message: "当前没有操作权限",
+                                                       result: null,
+                                                       returnStatus: ReturnStatus.Fail)
+                                                       );
                 }
-                else
-                {
-                    //TODO Check Permission
-                }
+
             }
             else
             {
@@ -68,7 +69,6 @@ namespace Ligy.Project.WebApi.CustomClass
                     returnStatus: ReturnStatus.Fail)
                     );
             }
-            return;
         }
     }
 }

@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "业务服务层", "业务�
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "缓存", "缓存", "{B2EEBED3-F185-4731-81CD-05D15C1BF4FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Cache", "WebApiCore.Cache\WebApiCore.Cache.csproj", "{C56F7E4C-5C4D-4C6D-AE9E-6C4655202578}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{68A7719A-EBCB-4EE4-813D-1E9C4903DC07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68A7719A-EBCB-4EE4-813D-1E9C4903DC07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68A7719A-EBCB-4EE4-813D-1E9C4903DC07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C56F7E4C-5C4D-4C6D-AE9E-6C4655202578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C56F7E4C-5C4D-4C6D-AE9E-6C4655202578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C56F7E4C-5C4D-4C6D-AE9E-6C4655202578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C56F7E4C-5C4D-4C6D-AE9E-6C4655202578}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{D882F16C-BE1A-4796-8370-D5BFDAEC8283} = {D89FA5C6-6BA8-4381-B1B1-2F91613B9562}
 		{6AB1CA32-7D71-4078-A03C-39214C9B0917} = {D89FA5C6-6BA8-4381-B1B1-2F91613B9562}
 		{68A7719A-EBCB-4EE4-813D-1E9C4903DC07} = {78BF3298-1B9B-4DE4-8FE5-5811345811CA}
+		{C56F7E4C-5C4D-4C6D-AE9E-6C4655202578} = {B2EEBED3-F185-4731-81CD-05D15C1BF4FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CBE522E4-37DE-4D2E-BC67-5774F47C3C1D}

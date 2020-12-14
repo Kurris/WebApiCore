@@ -1,5 +1,6 @@
 ﻿using Ligy.Project.WebApi.CustomClass;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApiCore.Entity.BlogInfos;
@@ -9,11 +10,12 @@ using WebApiCore.Utils;
 
 namespace Ligy.Project.WebApi.Controllers
 {
-    [ApiAuth("AA")]
+    [ApiAuth]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class EFTestsController : ControllerBase
     {
+
         public IBlogService BlogService { get; set; }
 
         [HttpGet]

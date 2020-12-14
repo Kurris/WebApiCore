@@ -4,11 +4,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
 
-    public class CustomActionAndResultFilter : Attribute, IActionFilter, IResultFilter
+    public class CustomActionAndResultFilter : ActionFilterAttribute
     {
         private readonly ILogger<CustomActionAndResultFilter> _logger = null;
 
@@ -16,28 +17,22 @@ namespace Ligy.Project.WebApi.CustomClass
         {
             _logger = logger;
         }
-        public void OnActionExecuting(ActionExecutingContext context)
+
+        public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
                        $"【Action】:{context.RouteData.Values["action"]}\r\n" +
                        $"【Paras】：{(context.ActionArguments.Count != 0 ? JsonConvert.SerializeObject(context.ActionArguments) : "None")}";
 
             _logger.LogInformation(sLog);
-        }
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
 
+            return base.OnActionExecutionAsync(context, next);
         }
 
-        public void OnResultExecuted(ResultExecutedContext context)
-        {
-
-        }
-
-        public void OnResultExecuting(ResultExecutingContext context)
+        public override Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
             var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
-                       $"【Action】:{context.RouteData.Values["action"]}\r\n";
+                      $"【Action】:{context.RouteData.Values["action"]}\r\n";
 
             _logger.LogInformation(sLog);
 
@@ -65,6 +60,8 @@ namespace Ligy.Project.WebApi.CustomClass
                                   returnStatus: ReturnStatus.Success)
                                   );
             }
+
+            return base.OnResultExecutionAsync(context, next);
         }
     }
 }
