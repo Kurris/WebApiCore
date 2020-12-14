@@ -103,5 +103,22 @@ namespace ApiUnitTest
                 throw;
             }
         }
+
+        [TestMethod]
+        public async Task Delete6_Exp()
+        {
+            var op = await Interface.BeginTransAsync();
+            try
+            {
+                int id = 11;
+                await op.DeleteAsync<Blog>(x => x.BlogId == id);
+                var res = await op.CommitTransAsync();
+            }
+            catch (Exception)
+            {
+                await op.RollbackTransAsync();
+                throw;
+            }
+        }
     }
 }

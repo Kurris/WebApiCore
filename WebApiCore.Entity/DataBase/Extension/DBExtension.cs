@@ -10,13 +10,14 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.Entity;
 
-namespace WebApiCore.EF.DataBase
+namespace WebApiCore.EF.DataBase.Extension
 {
     /// <summary>
     /// DataBase操作扩展帮助
     /// </summary>
     internal class DBExtension
     {
+        #region 分页排序
         /// <summary>
         /// 分页帮助
         /// </summary>
@@ -67,6 +68,9 @@ namespace WebApiCore.EF.DataBase
             }
             return tmpData;
         }
+        #endregion
+
+        #region 递归附加实体
 
         /// <summary>
         /// 递归附加
@@ -143,5 +147,9 @@ namespace WebApiCore.EF.DataBase
             }
             return null;
         }
+
+        #endregion
     }
+
+    
 }

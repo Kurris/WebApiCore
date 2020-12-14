@@ -8,21 +8,27 @@ using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.Utils
 {
-    public class ComputerHelper
+    /// <summary>
+    /// OS帮助类
+    /// </summary>
+    public class OSHelper
     {
+        /// <summary>
+        /// 判断是否为Unix
+        /// </summary>
         public static bool IsUnix { get => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux); }
 
-        public static ComputerInfo GetComputerInfo()
+        public static async Task<OSInfo> GetOSInfo()
         {
-            ComputerInfo computerInfo = new ComputerInfo();
+            OSInfo computerInfo = new OSInfo();
             try
             {
-                MemoryMetricsClient client = new MemoryMetricsClient();
-                MemoryMetrics memoryMetrics = client.GetMetrics();
+                MemoryMetricsHelper helper = new MemoryMetricsHelper();
+                MemoryMetrics memoryMetrics = helper.GetMetrics();
                 computerInfo.TotalRAM = Math.Ceiling(memoryMetrics.Total / 1024).ToString() + " GB";
                 computerInfo.RAMRate = Math.Ceiling(100 * memoryMetrics.Used / memoryMetrics.Total).ToString() + " %";
                 computerInfo.CPURate = Math.Ceiling(Convert.ToDouble(GetCPURate())) + " %";
-                computerInfo.RunTime = GetRunTime();
+                computerInfo.RunTime = GetOSRunTime();
 
                 return computerInfo;
             }
@@ -30,9 +36,7 @@ namespace WebApiCore.Utils
             {
                 return null;
             }
-
         }
-
 
 
         public static string GetCPURate()
@@ -51,7 +55,11 @@ namespace WebApiCore.Utils
             return cpuRate;
         }
 
-        public static string GetRunTime()
+        /// <summary>
+        /// 获取OX运行时间
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOSRunTime()
         {
             string runTime = string.Empty;
             try
@@ -60,7 +68,8 @@ namespace WebApiCore.Utils
                 {
                     string output = ShellHelper.Bash("uptime -s");
                     output = output.Trim();
-                    runTime = DateTimeHelper.UnixTimeToString((DateTime.Now - output.ParseToDateTime()).TotalMilliseconds.ToString().Split('.')[0].ParseToLong());
+                    runTime = DateTimeHelper.UnixTimeToString((DateTime.Now - output.ParseToDateTime())
+                                            .TotalMilliseconds.ParseToString().Split('.').First().ParseToLong());
                 }
                 else
                 {
@@ -68,9 +77,10 @@ namespace WebApiCore.Utils
                     string[] outputArr = output.Split("=", StringSplitOptions.RemoveEmptyEntries);
                     if (outputArr.Length == 2)
                     {
-                        runTime = DateTimeHelper.UnixTimeToString((DateTime.Now - outputArr[1].Split('.')[0].ParseToDateTime()).TotalMilliseconds.ToString().Split('.')[0].ParseToLong());
+                        runTime = DateTimeHelper.UnixTimeToString((DateTime.Now - outputArr[1].Split('.')[0].ParseToDateTime())
+                                                .TotalMilliseconds.ParseToString().Split('.')[0].ParseToLong());
                     }
-                }
+                } 
 
                 return runTime;
             }
@@ -81,24 +91,20 @@ namespace WebApiCore.Utils
         }
     }
 
-    public class MemoryMetrics
-    {
-        public double Total { get; set; }
-        public double Used { get; set; }
-        public double Free { get; set; }
-    }
 
-    public class MemoryMetricsClient
+
+
+
+    internal class MemoryMetricsHelper
     {
         public MemoryMetrics GetMetrics()
         {
-            if (ComputerHelper.IsUnix)
+            if (OSHelper.IsUnix)
             {
                 return GetUnixMetrics();
             }
             return GetWindowsMetrics();
         }
-
         private MemoryMetrics GetWindowsMetrics()
         {
             string output = ShellHelper.Cmd("wmic", "OS get FreePhysicalMemory,TotalVisibleMemorySize /Value");
@@ -114,7 +120,6 @@ namespace WebApiCore.Utils
 
             return metrics;
         }
-
         private MemoryMetrics GetUnixMetrics()
         {
             string output = ShellHelper.Bash("free -m");
@@ -131,7 +136,20 @@ namespace WebApiCore.Utils
         }
     }
 
-    public class ComputerInfo
+    /// <summary>
+    /// 内存指标
+    /// </summary>
+    internal class MemoryMetrics
+    {
+        public double Total { get; set; }
+        public double Used { get; set; }
+        public double Free { get; set; }
+    }
+
+    /// <summary>
+    /// OS信息
+    /// </summary>
+    public class OSInfo
     {
         /// <summary>
         /// CPU使用率

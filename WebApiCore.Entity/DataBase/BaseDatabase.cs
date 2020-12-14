@@ -3,16 +3,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
-using System.Data.Common;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using WebApiCore.Entity.BlogInfos;
+using WebApiCore.EF.DataBase.Extension;
+using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.EF.DataBase
 {
@@ -210,12 +207,28 @@ namespace WebApiCore.EF.DataBase
                 throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
             }
             string tableName = entityType.GetTableName();
-
             return await this.RunSqlAsync($"Delete From {tableName} where {propName}=@" + propName + ";", new Dictionary<string, object>()
             {
                 [propName] = propValue
             });
         }
+
+        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            IEntityType entityType = _dbContext.Set<T>().EntityType;
+            if (entityType == null)
+            {
+                throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
+            }
+            string tableName = entityType.GetTableName();
+
+            ConditionBuilderVisitor visitor = new ConditionBuilderVisitor();
+            visitor.Visit(predicate);
+
+            return await this.RunSqlAsync($"Delete From {tableName} {visitor.Combine(true)}");
+        }
+
+
 
         public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sortColumn, bool isAsc, int pageSize, int pageIndex) where T : class
         {
