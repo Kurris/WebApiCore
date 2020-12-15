@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebApiCore.Cache\WebApiCore.Cache.csproj" />
     <ProjectReference Include="..\WebApiCore.Entity\WebApiCore.EF.csproj" />
     <ProjectReference Include="..\WebApiCore.Interface\WebApiCore.Interface.csproj" />
     <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj" />

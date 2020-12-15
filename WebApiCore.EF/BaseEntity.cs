@@ -15,6 +15,12 @@ namespace WebApiCore.Entity
             this.Creator = "System";
         }
 
+        /// <summary>
+        /// JWT TOKEN
+        /// </summary>
+        [NotMapped]
+        public string Token { get; set; }
+
         public string Creator { get; set; }
         public DateTime CreateTime { get; set; }
 

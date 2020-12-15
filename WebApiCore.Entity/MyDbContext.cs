@@ -26,6 +26,11 @@ namespace WebApiCore.EF
         private readonly string _provider;
         private readonly string _connStr;
 
+        /// <summary>
+        /// DbContext
+        /// </summary>
+        /// <param name="provider">数据库引擎</param>
+        /// <param name="connStr">连接字符串</param>
         public MyDbContext(string provider, string connStr)
         {
             this._provider = provider;
@@ -40,23 +45,15 @@ namespace WebApiCore.EF
             }
             else if (this._provider.Equals("MySql", StringComparison.OrdinalIgnoreCase))
             {
-                //optionsBuilder.(GlobalInvariant.SystemConfig.DBConfig.MySqlConnectionString);
+                //optionsBuilder.usem(this._connStr,x=);
                 throw new NotImplementedException("MySql尚未实现!");
             }
             else
                 throw new NotImplementedException("未知的数据引擎");
 
             optionsBuilder.AddInterceptors(new DbCommandCustomInterceptor());
-            optionsBuilder.LogTo(Write, (eveid, level) =>
-             {
-                 return level == LogLevel.Information;
-             });
         }
 
-        private void Write(string log)
-        {
-            Debug.WriteLine(log);
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

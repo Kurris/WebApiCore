@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.EF.DataBase.Extension;
+using WebApiCore.Entity;
 using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.EF.DataBase
@@ -116,11 +117,11 @@ namespace WebApiCore.EF.DataBase
 
 
 
-        public virtual IQueryable<T> AsQueryable<T>(Expression<Func<T, bool>> predicate) where T : class
+        public virtual IQueryable<T> AsQueryable<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity
         {
             return this.AsQueryable<T>().Where(predicate);
         }
-        public virtual IQueryable<T> AsQueryable<T>() where T : class
+        public virtual IQueryable<T> AsQueryable<T>() where T : BaseEntity
         {
             return this._dbContext.Set<T>().AsQueryable();
         }
@@ -158,17 +159,17 @@ namespace WebApiCore.EF.DataBase
 
 
 
-        public virtual async Task<int> DeleteAsync<T>(T entity) where T : class
+        public virtual async Task<int> DeleteAsync<T>(T entity) where T : BaseEntity
         {
             _dbContext.Set<T>().Remove(entity);
             return await GetReuslt();
         }
-        public virtual async Task<int> DeleteAsync<T>(IEnumerable<T> entities) where T : class
+        public virtual async Task<int> DeleteAsync<T>(IEnumerable<T> entities) where T : BaseEntity
         {
             _dbContext.Set<T>().RemoveRange(entities);
             return await GetReuslt();
         }
-        public virtual async Task<int> DeleteAsync<T>(int keyValue) where T : class
+        public virtual async Task<int> DeleteAsync<T>(int keyValue) where T : BaseEntity
         {
             IEntityType entityType = _dbContext.Set<T>().EntityType;
             if (entityType == null)
@@ -181,7 +182,7 @@ namespace WebApiCore.EF.DataBase
 
             return await this.RunSqlAsync($"Delete From {tableNae} where {fieldKey}={keyValue};");
         }
-        public virtual async Task<int> DeleteAsync<T>(IEnumerable<int> keyValues) where T : class
+        public virtual async Task<int> DeleteAsync<T>(IEnumerable<int> keyValues) where T : BaseEntity
         {
             IEntityType entityType = _dbContext.Set<T>().EntityType;
             if (entityType == null)
@@ -199,7 +200,7 @@ namespace WebApiCore.EF.DataBase
 
             return await this.RunSqlAsync(sb.ToString());
         }
-        public virtual async Task<int> DeleteAsync<T>(string propName, object propValue) where T : class
+        public virtual async Task<int> DeleteAsync<T>(string propName, object propValue) where T : BaseEntity
         {
             IEntityType entityType = _dbContext.Set<T>().EntityType;
             if (entityType == null)
@@ -213,7 +214,7 @@ namespace WebApiCore.EF.DataBase
             });
         }
 
-        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity
         {
             IEntityType entityType = _dbContext.Set<T>().EntityType;
             if (entityType == null)
@@ -230,13 +231,13 @@ namespace WebApiCore.EF.DataBase
 
 
 
-        public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sortColumn, bool isAsc, int pageSize, int pageIndex) where T : class
+        public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sortColumn, bool isAsc, int pageSize, int pageIndex) where T : BaseEntity
         {
             var tempData = _dbContext.Set<T>().AsQueryable();
             return await this.FindListAsync<T>(tempData, sortColumn, isAsc, pageSize, pageIndex);
         }
         public virtual async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(Expression<Func<T, bool>> condition, string sortColumn,
-                                                                                     bool isAsc, int pageSize, int pageIndex) where T : class
+                                                                                     bool isAsc, int pageSize, int pageIndex) where T : BaseEntity
         {
             var tempData = _dbContext.Set<T>().Where(condition);
             return await this.FindListAsync<T>(tempData, sortColumn, isAsc, pageSize, pageIndex);
@@ -244,7 +245,7 @@ namespace WebApiCore.EF.DataBase
 #pragma warning disable CA1822 // 将成员标记为 static
         private async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(IQueryable<T> tmpdata, string sortColumn, bool isAsc,
 #pragma warning restore CA1822 // 将成员标记为 static
-                                                                              int pageSize, int pageIndex) where T : class
+                                                                              int pageSize, int pageIndex) where T : BaseEntity
         {
             tmpdata = DBExtension.PaginationSort<T>(tmpdata, sortColumn, isAsc);
 
@@ -289,7 +290,7 @@ WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
         }
 
 
-        public virtual async Task<int> UpdateAsync<T>(T entity, bool updateAll = false) where T : class
+        public virtual async Task<int> UpdateAsync<T>(T entity, bool updateAll = false) where T : BaseEntity
         {
             if (updateAll)
             {
@@ -302,7 +303,7 @@ WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
 
             return await GetReuslt();
         }
-        public virtual async Task<int> UpdateAsync<T>(IEnumerable<T> entities, bool updateAll = false) where T : class
+        public virtual async Task<int> UpdateAsync<T>(IEnumerable<T> entities, bool updateAll = false) where T : BaseEntity
         {
             foreach (var entity in entities)
             {
@@ -314,12 +315,12 @@ WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
 
 
 
-        public virtual async Task<int> AddAsync<T>(T entity) where T : class
+        public virtual async Task<int> AddAsync<T>(T entity) where T : BaseEntity
         {
             this._dbContext.Set<T>().Add(entity);
             return await GetReuslt();
         }
-        public virtual async Task<int> AddAsync<T>(IEnumerable<T> entities) where T : class
+        public virtual async Task<int> AddAsync<T>(IEnumerable<T> entities) where T : BaseEntity
         {
             await this._dbContext.Set<T>().AddRangeAsync(entities);
             return await GetReuslt();
@@ -327,15 +328,15 @@ WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
 
 
 
-        public virtual async Task<T> FindAsync<T>(params object[] keyValues) where T : class
+        public virtual async Task<T> FindAsync<T>(params object[] keyValues) where T : BaseEntity
         {
             return await _dbContext.Set<T>().FindAsync(keyValues);
         }
-        public virtual async Task<T> FindAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        public virtual async Task<T> FindAsync<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity
         {
             return await _dbContext.Set<T>().FirstOrDefaultAsync(predicate);
         }
-        public virtual async Task<IEnumerable<T>> FindListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        public virtual async Task<IEnumerable<T>> FindListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : BaseEntity
         {
             if (predicate == null)
             {
@@ -343,7 +344,7 @@ WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
             }
             return await _dbContext.Set<T>().Where(predicate).ToListAsync();
         }
-        public virtual async Task<IEnumerable<T>> FindListByOrderAsync<T>(Expression<Func<T, object>> predicate, bool isAsc) where T : class
+        public virtual async Task<IEnumerable<T>> FindListByOrderAsync<T>(Expression<Func<T, object>> predicate, bool isAsc) where T : BaseEntity
         {
             if (isAsc)
             {

@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
+using WebApiCore.Utils.Model;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
@@ -38,7 +39,7 @@ namespace Ligy.Project.WebApi.CustomClass
 
                 if (expTime - nowTime < 60 * 60 * 10)
                 {
-                    context.HttpContext.Response.Cookies.Append("access_token", JwtHelper.GenerateToken(new WebApiCore.Entity.SystemManager.User() { UserId = 1, Name = "ligy" }));
+                    context.HttpContext.Response.Cookies.Append("access_token", JwtHelper.GenerateToken(new WebApiCore.Entity.SystemManager.User() { UserId = 1, UserName = "ligy" }));
                 }
 
                 if (this._permission == null || this._permission.Length == 0) return;
@@ -48,26 +49,14 @@ namespace Ligy.Project.WebApi.CustomClass
                 bool roleFlag = false;
                 if (!roleFlag)
                 {
-                    context.Result = new ObjectResult(
-                                                       new ResultModel(
-                                                       code: 401,
-                                                       message: "当前没有操作权限",
-                                                       result: null,
-                                                       returnStatus: ReturnStatus.Fail)
-                                                       );
+                    //context.Result = new ObjectResult();
                 }
 
             }
             else
             {
 
-                context.Result = new ObjectResult(
-                    new ResultModel(
-                    code: 401,
-                    message: "授权失败",
-                    result: null,
-                    returnStatus: ReturnStatus.Fail)
-                    );
+                context.Result = new ObjectResult(new TData<string>("授权失败", string.Empty, ReturnStatus.NoPermission));
             }
         }
     }

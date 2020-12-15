@@ -2,35 +2,30 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
+using WebApiCore.Utils.Extensions;
+using WebApiCore.Utils.Model;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
-    public class CustomExceptionFilterAttribute : Attribute, IExceptionFilter
+    public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        private ILogger<CustomExceptionFilterAttribute> _ilogger = null;
+        public ILogger<CustomExceptionFilterAttribute>  Logger { get; set; }
 
-        public CustomExceptionFilterAttribute(ILogger<CustomExceptionFilterAttribute> ilogger)
+        public override Task OnExceptionAsync(ExceptionContext context)
         {
-            _ilogger = ilogger;
-        }
+            string msg = context.Exception.GetInnerException();
 
-        public void OnException(ExceptionContext context)
-        {
             var sLog = $"【Source】:{context.Exception.TargetSite}\r\n" +
                         $"【StackTrace】:{context.Exception.StackTrace}\r\n" +
-                        $"【ErrorMessage】:{context.Exception.Message}\r\n";
-            _ilogger.LogError(sLog);
+                        $"【ErrorMessage】:{msg}\r\n";
+            Logger.LogError(sLog);
 
             context.ExceptionHandled = true;
 
-            context.Result = new ObjectResult(
-                new ResultModel(
-                    code: 500,
-                    message: context.Exception.Message,
-                    result: string.Empty,
-                    returnStatus: ReturnStatus.Error
-                    )
-                );
+            context.Result = new ObjectResult(new TData<string>(msg, string.Empty, ReturnStatus.Error));
+
+            return Task.CompletedTask;
         }
     }
 }

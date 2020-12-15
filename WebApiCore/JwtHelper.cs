@@ -1,24 +1,28 @@
 ﻿using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 
 namespace Ligy.Project.WebApi
 {
+    /// <summary>
+    /// Jwt帮助类
+    /// </summary>
     public class JwtHelper
     {
+        /// <summary>
+        /// 生成Token凭证
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static string GenerateToken(User user)
         {
-            string secretKey = "12345678987654321";
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey));
 
             DateTime dtNow = DateTime.Now;
             DateTime dtExpiresAt = DateTime.Now.AddMinutes(60);
@@ -27,11 +31,11 @@ namespace Ligy.Project.WebApi
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(JwtClaimTypes.Audience,"api"),
-                    new Claim(JwtClaimTypes.Issuer,"ligy.site"),
+                    new Claim(JwtClaimTypes.Issuer,GlobalInvariant.SystemConfig.JwtSetting.Issuer),
+                    new Claim(JwtClaimTypes.Audience,GlobalInvariant.SystemConfig.JwtSetting.Audience),
                     new Claim(JwtClaimTypes.Id, user.UserId.ParseToString()),
-                    new Claim(JwtClaimTypes.Name, user.Name),
-                    new Claim("permission", user.Name),
+                    new Claim(JwtClaimTypes.Name, user.UserName),
+                    new Claim("permission", user.UserName),
                     new Claim(JwtClaimTypes.NotBefore, dtNow.ParseToString()),
                     new Claim(JwtClaimTypes.Expiration,dtExpiresAt.ParseToString())
                 }),

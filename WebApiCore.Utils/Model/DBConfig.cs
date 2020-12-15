@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WebApiCore.Utils.Model
+﻿namespace WebApiCore.Utils.Model
 {
     public class DBConfig
     {

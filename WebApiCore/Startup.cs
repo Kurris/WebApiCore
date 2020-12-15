@@ -57,31 +57,41 @@ namespace Ligy.Project.WebApi
 
             services.AddMemoryCache();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(op =>
-                {
-                    op.Events = new JwtBearerEvents()
-                    {
-                        OnMessageReceived = context =>
-                        {
-                            context.Token = context.Request.Headers["usr_access_token"].ParseToString();
-                            return Task.CompletedTask;
-                        }
-                    };
-
-                    op.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = "ligy.site",
-                        ValidAudience = "api",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("12345678987654321"))
-                    };
-                });
 
             GlobalInvariant.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
+            GlobalInvariant.Configuration = Configuration;
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(op =>
+            {
+                op.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
+                        if (loginProvider == "Api")
+                        {
+                            context.Token = context.Request.Headers[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
+                        }
+                        else
+                        {
+                            context.Token = context.Request.Cookies[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+                op.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = GlobalInvariant.SystemConfig.JwtSetting.Issuer,
+                    ValidAudience = GlobalInvariant.SystemConfig.JwtSetting.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey))
+                };
+            });
         }
 
         /// <summary>
@@ -119,6 +129,8 @@ namespace Ligy.Project.WebApi
             {
                 endpoints.MapControllers();
             });
+
+            GlobalInvariant.ServiceProvider = app.ApplicationServices;
         }
     }
 }

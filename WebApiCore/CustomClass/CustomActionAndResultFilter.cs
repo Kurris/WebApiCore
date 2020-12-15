@@ -1,30 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApiCore.Utils;
+using WebApiCore.Utils.Model;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
 
     public class CustomActionAndResultFilter : ActionFilterAttribute
     {
-        private readonly ILogger<CustomActionAndResultFilter> _logger = null;
-
-        public CustomActionAndResultFilter(ILogger<CustomActionAndResultFilter> logger)
-        {
-            _logger = logger;
-        }
+        public ILogger<CustomActionAndResultFilter> Logger { get; set; }
 
         public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
                        $"【Action】:{context.RouteData.Values["action"]}\r\n" +
-                       $"【Paras】：{(context.ActionArguments.Count != 0 ? JsonConvert.SerializeObject(context.ActionArguments) : "None")}";
+                       $"【Paras】：{(context.ActionArguments.Count == 0 ? "None" : JsonHelper.ToJson(context.ActionArguments))}";
 
-            _logger.LogInformation(sLog);
+            Logger.LogInformation(sLog);
 
             return base.OnActionExecutionAsync(context, next);
         }
@@ -32,33 +28,20 @@ namespace Ligy.Project.WebApi.CustomClass
         public override Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
             var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
-                      $"【Action】:{context.RouteData.Values["action"]}\r\n";
+                       $"【Action】:{context.RouteData.Values["action"]}\r\n";
 
-            _logger.LogInformation(sLog);
-
+            Logger.LogInformation(sLog);
 
             if (!context.ModelState.IsValid)
             {
                 var result = context.ModelState.Keys
-                    .SelectMany(key => context.ModelState[key].Errors.Select(x => new ValidationError(key, x.ErrorMessage)));
+                    .SelectMany(key => context.ModelState[key].Errors.Select(x => new EntityErrorParam(key, x.ErrorMessage)));
 
-                context.Result = new ObjectResult(
-                    new ResultModel(
-                    code: 422,
-                    message: "参数不合法",
-                    result: result,
-                    returnStatus: ReturnStatus.Fail)
-                    );
+                context.Result = new ObjectResult(new TData<IEnumerable<EntityErrorParam>>("参数不合法", result, ReturnStatus.ValidateEntityError));
             }
             else
             {
-                context.Result = new ObjectResult(
-                                  new ResultModel(
-                                  code: 100,
-                                  message: "成功",
-                                  result: (context.Result as ObjectResult)?.Value,
-                                  returnStatus: ReturnStatus.Success)
-                                  );
+                context.Result = new ObjectResult(context.Result);
             }
 
             return base.OnResultExecutionAsync(context, next);

@@ -13,6 +13,12 @@ namespace WebApiCore.EF
     /// </summary>
     public class InitDB
     {
+        /// <summary>
+        /// 创建具体数据库
+        /// </summary>
+        /// <param name="provider">数据库引擎</param>
+        /// <param name="connStr">数据库连接字符串</param>
+        /// <returns>操作对象<see cref="IDataBaseOperation"/></returns>
         public static IDataBaseOperation Create(string provider = null, string connStr = null)
         {
             provider = GlobalInvariant.SystemConfig?.DBConfig?.Provider ?? provider;

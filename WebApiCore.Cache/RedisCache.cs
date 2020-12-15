@@ -18,7 +18,7 @@ namespace WebApiCore.Cache
             throw new NotImplementedException();
         }
 
-        public bool SetCache<T>(string key, T value, DateTime? expireTime = null)
+        public bool SetCache<T>(string key, T value, DateTime? expireDateTime = null)
         {
             throw new NotImplementedException();
         }

@@ -16,16 +16,31 @@ namespace WebApiCore.Cache
         public T GetCache<T>(string key)
         {
             return _cache.Get<T>(key);
-        }   
+        }
 
         public bool RemoveCache(string key)
         {
-            throw new NotImplementedException();
-        }    
+            _cache.Remove(key);
+            return true;
+        }
 
         public bool SetCache<T>(string key, T value, DateTime? expireTime = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (expireTime == null)
+                {
+                    return _cache.Set<T>(key, value) != null;
+                }
+                else
+                {
+                    return _cache.Set(key, value, (expireTime.Value - DateTime.Now)) != null;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

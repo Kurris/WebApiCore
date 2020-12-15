@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.Entity.BlogInfos;
+using WebApiCore.Entity.SystemManager;
 
 namespace WebApiCore.EF
 {
@@ -29,6 +30,9 @@ namespace WebApiCore.EF
                 v => v.ToString(),
                 v => (Gender)Enum.Parse(typeof(Gender), v)
                 );
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.UserName).IsUnique();
         }
     }
 }

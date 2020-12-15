@@ -110,7 +110,7 @@ namespace WebApiCore.EF.DataBase.Extension
             string right = this._stringStack.Pop();
             string left = this._stringStack.Pop();
             this._stringStack.Push(string.Format(format, left, right));
-
+            
             return node;
         }
 

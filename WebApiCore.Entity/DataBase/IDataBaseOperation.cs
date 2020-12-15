@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using WebApiCore.Entity;
 
 namespace WebApiCore.EF.DataBase
 {
@@ -92,7 +93,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="predicate">表达式</param>
         /// <returns><see cref="IQueryable{T}"/></returns>
-        IQueryable<T> AsQueryable<T>(Expression<Func<T, bool>> predicate) where T : class;
+        IQueryable<T> AsQueryable<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity;
 
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace WebApiCore.EF.DataBase
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <returns><see cref="IQueryable{T}"/></returns>
-        IQueryable<T> AsQueryable<T>() where T : class;
+        IQueryable<T> AsQueryable<T>() where T : BaseEntity;
 
         /// <summary>
         /// 执行SQL
@@ -132,7 +133,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="entity">实例</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> AddAsync<T>(T entity) where T : class;
+        Task<int> AddAsync<T>(T entity) where T : BaseEntity;
 
         /// <summary>
         /// 添加一组实体
@@ -140,7 +141,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="entities">一组实例</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> AddAsync<T>(IEnumerable<T> entities) where T : class;
+        Task<int> AddAsync<T>(IEnumerable<T> entities) where T : BaseEntity;
 
         /// <summary>
         /// 更新一个实体
@@ -149,7 +150,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="entity">实例</param>
         /// <param name="updateAll">全部更新</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> UpdateAsync<T>(T entity, bool updateAll = false) where T : class;
+        Task<int> UpdateAsync<T>(T entity, bool updateAll = false) where T : BaseEntity;
 
         /// <summary>
         /// 更新一组实体
@@ -158,7 +159,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="entities">一组实例</param>
         /// <param name="updateAll">全部更新</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> UpdateAsync<T>(IEnumerable<T> entities, bool updateAll = false) where T : class;
+        Task<int> UpdateAsync<T>(IEnumerable<T> entities, bool updateAll = false) where T : BaseEntity;
 
         /// <summary>
         /// 删除一个实体
@@ -166,7 +167,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="entity">实例</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> DeleteAsync<T>(T entity) where T : class;
+        Task<int> DeleteAsync<T>(T entity) where T : BaseEntity;
 
         /// <summary>
         /// 删除一组实体
@@ -174,7 +175,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="entities">一组实例</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> DeleteAsync<T>(IEnumerable<T> entities) where T : class;
+        Task<int> DeleteAsync<T>(IEnumerable<T> entities) where T : BaseEntity;
 
         /// <summary>
         /// 删除实体
@@ -182,7 +183,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="key">主键</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> DeleteAsync<T>(int keyValue) where T : class;
+        Task<int> DeleteAsync<T>(int keyValue) where T : BaseEntity;
 
         /// <summary>
         /// 删除一组实体
@@ -190,7 +191,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="keyValues">一组主键</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> DeleteAsync<T>(IEnumerable<int> keyValues) where T : class;
+        Task<int> DeleteAsync<T>(IEnumerable<int> keyValues) where T : BaseEntity;
 
         /// <summary>
         /// 删除
@@ -199,7 +200,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="propName">字段</param>
         /// <param name="propValue">值</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> DeleteAsync<T>(string propName, object propValue) where T : class;
+        Task<int> DeleteAsync<T>(string propName, object propValue) where T : BaseEntity;
 
 
         /// <summary>
@@ -208,7 +209,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="predicate">表达式</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class;
+        Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity;
 
         /// <summary>
         /// 根据主键查找实体
@@ -216,7 +217,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="KeyValue">主键</param>
         /// <returns>实体<see cref="{T}"/></returns>
-        Task<T> FindAsync<T>(params object[] keyValues) where T : class;
+        Task<T> FindAsync<T>(params object[] keyValues) where T : BaseEntity;
 
         /// <summary>
         /// 查找实体
@@ -224,7 +225,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="predicate">表达式</param>
         /// <returns>实体<see cref="{T}"/></returns>
-        Task<T> FindAsync<T>(Expression<Func<T, bool>> predicate) where T : class;
+        Task<T> FindAsync<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity;
 
         /// <summary>
         /// 返回一组数据
@@ -232,7 +233,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="predicate">表达式</param>
         /// <returns>所有数据<see cref="IEnumerable{T}"/></returns>
-        Task<IEnumerable<T>> FindListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+        Task<IEnumerable<T>> FindListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : BaseEntity;
 
         /// <summary>
         /// 排序查询一组数据
@@ -240,7 +241,7 @@ namespace WebApiCore.EF.DataBase
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="predicate">表达式</param>
         /// <returns>一组数据<see cref="IEnumerable{T}"/></returns>
-        Task<IEnumerable<T>> FindListByOrderAsync<T>(Expression<Func<T, object>> predicate, bool isAsc) where T : class;
+        Task<IEnumerable<T>> FindListByOrderAsync<T>(Expression<Func<T, object>> predicate, bool isAsc) where T : BaseEntity;
 
         /// <summary>
         /// 分页查询
@@ -252,7 +253,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="pageIndex">当前页</param>
         /// <returns>总数<see cref="int"/> 当前页<see cref="IEnumerable{T}"/></returns>
         Task<(int total, IEnumerable<T> list)> FindListAsync<T>(string sortColumn, bool isAsc, int pageSize,
-                                                                int pageIndex) where T : class;
+                                                                int pageIndex) where T : BaseEntity;
 
         /// <summary>
         /// 分页查询
@@ -265,7 +266,7 @@ namespace WebApiCore.EF.DataBase
         /// <param name="pageIndex">当前页</param>
         /// <returns>总数<see cref="int"/> 当前页<see cref="IEnumerable{T}"/></returns>
         Task<(int total, IEnumerable<T> list)> FindListAsync<T>(Expression<Func<T, bool>> predicate, string sortColumn, bool isAsc,
-                                                                int pageSize, int pageIndex) where T : class;
+                                                                int pageSize, int pageIndex) where T : BaseEntity;
 
 
         /// <summary>

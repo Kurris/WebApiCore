@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Reflection;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace WebApiCore.Utils
 {
@@ -26,12 +25,6 @@ namespace WebApiCore.Utils
         /// 配置管理
         /// </summary>
         public static IConfiguration Configuration { get; set; }
-
-        /// <summary>
-        /// 秘钥
-        /// </summary>
-        public static string TokenKey { get; set; }
-
 
         /// <summary>
         /// 版本号

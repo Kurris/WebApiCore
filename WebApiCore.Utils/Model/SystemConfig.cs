@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WebApiCore.Utils.Model
+﻿namespace WebApiCore.Utils.Model
 {
     public class SystemConfig
     {
         public DBConfig DBConfig { get; set; }
+
+
+        /// <summary>
+        /// Jwt设置
+        /// </summary>
+        public JwtSetting JwtSetting { get; set; }
+
 
         /// <summary>
         /// 缓存引擎
