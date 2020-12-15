@@ -20,5 +20,11 @@
         /// 登录引擎
         /// </summary>
         public string LoginProvider { get; set; }
+
+
+        /// <summary>
+        /// Redis连接字符串
+        /// </summary>
+        public string RedisConnectionString { get; set; }
     }
 }

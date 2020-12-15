@@ -11,5 +11,13 @@ namespace WebApiCore.Utils
         public static JObject ToJObject(string json) => json.IsEmpty() ? JObject.Parse("{}") : JObject.Parse(json);
 
         public static string ToJson(object obj) => obj.IsEmpty() ? string.Empty : JsonConvert.SerializeObject(obj);
+
+        public static string ToJsonIgnoreLoop(object obj) =>
+            obj.IsEmpty()
+            ? string.Empty
+            : JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
     }
 }
