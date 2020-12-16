@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using WebApiCore.Utils.Extensions;
 
-namespace WebApiCore.Core
+namespace WebApiCore.Core.TokenHelper
 {
-    internal class SessionHelper
+    internal class SessionHelper 
     {
 
         /// <summary>

@@ -14,6 +14,8 @@ namespace Ligy.Project.WebApi.CustomClass
     {
         private readonly ILogger<CustomActionAndResultFilterAttribute> _logger;
 
+        public ILogger<CustomActionAndResultFilterAttribute>  Logger { get; set; }
+
         public CustomActionAndResultFilterAttribute(ILogger<CustomActionAndResultFilterAttribute> logger)
         {
             this._logger = logger;

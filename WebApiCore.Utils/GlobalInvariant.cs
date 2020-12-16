@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Autofac;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Reflection;
 using WebApiCore.Utils.Extensions;
@@ -25,6 +26,7 @@ namespace WebApiCore.Utils
         /// 配置管理
         /// </summary>
         public static IConfiguration Configuration { get; set; }
+
 
         /// <summary>
         /// 版本号

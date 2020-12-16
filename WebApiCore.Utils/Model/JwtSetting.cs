@@ -9,5 +9,10 @@
         public string TokenKey { get; set; }
         public string Issuer { get; set; }
         public string Audience { get; set; }
+
+        /// <summary>
+        /// 失效时间
+        /// </summary>
+        public int Expiration { get; set; }
     }
 }

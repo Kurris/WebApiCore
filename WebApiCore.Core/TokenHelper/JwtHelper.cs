@@ -5,10 +5,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebApiCore.Entity.SystemManager;
-using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
+using WebApiCore.Utils.Model;
 
-namespace WebApiCore.Core
+namespace WebApiCore.Core.TokenHelper
 {
     /// <summary>
     /// Jwt帮助类
@@ -18,30 +18,31 @@ namespace WebApiCore.Core
         /// <summary>
         /// 生成Token凭证
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public static string GenerateToken(User user)
+        /// <param name="user">用户信息</param>
+        /// <param name="jwtSetting">Jwt配置信息</param>
+        /// <returns>Token</returns>
+        public static string GenerateToken(User user, JwtSetting jwtSetting)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.TokenKey));
 
             DateTime dtNow = DateTime.Now;
-            DateTime dtExpiresAt = DateTime.Now.AddMinutes(60);
+            DateTime dtExpires = DateTime.Now.AddMinutes(jwtSetting.Expiration);
 
             var descriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(JwtClaimTypes.Issuer,GlobalInvariant.SystemConfig.JwtSetting.Issuer),
-                    new Claim(JwtClaimTypes.Audience,GlobalInvariant.SystemConfig.JwtSetting.Audience),
+                    new Claim(JwtClaimTypes.Issuer,jwtSetting.Issuer),
+                    new Claim(JwtClaimTypes.Audience,jwtSetting.Audience),
                     new Claim(JwtClaimTypes.Id, user.UserId.ParseToString()),
                     new Claim(JwtClaimTypes.Name, user.UserName),
                     new Claim("permission", user.UserName),
                     new Claim(JwtClaimTypes.NotBefore, dtNow.ParseToString()),
-                    new Claim(JwtClaimTypes.Expiration,dtExpiresAt.ParseToString())
+                    new Claim(JwtClaimTypes.Expiration,dtExpires.ParseToString())
                 }),
                 IssuedAt = dtNow,//颁发时间
                 NotBefore = dtNow,
-                Expires = dtExpiresAt,
+                Expires = dtExpires,
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
             };
 

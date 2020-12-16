@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Interface;
@@ -11,7 +12,7 @@ namespace Ligy.Project.WebApi.Controllers
     public class UserController : ControllerBase
     {
         public IUserService UserService { get; set; }
-
+        public ILogger<UserController> Logger { get; set; }
 
         [HttpPost]
         public async Task<TData<User>> Login([FromBody] User user)

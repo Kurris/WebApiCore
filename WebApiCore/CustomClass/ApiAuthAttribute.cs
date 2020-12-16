@@ -36,7 +36,7 @@ namespace Ligy.Project.WebApi.CustomClass
 
                 if (expTime - nowTime < 60 * 60 * 10)
                 {
-                    context.HttpContext.Response.Cookies.Append("access_token", JwtHelper.GenerateToken(new WebApiCore.Entity.SystemManager.User() { UserId = 1, UserName = "ligy" }));
+
                 }
 
                 if (this._permission == null || this._permission.Length == 0) return;

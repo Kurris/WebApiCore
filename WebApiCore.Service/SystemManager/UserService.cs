@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.Cache;
+using WebApiCore.Core;
 using WebApiCore.EF;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Interface;
@@ -46,7 +47,9 @@ namespace WebApiCore.Service.SystemManager
                         user.Token = "";
                         obj.Message = "登陆成功";
                         obj.Data = user;
-                        CacheFactory.Instance.SetCache(userName, user, DateTime.Now.AddMinutes(2));
+
+                        await Operator.Instance.AddCurrent(user);
+                        return obj;
                     }
                 }
                 return obj;

@@ -1,4 +1,7 @@
 ﻿using Autofac;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,22 +14,18 @@ namespace Ligy.Project.WebApi.CustomClass
         {
             Assembly iservice = Assembly.Load("WebApiCore.Interface");
 
-            string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Assembly service = Assembly.LoadFrom(Path.Combine(localPath, "WebApiCore.Service.dll"));
+            //string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //Assembly service = Assembly.LoadFrom(Path.Combine(localPath, "WebApiCore.Service.dll"));
+            Assembly service = Assembly.Load("WebApiCore.Service");
 
-         
+
             builder.RegisterAssemblyTypes(service, iservice)
-                .InstancePerLifetimeScope()
-                .AsImplementedInterfaces()
-                .PropertiesAutowired();
+                   .InstancePerLifetimeScope()
+                   .AsImplementedInterfaces()
+                   .PropertiesAutowired();
 
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).PropertiesAutowired();
 
-            
-
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                                                  .Where(x => x.Name.EndsWith("Controller")
-                                                           || x.Name.EndsWith("FilterAttribute")
-                                                           || x.Name.Equals("ApiAuthAttribute")).PropertiesAutowired();
         }
     }
 }

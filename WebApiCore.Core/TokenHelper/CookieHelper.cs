@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Autofac;
 
-namespace WebApiCore.Core
+namespace WebApiCore.Core.TokenHelper
 {
-    internal class CookieHelper
+    public class CookieHelper
     {
         /// <summary>
         /// 写cookie值
@@ -19,11 +20,9 @@ namespace WebApiCore.Core
         public void AddCookie(string sName, string sValue)
         {
             IHttpContextAccessor hca = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-            CookieOptions option = new CookieOptions
-            {
-                Expires = DateTime.Now.AddDays(15)
-            };
-            hca?.HttpContext?.Response.Cookies.Append(sName, sValue, option);
+            CookieOptions option = new CookieOptions();
+            option.Expires = DateTime.Now.AddDays(30);
+            hca.HttpContext.Response.Cookies.Append(sName, sValue, option);
         }
 
         /// <summary>
@@ -35,10 +34,8 @@ namespace WebApiCore.Core
         public void AddCookie(string sName, string sValue, int expires)
         {
             IHttpContextAccessor hca = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-            CookieOptions option = new CookieOptions
-            {
-                Expires = DateTime.Now.AddMinutes(expires)
-            };
+            CookieOptions option = new CookieOptions();
+            option.Expires = DateTime.Now.AddMinutes(expires);
             hca?.HttpContext?.Response.Cookies.Append(sName, sValue, option);
         }
 
@@ -53,15 +50,14 @@ namespace WebApiCore.Core
             return hca?.HttpContext?.Request.Cookies[sName];
         }
 
-
         /// <summary>
         /// 删除Cookie对象
         /// </summary>
         /// <param name="sName">Cookie对象名称</param>
-        public void RemoveCookie(string name)
+        public void RemoveCookie(string sName)
         {
             IHttpContextAccessor hca = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-            hca?.HttpContext?.Response.Cookies.Delete(name);
+            hca?.HttpContext?.Response.Cookies.Delete(sName);
         }
     }
 }

@@ -3,6 +3,7 @@ using Ligy.Project.WebApi.CustomClass;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
+using System;
 
 namespace Ligy.Project.WebApi
 {
@@ -53,9 +55,9 @@ namespace Ligy.Project.WebApi
                    builder.AllowAnyOrigin().AllowAnyMethod();
                });
             });
-
+            //services.AddHttpContextAccessor();
             services.AddMemoryCache();
-
+            services.AddSession();
 
             GlobalInvariant.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
             GlobalInvariant.Configuration = Configuration;
@@ -68,15 +70,19 @@ namespace Ligy.Project.WebApi
                     OnMessageReceived = context =>
                     {
                         string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
-                        if (loginProvider == "Api")
-                        {
+                        if (loginProvider == "WebApi")
                             context.Token = context.Request.Headers[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
-                        }
-                        else
-                        {
+                        else if (loginProvider == "Session")
+                            context.Token = context.HttpContext.Session.GetString(GlobalInvariant.SystemConfig.JwtSetting.TokenName);
+                        else if (loginProvider == "Cookie")
                             context.Token = context.Request.Cookies[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
-                        }
+                        else
+                            throw new NotSupportedException(loginProvider);
 
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
                         return Task.CompletedTask;
                     }
                 };
@@ -97,33 +103,25 @@ namespace Ligy.Project.WebApi
         /// 依赖注入Autofac
         /// </summary>
         /// <param name="builder"></param>
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            builder.RegisterModule<CustomAutofacModule>();
-        }
+        public void ConfigureContainer(ContainerBuilder builder) => builder.RegisterModule<CustomAutofacModule>();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
                 option.SwaggerEndpoint("/swagger/V1/swagger.json", "MyBlog WebApi");
             });
-
             app.UseRouting();
-
             //跨域 必须在UseRouting之后,UseAuthorization之前
             app.UseCors("AllowCors");
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
