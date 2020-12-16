@@ -10,9 +10,14 @@ using WebApiCore.Utils.Model;
 namespace Ligy.Project.WebApi.CustomClass
 {
 
-    public class CustomActionAndResultFilter : ActionFilterAttribute
+    public class CustomActionAndResultFilterAttribute : ActionFilterAttribute
     {
-        public ILogger<CustomActionAndResultFilter> Logger { get; set; }
+        private readonly ILogger<CustomActionAndResultFilterAttribute> _logger;
+
+        public CustomActionAndResultFilterAttribute(ILogger<CustomActionAndResultFilterAttribute> logger)
+        {
+            this._logger = logger;
+        }
 
         public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
@@ -20,7 +25,7 @@ namespace Ligy.Project.WebApi.CustomClass
                        $"【Action】:{context.RouteData.Values["action"]}\r\n" +
                        $"【Paras】：{(context.ActionArguments.Count == 0 ? "None" : JsonHelper.ToJson(context.ActionArguments))}";
 
-            Logger.LogInformation(sLog);
+            _logger.LogInformation(sLog);
 
             return base.OnActionExecutionAsync(context, next);
         }
@@ -30,18 +35,27 @@ namespace Ligy.Project.WebApi.CustomClass
             var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
                        $"【Action】:{context.RouteData.Values["action"]}\r\n";
 
-            Logger.LogInformation(sLog);
+            _logger.LogInformation(sLog);
 
             if (!context.ModelState.IsValid)
             {
                 var result = context.ModelState.Keys
                     .SelectMany(key => context.ModelState[key].Errors.Select(x => new EntityErrorParam(key, x.ErrorMessage)));
 
-                context.Result = new ObjectResult(new TData<IEnumerable<EntityErrorParam>>("参数不合法", result, ReturnStatus.ValidateEntityError));
+                context.Result = new ObjectResult(new TData<IEnumerable<EntityErrorParam>>("参数不合法", result, Status.ValidateEntityError));
             }
             else
             {
-                context.Result = new ObjectResult(context.Result);
+                object resultValue = (context.Result as ObjectResult)?.Value;
+
+                if (resultValue != null && resultValue.GetType().Name.StartsWith("TData"))
+                {
+                    context.Result = new ObjectResult(resultValue);
+                }
+                else
+                {
+                    context.Result = new ObjectResult(new TData<object>("请求成功", resultValue, Status.Success));
+                }
             }
 
             return base.OnResultExecutionAsync(context, next);

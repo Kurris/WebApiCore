@@ -9,6 +9,7 @@ using WebApiCore.EF;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Interface;
 using WebApiCore.Utils;
+using WebApiCore.Utils.Model;
 
 namespace WebApiCore.Service.SystemManager
 {
@@ -18,28 +19,37 @@ namespace WebApiCore.Service.SystemManager
 
         public async Task<User> CheckLogin(string userName)
         {
-            throw new NotImplementedException();
+            return CacheFactory.Instance.GetCache<User>(userName);
         }
 
-        public async Task<string> Login(string userName, string password)
+        public async Task<TData<User>> Login(string userName, string password)
         {
             var op = await InitDB.Create().BeginTransAsync();
             try
             {
-                User existUser = await op.FindAsync<User>(x => x.UserName == userName);
-                if (existUser == null)
-                {
-                    return "用户不存在";
-                }
+                User user = await op.FindAsync<User>(x => x.UserName == userName);
+                TData<User> obj = new TData<User>();
 
-                string encrypt = SecurityHelper.MD5Encrypt(password);
-                if (existUser.Password != encrypt)
+                if (user == null)
                 {
-                    return "密码错误";
+                    obj.Message = "用户不存在";
                 }
-
-                CacheFactory.Cache.SetCache(userName, existUser, DateTime.Now.AddMinutes(2));
-                return "登录成功";
+                else
+                {
+                    string encrypt = SecurityHelper.MD5Encrypt(password);
+                    if (user.Password != encrypt)
+                    {
+                        obj.Message = "密码错误";
+                    }
+                    else
+                    {
+                        user.Token = "";
+                        obj.Message = "登陆成功";
+                        obj.Data = user;
+                        CacheFactory.Instance.SetCache(userName, user, DateTime.Now.AddMinutes(2));
+                    }
+                }
+                return obj;
             }
             catch (Exception ex)
             {

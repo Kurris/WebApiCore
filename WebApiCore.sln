@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "缓存", "缓存", "{B2EEBE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Cache", "WebApiCore.Cache\WebApiCore.Cache.csproj", "{C56F7E4C-5C4D-4C6D-AE9E-6C4655202578}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Core", "WebApiCore.Core\WebApiCore.Core.csproj", "{1A845D59-57EC-468B-B9A3-A426EC812A14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Core", "WebApiCore.Core\WebApiCore.Core.csproj", "{1A845D59-57EC-468B-B9A3-A426EC812A14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

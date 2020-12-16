@@ -8,7 +8,7 @@ using WebApiCore.Entity.SystemManager;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 
-namespace Ligy.Project.WebApi
+namespace WebApiCore.Core
 {
     /// <summary>
     /// Jwt帮助类

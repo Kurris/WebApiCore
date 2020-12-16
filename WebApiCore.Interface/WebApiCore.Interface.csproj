@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApiCore.EF\WebApiCore.Entity.csproj" />
+    <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj" />
   </ItemGroup>
 
 </Project>

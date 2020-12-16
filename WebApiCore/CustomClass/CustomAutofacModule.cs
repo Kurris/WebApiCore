@@ -20,7 +20,13 @@ namespace Ligy.Project.WebApi.CustomClass
                 .AsImplementedInterfaces()
                 .PropertiesAutowired();
 
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(x => x.Name.EndsWith("Controller")).PropertiesAutowired();
+
+            
+
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                                                  .Where(x => x.Name.EndsWith("Controller")
+                                                           || x.Name.EndsWith("FilterAttribute")
+                                                           || x.Name.Equals("ApiAuthAttribute")).PropertiesAutowired();
         }
     }
 }

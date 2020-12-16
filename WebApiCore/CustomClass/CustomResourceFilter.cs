@@ -1,13 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
-    /// <summary>
-    /// 缓存作用,在控制器实例化前被调用
-    /// </summary>
+
     public class CustomResourceFilterAttribute : Attribute, IResourceFilter
     {
+        private readonly ILogger<CustomResourceFilterAttribute> _logger;
+
+        public CustomResourceFilterAttribute(ILogger<CustomResourceFilterAttribute> logger)
+        {
+            this._logger = logger;
+        }
+
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
 

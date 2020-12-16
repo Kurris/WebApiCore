@@ -51,40 +51,19 @@ namespace WebApiCore.Utils.Model
     /// </summary>
     public enum Status
     {
-        /// <summary>
-        /// 失败
-        /// </summary>
         [Description("失败")]
         Fail = 0,
 
-        /// <summary>
-        /// 成功
-        /// </summary>
         [Description("成功")]
         Success = 1,
 
-        /// <summary>
-        /// 错误
-        /// </summary>
         [Description("错误")]
         Error = 3,
 
-        /// <summary>
-        /// 无权限
-        /// </summary>
         [Description("无权限")]
         NoPermission = 4,
 
-        /// <summary>
-        /// 鉴权失败
-        /// </summary>
-        [Description("鉴权失败")]
-        AuthorizationFail =5,
-
-        /// <summary>
-        /// 实体验证失败
-        /// </summary>
         [Description("实体验证失败")]
-        ValidateEntityError = 6,
+        ValidateEntityError = 5,
     }
 }

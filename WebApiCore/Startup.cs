@@ -43,9 +43,8 @@ namespace Ligy.Project.WebApi
             {
                 option.Filters.Add<CustomExceptionFilterAttribute>();
                 option.Filters.Add<CustomResourceFilterAttribute>();
-                option.Filters.Add<CustomActionAndResultFilter>();
+                option.Filters.Add<CustomActionAndResultFilterAttribute>();
             });
-
 
             services.AddCors(option =>
             {

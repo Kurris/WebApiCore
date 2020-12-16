@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Interface;
-using WebApiCore.Utils;
+using WebApiCore.Utils.Model;
 
 namespace Ligy.Project.WebApi.Controllers
 {
@@ -18,7 +14,7 @@ namespace Ligy.Project.WebApi.Controllers
 
 
         [HttpPost]
-        public async Task<string> Login([FromBody] User user)
+        public async Task<TData<User>> Login([FromBody] User user)
         {
             return await UserService.Login(user?.UserName, user?.Password);
         }

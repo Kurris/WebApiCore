@@ -8,9 +8,9 @@ namespace WebApiCore.Cache
         private static readonly object _lock = new object();
 
         /// <summary>
-        /// 缓存
+        /// 缓存实例
         /// </summary>
-        public static ICache Cache
+        public static ICache Instance
         {
             get
             {

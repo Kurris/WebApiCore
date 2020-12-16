@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
@@ -56,7 +53,7 @@ namespace Ligy.Project.WebApi.CustomClass
             else
             {
 
-                context.Result = new ObjectResult(new TData<string>("授权失败", string.Empty, ReturnStatus.NoPermission));
+                context.Result = new ObjectResult(new TData<string>("授权失败", string.Empty, Status.NoPermission));
             }
         }
     }

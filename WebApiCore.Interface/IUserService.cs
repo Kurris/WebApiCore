@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.Entity.SystemManager;
+using WebApiCore.Utils.Model;
 
 namespace WebApiCore.Interface
 {
@@ -16,8 +17,8 @@ namespace WebApiCore.Interface
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        Task<string> Login(string userName, string password);
-
+        Task<TData<User>> Login(string userName, string password);
+         
         /// <summary>
         /// 检查登录
         /// </summary>
