@@ -13,19 +13,14 @@ namespace Ligy.Project.WebApi.CustomClass
         protected override void Load(ContainerBuilder builder)
         {
             Assembly iservice = Assembly.Load("WebApiCore.Interface");
-
-            //string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            //Assembly service = Assembly.LoadFrom(Path.Combine(localPath, "WebApiCore.Service.dll"));
             Assembly service = Assembly.Load("WebApiCore.Service");
-
-
             builder.RegisterAssemblyTypes(service, iservice)
                    .InstancePerLifetimeScope()
                    .AsImplementedInterfaces()
                    .PropertiesAutowired();
 
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).PropertiesAutowired();
-
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                   .PropertiesAutowired();
         }
     }
 }

@@ -1,10 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
+using System;
 using WebApiCore.Utils;
 
 namespace WebApiCore.Cache

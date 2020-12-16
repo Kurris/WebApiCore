@@ -2,6 +2,9 @@
 
 namespace WebApiCore.Cache
 {
+    /// <summary>
+    /// 缓存工厂
+    /// </summary>
     public class CacheFactory
     {
         private static ICache _cache = null;

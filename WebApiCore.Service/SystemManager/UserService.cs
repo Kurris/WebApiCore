@@ -44,7 +44,7 @@ namespace WebApiCore.Service.SystemManager
                     }
                     else
                     {
-                        user.Token = "";
+                        user.LastLogin = DateTime.Now;
                         obj.Message = "登陆成功";
                         obj.Data = user;
 
@@ -64,7 +64,9 @@ namespace WebApiCore.Service.SystemManager
 
         public async Task<string> LoginOff(string userName)
         {
-            throw new NotImplementedException();
+            await Operator.Instance.RemoveCurrent(userName);
+
+            return "退出登录";
         }
 
         public async Task<string> SignOut(string userName, string password)

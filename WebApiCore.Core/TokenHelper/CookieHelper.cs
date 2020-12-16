@@ -10,8 +10,22 @@ using Autofac;
 
 namespace WebApiCore.Core.TokenHelper
 {
-    public class CookieHelper
+    internal class CookieHelper
     {
+        private IHttpContextAccessor HttpContextAccessor
+        {
+            get
+            {
+                IHttpContextAccessor httpContextAccessor = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
+                if (httpContextAccessor == null)
+                {
+                    throw new NullReferenceException("HttpContext对象为NULL");
+                }
+
+                return httpContextAccessor;
+            }
+        }
+
         /// <summary>
         /// 写cookie值
         /// </summary>
@@ -19,10 +33,11 @@ namespace WebApiCore.Core.TokenHelper
         /// <param name="sValue">值</param>
         public void AddCookie(string sName, string sValue)
         {
-            IHttpContextAccessor hca = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-            CookieOptions option = new CookieOptions();
-            option.Expires = DateTime.Now.AddDays(30);
-            hca.HttpContext.Response.Cookies.Append(sName, sValue, option);
+            CookieOptions option = new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(15)
+            };
+            HttpContextAccessor.HttpContext.Response.Cookies.Append(sName, sValue, option);
         }
 
         /// <summary>
@@ -33,10 +48,11 @@ namespace WebApiCore.Core.TokenHelper
         /// <param name="expires">过期时间(分钟)</param>
         public void AddCookie(string sName, string sValue, int expires)
         {
-            IHttpContextAccessor hca = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-            CookieOptions option = new CookieOptions();
-            option.Expires = DateTime.Now.AddMinutes(expires);
-            hca?.HttpContext?.Response.Cookies.Append(sName, sValue, option);
+            CookieOptions option = new CookieOptions
+            {
+                Expires = DateTime.Now.AddMinutes(expires)
+            };
+            HttpContextAccessor.HttpContext.Response.Cookies.Append(sName, sValue, option);
         }
 
         /// <summary>
@@ -46,8 +62,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <returns>cookie值</returns>
         public string GetCookie(string sName)
         {
-            IHttpContextAccessor hca = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-            return hca?.HttpContext?.Request.Cookies[sName];
+            return HttpContextAccessor.HttpContext?.Request.Cookies[sName];
         }
 
         /// <summary>
@@ -56,8 +71,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <param name="sName">Cookie对象名称</param>
         public void RemoveCookie(string sName)
         {
-            IHttpContextAccessor hca = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-            hca?.HttpContext?.Response.Cookies.Delete(sName);
+            HttpContextAccessor.HttpContext?.Response.Cookies.Delete(sName);
         }
     }
 }

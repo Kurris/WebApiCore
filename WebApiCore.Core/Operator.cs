@@ -13,7 +13,8 @@ namespace WebApiCore.Core
         private static Operator _instance = new Operator();
         public static Operator Instance { get => _instance; }
 
-        private readonly static string _tokenKey = GlobalInvariant.SystemConfig.JwtSetting.TokenName;
+        private readonly string _loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
+        private readonly string _tokenName = GlobalInvariant.SystemConfig.JwtSetting.TokenName;
 
         /// <summary>
         /// 添加当前操作
@@ -22,27 +23,46 @@ namespace WebApiCore.Core
         /// <returns></returns>
         public async Task<User> AddCurrent(User user)
         {
-            string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
+
             string jwtToken = JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtSetting);
 
-            switch (loginProvider)
+            switch (_loginProvider)
             {
                 case "WebApi":
                     user.Token = jwtToken;
                     break;
                 case "Cookie":
-                    new CookieHelper().AddCookie(_tokenKey, jwtToken);
+                    new CookieHelper().AddCookie(_tokenName, jwtToken);
                     break;
                 case "Session":
-                    new SessionHelper().AddSession(_tokenKey, jwtToken);
+                    new SessionHelper().AddSession(_tokenName, jwtToken);
                     break;
                 default:
-                    throw new NotSupportedException(loginProvider);
+                    throw new NotSupportedException(_loginProvider);
             }
 
             CacheFactory.Instance.SetCache(user.UserName, user, DateTime.Now.AddMinutes(2));
 
             return user;
+        }
+
+        public async Task<bool> RemoveCurrent(string userName)
+        {
+            switch (_loginProvider)
+            {
+                case "WebApi":
+                    break;
+                case "Cookie":
+                    new CookieHelper().RemoveCookie(_tokenName);
+                    break;
+                case "Session":
+                    new SessionHelper().RemoveSession(_tokenName);
+                    break;
+                default:
+                    throw new NotSupportedException(_loginProvider);
+            }
+
+            return CacheFactory.Instance.RemoveCache(userName);
         }
     }
 }

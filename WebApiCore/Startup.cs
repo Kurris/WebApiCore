@@ -26,7 +26,7 @@ namespace Ligy.Project.WebApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddControllersAsServices();
@@ -36,7 +36,7 @@ namespace Ligy.Project.WebApi
                    setupAction.SwaggerDoc("V1", new Microsoft.OpenApi.Models.OpenApiInfo()
                    {
                        Version = "Ver 1",
-                       Title = "MyBlog WebApi",
+                       Title = "WebApi",
                    });
                });
 
@@ -55,7 +55,7 @@ namespace Ligy.Project.WebApi
                    builder.AllowAnyOrigin().AllowAnyMethod();
                });
             });
-            //services.AddHttpContextAccessor();
+            services.AddHttpContextAccessor();
             services.AddMemoryCache();
             services.AddSession();
 
@@ -115,7 +115,7 @@ namespace Ligy.Project.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
-                option.SwaggerEndpoint("/swagger/V1/swagger.json", "MyBlog WebApi");
+                option.SwaggerEndpoint("/swagger/V1/swagger.json", "WebApi");
             });
             app.UseRouting();
             //跨域 必须在UseRouting之后,UseAuthorization之前

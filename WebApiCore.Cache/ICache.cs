@@ -4,6 +4,9 @@ using System.Text;
 
 namespace WebApiCore.Cache
 {
+    /// <summary>
+    /// 缓存实现接口
+    /// </summary>
     public interface ICache
     {
         /// <summary>
