@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,7 +21,8 @@ namespace Ligy.Project.WebApi.CustomClass
                    .PropertiesAutowired();
 
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                   .PropertiesAutowired();
+                .Where(x => x.IsSubclassOf(typeof(ControllerBase))
+                         || x.IsSubclassOf(typeof(Attribute))).PropertiesAutowired();
         }
     }
 }

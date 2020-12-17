@@ -9,25 +9,21 @@ using WebApiCore.Utils.Model;
 
 namespace Ligy.Project.WebApi.CustomClass
 {
-
+    /// <summary>
+    /// 自定义Action和Result过滤器
+    /// </summary>
     public class CustomActionAndResultFilterAttribute : ActionFilterAttribute
     {
-        private readonly ILogger<CustomActionAndResultFilterAttribute> _logger;
 
         public ILogger<CustomActionAndResultFilterAttribute>  Logger { get; set; }
 
-        public CustomActionAndResultFilterAttribute(ILogger<CustomActionAndResultFilterAttribute> logger)
-        {
-            this._logger = logger;
-        }
 
         public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
                        $"【Action】:{context.RouteData.Values["action"]}\r\n" +
                        $"【Paras】：{(context.ActionArguments.Count == 0 ? "None" : JsonHelper.ToJson(context.ActionArguments))}";
-
-            _logger.LogInformation(sLog);
+            Logger.LogInformation(sLog);
 
             return base.OnActionExecutionAsync(context, next);
         }
@@ -37,7 +33,7 @@ namespace Ligy.Project.WebApi.CustomClass
             var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
                        $"【Action】:{context.RouteData.Values["action"]}\r\n";
 
-            _logger.LogInformation(sLog);
+            Logger.LogInformation(sLog);
 
             if (!context.ModelState.IsValid)
             {

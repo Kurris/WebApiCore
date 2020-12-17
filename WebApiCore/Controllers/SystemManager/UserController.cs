@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ligy.Project.WebApi.CustomClass;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Interface;
 using WebApiCore.Utils.Model;
 
-namespace Ligy.Project.WebApi.Controllers
+namespace Ligy.Project.WebApi.Controllers.SystemManager
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -20,16 +21,17 @@ namespace Ligy.Project.WebApi.Controllers
             return await UserService.Login(user?.UserName, user?.Password);
         }
 
-        [HttpPost]
-        public async Task<User> CheckLogin()
+        [ApiAuth]
+        [HttpGet]
+        public async Task<User> RefreshToken()
         {
-            return await UserService.CheckLogin("ligy");
+            return await UserService.RefreshToken();
         }
 
         [HttpPost]
-        public async Task<string> LoginOff()
+        public async Task<TData<string>> LoginOff(string userName)
         {
-            return null;
+            return await UserService.LoginOff(userName);
         }
 
         [HttpPost]

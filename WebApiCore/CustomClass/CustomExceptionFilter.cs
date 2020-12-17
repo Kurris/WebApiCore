@@ -9,11 +9,7 @@ namespace Ligy.Project.WebApi.CustomClass
 {
     public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        private readonly ILogger<CustomExceptionFilterAttribute> _logger;
-        public CustomExceptionFilterAttribute(ILogger<CustomExceptionFilterAttribute> logger)
-        {
-            this._logger = logger;
-        }
+        public ILogger<CustomExceptionFilterAttribute>  Logger { get; set; }
 
         public override Task OnExceptionAsync(ExceptionContext context)
         {
@@ -22,7 +18,7 @@ namespace Ligy.Project.WebApi.CustomClass
             var sLog = $"【Source】:{context.Exception.TargetSite}\r\n" +
                         $"【StackTrace】:{context.Exception.StackTrace}\r\n" +
                         $"【ErrorMessage】:{msg}\r\n";
-            _logger.LogError(sLog);
+            Logger.LogError(sLog);
 
             context.ExceptionHandled = true;
 

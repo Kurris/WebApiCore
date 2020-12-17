@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Threading.Tasks;
 using WebApiCore.Cache;
 using WebApiCore.Core.TokenHelper;
 using WebApiCore.Entity;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Utils;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApiCore.Core
 {
@@ -19,17 +22,16 @@ namespace WebApiCore.Core
         /// <summary>
         /// 添加当前操作
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="user">用户信息<see cref="User"/></param>
+        /// <returns>用户信息<see cref="User"/></returns>
         public async Task<User> AddCurrent(User user)
         {
-
+            user.RefreshTime = DateTime.Now.AddMinutes(GlobalInvariant.SystemConfig.JwtSetting.Expiration);
             string jwtToken = JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtSetting);
 
             switch (_loginProvider)
             {
                 case "WebApi":
-                    user.Token = jwtToken;
                     break;
                 case "Cookie":
                     new CookieHelper().AddCookie(_tokenName, jwtToken);
@@ -41,11 +43,18 @@ namespace WebApiCore.Core
                     throw new NotSupportedException(_loginProvider);
             }
 
-            CacheFactory.Instance.SetCache(user.UserName, user, DateTime.Now.AddMinutes(2));
+            user.Token = jwtToken;
+
+            CacheFactory.Instance.SetCache(user.UserName, user, DateTime.Now.AddMinutes(GlobalInvariant.SystemConfig.JwtSetting.Expiration));
 
             return user;
         }
 
+        /// <summary>
+        /// 移除当前凭证
+        /// </summary>
+        /// <param name="userName">用户账号</param>
+        /// <returns></returns>
         public async Task<bool> RemoveCurrent(string userName)
         {
             switch (_loginProvider)
@@ -63,6 +72,17 @@ namespace WebApiCore.Core
             }
 
             return CacheFactory.Instance.RemoveCache(userName);
+        }
+
+        /// <summary>
+        /// 获取当前操作者
+        /// </summary>
+        /// <returns><see cref="User"/></returns>
+        public async Task<User> GetCurrent()
+        {
+            var accessor = GlobalInvariant.ServiceProvider.GetService<IHttpContextAccessor>();
+            string userName = accessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+            return CacheFactory.Instance.GetCache<User>(userName);
         }
     }
 }

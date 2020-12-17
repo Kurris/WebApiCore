@@ -18,13 +18,6 @@ namespace WebApiCore.Interface
         /// <param name="password"></param>
         /// <returns></returns>
         Task<TData<User>> Login(string userName, string password);
-         
-        /// <summary>
-        /// 检查登录
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <returns></returns>
-        Task<User> CheckLogin(string userName);
 
         /// <summary>
         /// 注册
@@ -38,6 +31,12 @@ namespace WebApiCore.Interface
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        Task<string> LoginOff(string userName);
+        Task<TData<string>> LoginOff(string userName);
+
+        /// <summary>
+        /// 刷新Token
+        /// </summary>
+        /// <returns></returns>
+        Task<User> RefreshToken();
     }
 }

@@ -11,6 +11,9 @@ using WebApiCore.Utils.Model;
 namespace Ligy.Project.WebApi.CustomClass
 {
 
+    /// <summary>
+    /// 自定义Auth鉴权
+    /// </summary>
     public class ApiAuthAttribute : AuthorizeAttribute, IAuthorizationFilter
     {
         /// <summary>
@@ -48,7 +51,6 @@ namespace Ligy.Project.WebApi.CustomClass
                 {
                     //context.Result = new ObjectResult();
                 }
-
             }
             else
             {

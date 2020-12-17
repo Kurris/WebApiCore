@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebApiCore.Core\WebApiCore.Core.csproj" />
     <ProjectReference Include="..\WebApiCore.EF\WebApiCore.Entity.csproj">
       <Private>true</Private>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>

@@ -9,8 +9,10 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using WebApiCore.Core;
 using WebApiCore.Entity;
 using WebApiCore.Entity.BlogInfos;
+using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.EF
 {
@@ -95,7 +97,9 @@ namespace WebApiCore.EF
                     item.Property("Creator").IsModified = false;
                     item.Property("CreateTime").IsModified = false;
 
-                    item.Property("Modifier").CurrentValue = item.Property("Modifier").CurrentValue ?? "System";
+                    var user = await Operator.Instance.GetCurrent();
+
+                    item.Property("Modifier").CurrentValue = user.UserName.IsEmpty() ? "System" : user.UserName;
                     item.Property("ModifyTime").CurrentValue = DateTime.Now;
                 }
             }

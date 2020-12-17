@@ -3,10 +3,13 @@ using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.Utils.Model
 {
+    /// <summary>
+    /// 实体验证错误
+    /// </summary>
     public class EntityErrorParam
     {
         /// <summary>
-        /// 验证
+        /// 实体验证错误
         /// </summary>
         /// <param name="field"></param>
         /// <param name="message"></param>

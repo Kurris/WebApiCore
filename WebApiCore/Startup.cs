@@ -26,7 +26,7 @@ namespace Ligy.Project.WebApi
 
         public IConfiguration Configuration { get; }
 
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddControllersAsServices();
@@ -43,16 +43,16 @@ namespace Ligy.Project.WebApi
             //自定义特性
             services.AddMvc(option =>
             {
-                option.Filters.Add<CustomExceptionFilterAttribute>();
-                option.Filters.Add<CustomResourceFilterAttribute>();
-                option.Filters.Add<CustomActionAndResultFilterAttribute>();
+                option.Filters.AddService<CustomExceptionFilterAttribute>();
+                option.Filters.AddService<CustomResourceFilterAttribute>();
+                option.Filters.AddService<CustomActionAndResultFilterAttribute>();
             });
 
             services.AddCors(option =>
             {
                 option.AddPolicy("AllowCors", builder =>
                {
-                   builder.AllowAnyOrigin().AllowAnyMethod();
+                   builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                });
             });
             services.AddHttpContextAccessor();
@@ -79,10 +79,6 @@ namespace Ligy.Project.WebApi
                         else
                             throw new NotSupportedException(loginProvider);
 
-                        return Task.CompletedTask;
-                    },
-                    OnAuthenticationFailed = context =>
-                    {
                         return Task.CompletedTask;
                     }
                 };

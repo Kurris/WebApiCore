@@ -6,7 +6,7 @@ namespace WebApiCore.Utils.Model
     /// <summary>
     /// 数据结果返回模型
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">数据类型</typeparam>
     public class TData<T>
     {
         /// <summary>
@@ -79,12 +79,18 @@ namespace WebApiCore.Utils.Model
         /// 鉴权失败
         /// </summary>
         [Description("鉴权失败")]
-        AuthorizationFail =5,
+        AuthorizationFail = 5,
 
         /// <summary>
         /// 实体验证失败
         /// </summary>
         [Description("实体验证失败")]
         ValidateEntityError = 6,
+
+        /// <summary>
+        /// 登录成功
+        /// </summary>
+        [Description("登录成功")]
+        LoginSuccess = 7
     }
 }

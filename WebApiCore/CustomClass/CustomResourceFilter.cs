@@ -7,12 +7,7 @@ namespace Ligy.Project.WebApi.CustomClass
 
     public class CustomResourceFilterAttribute : Attribute, IResourceFilter
     {
-        private readonly ILogger<CustomResourceFilterAttribute> _logger;
-
-        public CustomResourceFilterAttribute(ILogger<CustomResourceFilterAttribute> logger)
-        {
-            this._logger = logger;
-        }
+        public ILogger<CustomResourceFilterAttribute>  Logger { get; set; }
 
         public void OnResourceExecuting(ResourceExecutingContext context)
         {

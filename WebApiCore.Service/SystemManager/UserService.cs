@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.Cache;
 using WebApiCore.Core;
+using WebApiCore.Core.TokenHelper;
 using WebApiCore.EF;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Interface;
@@ -18,11 +19,12 @@ namespace WebApiCore.Service.SystemManager
     {
         public ILogger<UserService> Logger { get; set; }
 
-        public async Task<User> CheckLogin(string userName)
-        {
-            return CacheFactory.Instance.GetCache<User>(userName);
-        }
-
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <param name="password">密码</param>
+        /// <returns>用户信息</returns>
         public async Task<TData<User>> Login(string userName, string password)
         {
             var op = await InitDB.Create().BeginTransAsync();
@@ -46,6 +48,7 @@ namespace WebApiCore.Service.SystemManager
                     {
                         user.LastLogin = DateTime.Now;
                         obj.Message = "登陆成功";
+                        obj.Status = Status.LoginSuccess;
                         obj.Data = user;
 
                         await Operator.Instance.AddCurrent(user);
@@ -62,11 +65,19 @@ namespace WebApiCore.Service.SystemManager
             }
         }
 
-        public async Task<string> LoginOff(string userName)
+        /// <summary>
+        /// 退出登录
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <returns>退出信息</returns>
+        public async Task<TData<string>> LoginOff(string userName)
         {
             await Operator.Instance.RemoveCurrent(userName);
-
-            return "退出登录";
+            return new TData<string>()
+            {
+                Message = "退出成功",
+                Status = Status.Success
+            };
         }
 
         public async Task<string> SignOut(string userName, string password)
@@ -112,6 +123,15 @@ namespace WebApiCore.Service.SystemManager
                 Logger.LogError(ex, ex.InnerException?.Message);
                 return "注册失败";
             }
+        }
+
+        public async Task<User> RefreshToken()
+        {
+            User user = await Operator.Instance.GetCurrent();
+            user.Token = JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtSetting);
+            CacheFactory.Instance.SetCache(user.UserName, user);
+
+            return user;
         }
     }
 }
