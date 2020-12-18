@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
 
-namespace Ligy.Project.WebApi.CustomClass
+namespace WebApiCore.CustomClass
 {
     public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Model;
 
-namespace Ligy.Project.WebApi.CustomClass
+namespace WebApiCore.CustomClass
 {
     /// <summary>
     /// 自定义Action和Result过滤器

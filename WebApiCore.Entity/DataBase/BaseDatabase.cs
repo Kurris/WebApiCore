@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.EF.DataBase.Extension;
 using WebApiCore.Entity;
-using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.EF.DataBase
 {
@@ -95,20 +94,24 @@ namespace WebApiCore.EF.DataBase
         }
         public virtual async Task<IDataBaseOperation> CreateSavepointAsync(string name)
         {
-            IDataBaseOperation operation = _dbContextTransaction == null
-                                    ? await BeginTransAsync()
-                                    : this;
+            throw new NotImplementedException(".net core 3.1");
 
-            await _dbContextTransaction.CreateSavepointAsync(name);
+            //IDataBaseOperation operation = _dbContextTransaction == null
+            //                        ? await BeginTransAsync()
+            //                        : this;
 
-            return operation;
+            //await _dbContextTransaction.CreateSavepointAsync(name);
+
+            //return operation;
         }
         public virtual async Task RollbackToSavepointAsync(string name)
         {
-            if (_dbContextTransaction != null)
-            {
-                await _dbContextTransaction.RollbackToSavepointAsync(name);
-            }
+            throw new NotImplementedException(".net core 3.1");
+
+            //if (_dbContextTransaction != null)
+            //{
+            //    await _dbContextTransaction.RollbackToSavepointAsync(name);
+            //}
         }
         public virtual async Task CloseAsync()
         {
@@ -171,7 +174,8 @@ namespace WebApiCore.EF.DataBase
         }
         public virtual async Task<int> DeleteAsync<T>(int keyValue) where T : BaseEntity
         {
-            IEntityType entityType = _dbContext.Set<T>().EntityType;
+            //IEntityType entityType = _dbContext.Set<T>().EntityType;
+            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(T));
             if (entityType == null)
             {
                 throw new NotSupportedException($"类型{entityType.Name}不符合跟踪要求!");
@@ -184,7 +188,8 @@ namespace WebApiCore.EF.DataBase
         }
         public virtual async Task<int> DeleteAsync<T>(IEnumerable<int> keyValues) where T : BaseEntity
         {
-            IEntityType entityType = _dbContext.Set<T>().EntityType;
+            //IEntityType entityType = _dbContext.Set<T>().EntityType;
+            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(T));
             if (entityType == null)
             {
                 throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
@@ -202,7 +207,8 @@ namespace WebApiCore.EF.DataBase
         }
         public virtual async Task<int> DeleteAsync<T>(string propName, object propValue) where T : BaseEntity
         {
-            IEntityType entityType = _dbContext.Set<T>().EntityType;
+            //IEntityType entityType = _dbContext.Set<T>().EntityType;
+            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(T));
             if (entityType == null)
             {
                 throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");
@@ -216,7 +222,8 @@ namespace WebApiCore.EF.DataBase
 
         public virtual async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity
         {
-            IEntityType entityType = _dbContext.Set<T>().EntityType;
+            //IEntityType entityType = _dbContext.Set<T>().EntityType;
+            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(T));
             if (entityType == null)
             {
                 throw new ArgumentException($"类型{entityType.Name}不符合跟踪要求!");

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace Ligy.Project.WebApi.CustomClass
+namespace WebApiCore.CustomClass
 {
 
     public class CustomResourceFilterAttribute : Attribute, IResourceFilter

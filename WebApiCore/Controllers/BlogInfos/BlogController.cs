@@ -1,27 +1,22 @@
-﻿using Ligy.Project.WebApi.CustomClass;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApiCore.CustomClass;
 using WebApiCore.Entity.BlogInfos;
-using WebApiCore.Interface;
+using WebApiCore.Interface.BlogInfos;
 using WebApiCore.Service.SystemManager;
 using WebApiCore.Utils;
 
-namespace Ligy.Project.WebApi.Controllers
+namespace WebApiCore.Controllers.BlogInfos
 {
     [ApiAuth]
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class EFTestsController : ControllerBase
+    public class BlogController : ControllerBase
     {
 
         public IBlogService BlogService { get; set; }
 
-        private readonly IBlogService _blogService = null;
-        public EFTestsController(IBlogService blogService)
-        {
-            this._blogService = blogService;
-        }
 
         [HttpGet]
         public async Task<IEnumerable<Blog>> GetBlogs()

@@ -1,23 +1,19 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WebApiCore.Cache;
 using WebApiCore.Core;
 using WebApiCore.Core.TokenHelper;
 using WebApiCore.EF;
 using WebApiCore.Entity.SystemManager;
-using WebApiCore.Interface;
+using WebApiCore.Interface.SystemManager;
 using WebApiCore.Utils;
+using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
 
 namespace WebApiCore.Service.SystemManager
 {
     public class UserService : IUserService
     {
-        public ILogger<UserService> Logger { get; set; }
 
         /// <summary>
         /// 登录
@@ -28,11 +24,10 @@ namespace WebApiCore.Service.SystemManager
         public async Task<TData<User>> Login(string userName, string password)
         {
             var op = await InitDB.Create().BeginTransAsync();
+            TData<User> obj = new TData<User>();
             try
             {
                 User user = await op.FindAsync<User>(x => x.UserName == userName);
-                TData<User> obj = new TData<User>();
-
                 if (user == null)
                 {
                     obj.Message = "用户不存在";
@@ -46,22 +41,26 @@ namespace WebApiCore.Service.SystemManager
                     }
                     else
                     {
+
+                        await op.RunSqlAsync("UPDATE Users SET lastlogin=@lastlogin", new Dictionary<string, object>() { ["lastlogin"] = DateTime.Now });
+
                         user.LastLogin = DateTime.Now;
                         obj.Message = "登陆成功";
                         obj.Status = Status.LoginSuccess;
                         obj.Data = user;
 
                         await Operator.Instance.AddCurrent(user);
-                        return obj;
                     }
                 }
+                await op.CommitTransAsync();
                 return obj;
             }
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
-                Logger.LogError(ex, ex.InnerException?.Message);
-                throw;
+                obj.Status = Status.Error;
+                obj.Message = ex.GetInnerException();
+                return obj;
             }
         }
 
@@ -80,58 +79,93 @@ namespace WebApiCore.Service.SystemManager
             };
         }
 
-        public async Task<string> SignOut(string userName, string password)
+        public async Task<TData<string>> SignOut(string userName, string password)
         {
             var op = await InitDB.Create().BeginTransAsync();
+            TData<string> obj = new TData<string>();
             try
             {
                 string encrypt = SecurityHelper.MD5Encrypt(password);
                 User existUser = await op.FindAsync<User>(x => x.UserName == userName && x.Password == encrypt);
                 if (existUser == null)
                 {
-                    return $"注销失败,用户{userName}不存在";
+                    obj.Message = $"注销失败,用户{userName}不存在";
+                    return obj;
                 }
 
                 await op.DeleteAsync(existUser);
-                return "注销成功";
+                await op.CommitTransAsync();
+
+                obj.Message = "注销成功";
+                obj.Status = Status.Success;
+                return obj;
             }
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
-                Logger.LogError(ex, ex.InnerException?.Message);
-                return "注销失败";
+                obj.Message = ex.GetInnerException();
+                return obj;
             }
         }
 
-        public async Task<string> SignUp(User user)
+        public async Task<TData<string>> SignUp(User user)
         {
             var op = await InitDB.Create().BeginTransAsync();
+            TData<string> obj = new TData<string>();
             try
             {
                 User existUser = await op.FindAsync<User>(x => x.UserName == user.UserName);
                 if (existUser != null)
                 {
-                    return $"注册失败,已经存在用户{user.UserName}";
+                    obj.Message = $"注册失败,已经存在用户{user.UserName}";
+                    return obj;
                 }
+
                 user.Password = SecurityHelper.MD5Encrypt(user.Password);
-                await InitDB.Create().AddAsync(user);
-                return "注册成功";
+                await op.AddAsync(user);
+                await op.CommitTransAsync();
+
+                obj.Message = "注册成功";
+                obj.Status = Status.Success;
+                return obj;
             }
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
-                Logger.LogError(ex, ex.InnerException?.Message);
-                return "注册失败";
+                obj.Message = ex.GetInnerException();
+                obj.Status = Status.Error;
+                return obj;
             }
         }
 
-        public async Task<User> RefreshToken()
+        public async Task<string> RefreshToken()
         {
-            User user = await Operator.Instance.GetCurrent();
-            user.Token = JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtSetting);
-            CacheFactory.Instance.SetCache(user.UserName, user);
+            string userName = await Operator.Instance.GetCurrent();
+            User user = await InitDB.Create().FindAsync<User>(x => x.UserName == userName);
+            return JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtSetting);
+        }
 
-            return user;
+        public async Task<TData<User>> EditUser(User user)
+        {
+            var op = await InitDB.Create().BeginTransAsync();
+            TData<User> obj = new TData<User>();
+            try
+            {
+                await op.UpdateAsync(user);
+                await op.CommitTransAsync();
+                obj.Message = "修改成功";
+                obj.Status = Status.Success;
+            }
+            catch (Exception ex)
+            {
+                await op.RollbackTransAsync();
+                obj.Message = ex.GetInnerException();
+                obj.Status = Status.Error;
+                return obj;
+            }
+
+            obj.Data = await InitDB.Create().FindAsync<User>(user.UserId);
+            return obj;
         }
     }
 }

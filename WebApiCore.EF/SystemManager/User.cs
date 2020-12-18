@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebApiCore.Entity.SystemManager
 {
@@ -14,9 +10,15 @@ namespace WebApiCore.Entity.SystemManager
         public string UserName { get; set; }
         public string Password { get; set; }
 
+        public string Email { get; set; }
+
+        public string MobilePhone { get; set; }
+
+        public DateTime? LastLogin { get; set; }
+
         [NotMapped]
         public string Token { get; set; }
+        [NotMapped]
         public DateTime? RefreshTime { get; set; }
-        public DateTime? LastLogin { get; set; }
     }
 }

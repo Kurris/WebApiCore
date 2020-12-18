@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApiCore.EF;
 using WebApiCore.Entity.BlogInfos;
-using WebApiCore.Interface;
-using WebApiCore.Utils.Model;
+using WebApiCore.Interface.BlogInfos;
 
-namespace WebApiCore.Service
+namespace WebApiCore.Service.BlogInfos
 {
     public class BlogService : IBlogService
     {

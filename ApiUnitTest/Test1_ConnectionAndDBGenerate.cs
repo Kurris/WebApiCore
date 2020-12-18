@@ -1,8 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.EF;
 using WebApiCore.EF.DataBase;
@@ -23,6 +19,13 @@ namespace ApiUnitTest
         [TestMethod]
         public async Task CreateDataBase()
         {
+            var op = InitDB.Create("MySql", "data source=localhost;database=MyBlog; uid=root;pwd=Sa123456!;")
+                        .GetIDataBaseOperation();
+
+            await op.EnsureDeletedAsync();
+            await op.EnsureCreatedAsync();
+
+
             await GetInterface().EnsureDeletedAsync();
             await GetInterface().EnsureCreatedAsync();
         }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApiCore.EF;
 using WebApiCore.EF.DataBase;
 using WebApiCore.Entity.BlogInfos;
-using System.Collections.Generic;
-using System;
-using Microsoft.EntityFrameworkCore;
 
 namespace ApiUnitTest
 {
@@ -38,7 +36,7 @@ namespace ApiUnitTest
                 await op.UpdateAsync(blog);
                 await op.CommitTransAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await op.RollbackTransAsync();
                 throw;
@@ -85,7 +83,7 @@ namespace ApiUnitTest
                 await op.UpdateAsync<Blog>(new[] { blog, blog2 });
                 await op.CommitTransAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 await op.RollbackTransAsync();
                 throw;

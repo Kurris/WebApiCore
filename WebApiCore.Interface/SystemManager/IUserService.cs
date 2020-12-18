@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Utils.Model;
 
-namespace WebApiCore.Interface
+namespace WebApiCore.Interface.SystemManager
 {
     public interface IUserService
     {
@@ -24,7 +20,7 @@ namespace WebApiCore.Interface
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        Task<string> SignUp(User user);
+        Task<TData<string>> SignUp(User user);
 
         /// <summary>
         /// 登出
@@ -36,7 +32,14 @@ namespace WebApiCore.Interface
         /// <summary>
         /// 刷新Token
         /// </summary>
-        /// <returns></returns>
-        Task<User> RefreshToken();
+        /// <returns>Token</returns>
+        Task<string> RefreshToken();
+
+        /// <summary>
+        /// 编辑用户资料
+        /// </summary>
+        /// <param name="user">需要修改的用户资料</param>
+        /// <returns>用户资料</returns>
+        Task<TData<User>> EditUser(User user);
     }
 }

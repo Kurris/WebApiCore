@@ -1,12 +1,12 @@
-﻿using Ligy.Project.WebApi.CustomClass;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using WebApiCore.CustomClass;
 using WebApiCore.Entity.SystemManager;
-using WebApiCore.Interface;
+using WebApiCore.Interface.SystemManager;
 using WebApiCore.Utils.Model;
 
-namespace Ligy.Project.WebApi.Controllers.SystemManager
+namespace WebApiCore.Controllers.SystemManager
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -23,7 +23,7 @@ namespace Ligy.Project.WebApi.Controllers.SystemManager
 
         [ApiAuth]
         [HttpGet]
-        public async Task<User> RefreshToken()
+        public async Task<string> RefreshToken()
         {
             return await UserService.RefreshToken();
         }
@@ -35,9 +35,15 @@ namespace Ligy.Project.WebApi.Controllers.SystemManager
         }
 
         [HttpPost]
-        public async Task<string> SignUp([FromBody] User user)
+        public async Task<TData<string>> SignUp([FromBody] User user)
         {
             return await UserService.SignUp(user);
+        }
+
+        [HttpPost]
+        public async Task<TData<User>> EditUser([FromBody] User user)
+        {
+            return await UserService.EditUser(user);
         }
     }
 }

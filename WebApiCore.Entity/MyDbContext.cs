@@ -1,18 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiCore.Core;
 using WebApiCore.Entity;
-using WebApiCore.Entity.BlogInfos;
-using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.EF
 {
@@ -47,8 +41,7 @@ namespace WebApiCore.EF
             }
             else if (this._provider.Equals("MySql", StringComparison.OrdinalIgnoreCase))
             {
-                //optionsBuilder.usem(this._connStr,x=);
-                throw new NotImplementedException("MySql尚未实现!");
+                optionsBuilder.UseMySql(this._connStr, x => x.CommandTimeout(5));
             }
             else
                 throw new NotImplementedException("未知的数据引擎");
@@ -85,10 +78,13 @@ namespace WebApiCore.EF
         /// <returns></returns>
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            var userName = await Operator.Instance.GetCurrent() ?? "System";
+
             foreach (var item in this.ChangeTracker.Entries())
             {
                 if (item.State == EntityState.Added)
                 {
+                    item.Property("Creator").CurrentValue = userName;
                     item.Property("CreateTime").CurrentValue = DateTime.Now;
                 }
                 else if (item.State == EntityState.Modified)
@@ -97,9 +93,7 @@ namespace WebApiCore.EF
                     item.Property("Creator").IsModified = false;
                     item.Property("CreateTime").IsModified = false;
 
-                    var user = await Operator.Instance.GetCurrent();
-
-                    item.Property("Modifier").CurrentValue = user.UserName.IsEmpty() ? "System" : user.UserName;
+                    item.Property("Modifier").CurrentValue = userName;
                     item.Property("ModifyTime").CurrentValue = DateTime.Now;
                 }
             }

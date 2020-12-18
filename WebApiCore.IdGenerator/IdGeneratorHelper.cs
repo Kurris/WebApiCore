@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WebApiCore.IdGenerator
+﻿namespace WebApiCore.IdGenerator
 {
     /// <summary>
     /// ID生成帮助类

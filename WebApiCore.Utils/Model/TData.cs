@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.Utils.Model
 {

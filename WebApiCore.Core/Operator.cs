@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.Cache;
 using WebApiCore.Core.TokenHelper;
-using WebApiCore.Entity;
 using WebApiCore.Entity.SystemManager;
 using WebApiCore.Utils;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApiCore.Core
 {
@@ -16,8 +15,8 @@ namespace WebApiCore.Core
         private static Operator _instance = new Operator();
         public static Operator Instance { get => _instance; }
 
-        private readonly string _loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
-        private readonly string _tokenName = GlobalInvariant.SystemConfig.JwtSetting.TokenName;
+        private readonly string _loginProvider = GlobalInvariant.SystemConfig?.LoginProvider;
+        private readonly string _tokenName = GlobalInvariant.SystemConfig?.JwtSetting?.TokenName;
 
         /// <summary>
         /// 添加当前操作
@@ -44,8 +43,6 @@ namespace WebApiCore.Core
             }
 
             user.Token = jwtToken;
-
-            CacheFactory.Instance.SetCache(user.UserName, user, DateTime.Now.AddMinutes(GlobalInvariant.SystemConfig.JwtSetting.Expiration));
 
             return user;
         }
@@ -77,12 +74,12 @@ namespace WebApiCore.Core
         /// <summary>
         /// 获取当前操作者
         /// </summary>
-        /// <returns><see cref="User"/></returns>
-        public async Task<User> GetCurrent()
+        /// <returns>User Naem<see cref="string"/></returns>
+        public async Task<string> GetCurrent()
         {
-            var accessor = GlobalInvariant.ServiceProvider.GetService<IHttpContextAccessor>();
-            string userName = accessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
-            return CacheFactory.Instance.GetCache<User>(userName);
+            var accessor = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
+
+            return accessor?.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
         }
     }
 }

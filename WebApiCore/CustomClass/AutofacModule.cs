@@ -1,15 +1,12 @@
 ﻿using Autofac;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Ligy.Project.WebApi.CustomClass
+namespace WebApiCore.CustomClass
 {
-    public class CustomAutofacModule : Autofac.Module
+    public class AutofacModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {
@@ -23,6 +20,7 @@ namespace Ligy.Project.WebApi.CustomClass
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .Where(x => x.IsSubclassOf(typeof(ControllerBase))
                          || x.IsSubclassOf(typeof(Attribute))).PropertiesAutowired();
+
         }
     }
 }
