@@ -10,7 +10,7 @@ namespace WebApiCore.Utils.Extensions
             {
                 return exception.Message;
             }
-            return exception.GetInnerException();
+            return exception.InnerException.GetInnerException();
         }
     }
 }

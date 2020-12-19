@@ -331,6 +331,17 @@ namespace WebApiCore.Utils.Extensions
                 return string.Empty;
             }
         }
+
+        /// <summary>
+        /// 将object转换为string，若转换失败，则返回""。不抛出异常。  
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="formatProvider"></param>
+        /// <returns></returns>
+        public static string ParseToString(this object obj, IFormatProvider formatProvider)
+        {
+            return obj.ParseToString()?.ToString(formatProvider);
+        }
         public static string ParseToStrings<T>(this object obj)
         {
             try

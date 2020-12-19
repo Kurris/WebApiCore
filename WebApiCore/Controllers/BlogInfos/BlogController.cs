@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using WebApiCore.CustomClass;
 using WebApiCore.Entity.BlogInfos;
 using WebApiCore.Interface.BlogInfos;
-using WebApiCore.Service.SystemManager;
 using WebApiCore.Utils;
 
 namespace WebApiCore.Controllers.BlogInfos
@@ -27,8 +26,9 @@ namespace WebApiCore.Controllers.BlogInfos
         [HttpGet]
         public async Task<OSInfo> GetOSInfo()
         {
-            OSInfoService infoService = new OSInfoService();
-            return await infoService.GetOSInfo();
+            //OSInfoService infoService = new OSInfoService();
+            //return await infoService.GetOSInfo();
+            return null;
         }
     }
 }

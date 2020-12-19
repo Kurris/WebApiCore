@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,8 +34,12 @@ namespace WebApiCore
             GlobalInvariant.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
             GlobalInvariant.Configuration = Configuration;
 
-            services.AddControllers().AddControllersAsServices();
-
+            services.AddControllers().AddControllersAsServices()
+                .AddNewtonsoftJson(x=>
+                {
+                    x.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                });
+            
             services.AddSwaggerGen(setupAction =>
                {
                    setupAction.SwaggerDoc("V1", new Microsoft.OpenApi.Models.OpenApiInfo()
@@ -52,13 +57,7 @@ namespace WebApiCore
                 option.Filters.AddService<CustomActionAndResultFilterAttribute>();
             });
 
-            services.AddCors(option =>
-            {
-                option.AddPolicy(_corsPolicy, builder =>
-               {
-                   builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-               });
-            });
+            services.AddCors();
             services.AddHttpContextAccessor();
             services.AddMemoryCache();
             services.AddSession();
@@ -116,7 +115,10 @@ namespace WebApiCore
             });
             app.UseRouting();
             //跨域 必须在UseRouting之后,UseAuthorization之前
-            app.UseCors(_corsPolicy);
+            app.UseCors(builder=>
+            {
+                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            });
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

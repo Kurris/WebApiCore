@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.Utils
@@ -19,5 +20,34 @@ namespace WebApiCore.Utils
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
+    }
+
+    public class DateTimeJsonConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return true;
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return reader.Value?.ParseToString().ParseToDateTime();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            DateTime? dt = value as DateTime?;
+            if (dt == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            writer.WriteValue(dt.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
     }
 }

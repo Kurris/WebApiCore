@@ -6,13 +6,13 @@ namespace WebApiCore.Cache
 {
     internal class RedisCache : ICache, IDisposable
     {
-        private IDatabase cache;
-        private ConnectionMultiplexer connection;
+        private readonly IDatabase _cache;
+        private readonly ConnectionMultiplexer _connection;
 
         public RedisCache()
         {
-            connection = ConnectionMultiplexer.Connect(GlobalInvariant.SystemConfig.RedisConnectionString);
-            cache = connection.GetDatabase();
+            _connection = ConnectionMultiplexer.Connect(GlobalInvariant.SystemConfig.RedisConnectionString);
+            _cache = _connection.GetDatabase();
         }
 
         public bool SetCache<T>(string key, T value, DateTime? expireDateTime = null)
@@ -26,25 +26,25 @@ namespace WebApiCore.Cache
 
             if (expireDateTime == null)
             {
-                return cache.StringSet(key, strValue);
+                return _cache.StringSet(key, strValue);
             }
             else
             {
-                return cache.StringSet(key, strValue, (expireDateTime.Value - DateTime.Now));
+                return _cache.StringSet(key, strValue, (expireDateTime.Value - DateTime.Now));
             }
 
         }
 
         public bool RemoveCache(string key)
         {
-            return cache.KeyDelete(key);
+            return _cache.KeyDelete(key);
         }
 
         public T GetCache<T>(string key)
         {
             var t = default(T);
 
-            var value = cache.StringGet(key);
+            var value = _cache.StringGet(key);
             if (string.IsNullOrEmpty(value))
             {
                 return t;
@@ -57,9 +57,9 @@ namespace WebApiCore.Cache
 
         public void Dispose()
         {
-            if (connection != null)
+            if (_connection != null)
             {
-                connection.Close();
+                _connection.Close();
             }
             GC.SuppressFinalize(this);
         }

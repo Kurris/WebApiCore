@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiCore.Core;
 using WebApiCore.Entity;
+using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.EF
 {
@@ -53,8 +56,8 @@ namespace WebApiCore.EF
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var entityTypes = Assembly.Load(new AssemblyName("WebApiCore.Entity"))
-                .GetTypes().Where(x => x.IsSubclassOf(typeof(BaseEntity))
-                               && x.IsDefined(typeof(TableAttribute)));
+                   .GetTypes().Where(x => x.IsSubclassOf(typeof(BaseEntity))
+                                  && x.IsDefined(typeof(TableAttribute)));
 
 
             foreach (var entityType in entityTypes)
@@ -64,6 +67,20 @@ namespace WebApiCore.EF
                     continue;
                 }
                 modelBuilder.Entity(entityType);
+            }
+
+            var DateTimeConverter = new ValueConverter<DateTime, DateTime>(
+               v => v.ToString("yyyy-MM-dd HH:mm:ss").ParseToDateTime(),
+               v => v.ToString("yyyy-MM-dd HH:mm:ss").ParseToDateTime()
+               );
+
+            foreach (var item in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var prop in item.GetProperties().Where(x => x.ClrType == typeof(DateTime) || x.ClrType == typeof(DateTime?)))
+                {
+                    prop.SetValueConverter(DateTimeConverter);
+                    prop.SetMaxLength(14);
+                }
             }
 
             ConfigModel.Build(modelBuilder);
