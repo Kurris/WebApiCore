@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
+using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.CustomClass;
@@ -35,11 +38,11 @@ namespace WebApiCore
             GlobalInvariant.Configuration = Configuration;
 
             services.AddControllers().AddControllersAsServices()
-                .AddNewtonsoftJson(x=>
+                .AddNewtonsoftJson(x =>
                 {
                     x.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 });
-            
+
             services.AddSwaggerGen(setupAction =>
                {
                    setupAction.SwaggerDoc("V1", new Microsoft.OpenApi.Models.OpenApiInfo()
@@ -57,7 +60,13 @@ namespace WebApiCore
                 option.Filters.AddService<CustomActionAndResultFilterAttribute>();
             });
 
-            services.AddCors();
+            services.AddCors(op =>
+            {
+                op.AddPolicy(_corsPolicy, builder =>
+                 {
+                     builder.WithOrigins(GlobalInvariant.SystemConfig.AllowHosts.Split(',')).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                 });
+            });
             services.AddHttpContextAccessor();
             services.AddMemoryCache();
             services.AddSession();
@@ -79,6 +88,25 @@ namespace WebApiCore
                                 else
                                     throw new NotSupportedException(loginProvider);
 
+                                return Task.CompletedTask;
+                            },
+                            OnChallenge = context =>
+                            {
+                                if (!context.HttpContext.User.Identity.IsAuthenticated)
+                                {
+                                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                                    context.Response.ContentType = "application/json";
+
+                                    string result = JsonHelper.ToJson(new TData<string>()
+                                    {
+                                        Data = null,
+                                        Message = "授权失败",
+                                        Status = Status.AuthorizationFail
+                                    });
+                                    byte[] content = Encoding.UTF8.GetBytes(result);
+                                    context.Response.ContentLength = content.Length;
+                                    context.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(content));
+                                }
                                 return Task.CompletedTask;
                             }
                         };
@@ -114,11 +142,7 @@ namespace WebApiCore
                 option.SwaggerEndpoint("/swagger/V1/swagger.json", "WebApi");
             });
             app.UseRouting();
-            //跨域 必须在UseRouting之后,UseAuthorization之前
-            app.UseCors(builder=>
-            {
-                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-            });
+            app.UseCors(_corsPolicy);
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

@@ -26,7 +26,6 @@ namespace WebApiCore.Utils
         /// </summary>
         public static IConfiguration Configuration { get; set; }
 
-
         /// <summary>
         /// 版本号
         /// </summary>

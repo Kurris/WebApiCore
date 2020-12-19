@@ -26,5 +26,17 @@
         /// Redis连接字符串
         /// </summary>
         public string RedisConnectionString { get; set; }
+
+
+        /// <summary>
+        /// 是否在调试中
+        /// </summary>
+        public bool? IsDebug { get; set; }
+
+
+        /// <summary>
+        /// 允许访问来源
+        /// </summary>
+        public string AllowHosts { get; set; }
     }
 }
