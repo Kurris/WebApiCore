@@ -11,7 +11,7 @@ namespace WebApiCore.CustomClass
     {
         public ILogger<CustomExceptionFilterAttribute>  Logger { get; set; }
 
-        public override Task OnExceptionAsync(ExceptionContext context)
+        public override async Task OnExceptionAsync(ExceptionContext context)
         {
             string msg = context.Exception.GetInnerException();
 
@@ -23,8 +23,6 @@ namespace WebApiCore.CustomClass
             context.ExceptionHandled = true;
 
             context.Result = new ObjectResult(new TData<string>(msg, string.Empty, Status.Error));
-
-            return Task.CompletedTask;
         }
     }
 }

@@ -7,19 +7,6 @@ namespace WebApiCore.Core.TokenHelper
 {
     internal class CookieHelper
     {
-        private IHttpContextAccessor HttpContextAccessor
-        {
-            get
-            {
-                IHttpContextAccessor httpContextAccessor = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-                if (httpContextAccessor == null)
-                {
-                    throw new NullReferenceException("HttpContext对象为NULL");
-                }
-
-                return httpContextAccessor;
-            }
-        }
 
         /// <summary>
         /// 写cookie值
@@ -32,7 +19,7 @@ namespace WebApiCore.Core.TokenHelper
             {
                 Expires = DateTime.Now.AddDays(15)
             };
-            HttpContextAccessor.HttpContext.Response.Cookies.Append(sName, sValue, option);
+            NetHelper.HttpContext.Response.Cookies.Append(sName, sValue, option);
         }
 
         /// <summary>
@@ -47,7 +34,7 @@ namespace WebApiCore.Core.TokenHelper
             {
                 Expires = DateTime.Now.AddMinutes(expires)
             };
-            HttpContextAccessor.HttpContext.Response.Cookies.Append(sName, sValue, option);
+            NetHelper.HttpContext.Response.Cookies.Append(sName, sValue, option);
         }
 
         /// <summary>
@@ -57,7 +44,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <returns>cookie值</returns>
         public string GetCookie(string sName)
         {
-            return HttpContextAccessor.HttpContext?.Request.Cookies[sName];
+            return NetHelper.HttpContext?.Request.Cookies[sName];
         }
 
         /// <summary>
@@ -66,7 +53,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <param name="sName">Cookie对象名称</param>
         public void RemoveCookie(string sName)
         {
-            HttpContextAccessor.HttpContext?.Response.Cookies.Delete(sName);
+            NetHelper.HttpContext?.Response.Cookies.Delete(sName);
         }
     }
 }

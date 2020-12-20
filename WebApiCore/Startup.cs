@@ -76,21 +76,19 @@ namespace WebApiCore
                     {
                         op.Events = new JwtBearerEvents()
                         {
-                            OnMessageReceived = context =>
-                            {
-                                string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
-                                if (loginProvider == "WebApi")
-                                    context.Token = context.Request.Headers[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
-                                else if (loginProvider == "Session")
-                                    context.Token = context.HttpContext.Session.GetString(GlobalInvariant.SystemConfig.JwtSetting.TokenName);
-                                else if (loginProvider == "Cookie")
-                                    context.Token = context.Request.Cookies[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
-                                else
-                                    throw new NotSupportedException(loginProvider);
-
-                                return Task.CompletedTask;
-                            },
-                            OnChallenge = context =>
+                            OnMessageReceived = async context =>
+                             {
+                                 string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
+                                 if (loginProvider == "WebApi")
+                                     context.Token = context.Request.Headers[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
+                                 else if (loginProvider == "Session")
+                                     context.Token = context.HttpContext.Session.GetString(GlobalInvariant.SystemConfig.JwtSetting.TokenName);
+                                 else if (loginProvider == "Cookie")
+                                     context.Token = context.Request.Cookies[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
+                                 else
+                                     throw new NotSupportedException(loginProvider);
+                             },
+                            OnChallenge = async context =>
                             {
                                 if (!context.HttpContext.User.Identity.IsAuthenticated)
                                 {
@@ -105,9 +103,8 @@ namespace WebApiCore
                                     });
                                     byte[] content = Encoding.UTF8.GetBytes(result);
                                     context.Response.ContentLength = content.Length;
-                                    context.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(content));
+                                    await context.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(content));
                                 }
-                                return Task.CompletedTask;
                             }
                         };
                         op.TokenValidationParameters = new TokenValidationParameters()
@@ -134,8 +131,10 @@ namespace WebApiCore
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                GlobalInvariant.SystemConfig.IsDebug = true;
+                //app.UseDeveloperExceptionPage();
             }
+
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {

@@ -8,20 +8,6 @@ namespace WebApiCore.Core.TokenHelper
     internal class SessionHelper 
     {
 
-        private IHttpContextAccessor HttpContextAccessor
-        {
-            get
-            {
-                IHttpContextAccessor httpContextAccessor = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-                if (httpContextAccessor == null)
-                {
-                    throw new NullReferenceException("HttpContext对象为NULL");
-                }
-
-                return httpContextAccessor;
-            }
-        }
-
         /// <summary>
         /// 写Session
         /// </summary>
@@ -29,7 +15,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <param name="value">Session的键值</param>
         public void AddSession(string key, string value)
         {
-            HttpContextAccessor.HttpContext.Session.SetString(key, value);
+            NetHelper.HttpContext.Session.SetString(key, value);
         }
 
         /// <summary>
@@ -38,7 +24,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <param name="key">Session的键名</param>        
         public string GetSession(string key)
         {
-            return HttpContextAccessor.HttpContext.Session.GetString(key);
+            return NetHelper.HttpContext.Session.GetString(key);
         }
 
         /// <summary>
@@ -47,7 +33,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <param name="key">Session的键名</param>
         public void RemoveSession(string key)
         {
-            HttpContextAccessor.HttpContext.Session.Remove(key);
+            NetHelper.HttpContext.Session.Remove(key);
         }
     }
 }

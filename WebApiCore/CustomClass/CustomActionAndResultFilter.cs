@@ -14,19 +14,19 @@ namespace WebApiCore.CustomClass
     /// </summary>
     public class CustomActionAndResultFilterAttribute : ActionFilterAttribute
     {
-        public ILogger<CustomActionAndResultFilterAttribute>  Logger { get; set; }
+        public ILogger<CustomActionAndResultFilterAttribute> Logger { get; set; }
 
-        public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var sLog = $"【Controller】:{context.RouteData.Values["controller"]}\r\n" +
                        $"【Action】:{context.RouteData.Values["action"]}\r\n" +
                        $"【Paras】：{(context.ActionArguments.Count == 0 ? "None" : JsonHelper.ToJson(context.ActionArguments))}";
             Logger.LogInformation(sLog);
-            
-            return base.OnActionExecutionAsync(context, next);
+
+            await base.OnActionExecutionAsync(context, next);
         }
 
-        public override Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
             if (!context.ModelState.IsValid)
             {
@@ -47,8 +47,8 @@ namespace WebApiCore.CustomClass
                 {
                     context.Result = new ObjectResult(new TData<object>("请求成功", resultValue, Status.Success));
                 }
-            }     
-            return base.OnResultExecutionAsync(context, next);
+            }
+            await base.OnResultExecutionAsync(context, next);
         }
     }
 }
