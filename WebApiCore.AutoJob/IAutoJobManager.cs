@@ -2,7 +2,7 @@
 
 namespace WebApiCore.AutoJob
 {
-    public interface IAutoJobManager
+    public interface IJobCenter
     {
         Task<string> Start();
         Task<string> Stop();
