@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using WebApiCore.CustomClass;
-using WebApiCore.Entity.SystemManager;
-using WebApiCore.Interface.SystemManager;
+using WebApiCore.Entity.SystemManage;
+using WebApiCore.Interface.SystemManage;
 using WebApiCore.Utils.Model;
 
-namespace WebApiCore.Controllers.SystemManager
+namespace WebApiCore.Controllers.SystemManage
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

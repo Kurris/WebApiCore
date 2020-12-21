@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using WebApiCore.Entity.BlogInfos;
-using WebApiCore.Entity.SystemManager;
+using WebApiCore.Entity.SystemManage;
 
 namespace WebApiCore.EF
 {

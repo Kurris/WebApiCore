@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.Cache;
 using WebApiCore.Core.TokenHelper;
-using WebApiCore.Entity.SystemManager;
+using WebApiCore.Entity.SystemManage;
 using WebApiCore.Utils;
 
 namespace WebApiCore.Core

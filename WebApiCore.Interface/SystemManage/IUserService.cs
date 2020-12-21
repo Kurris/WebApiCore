@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using WebApiCore.Entity.SystemManager;
+using WebApiCore.Entity.SystemManage;
 using WebApiCore.Utils.Model;
 
-namespace WebApiCore.Interface.SystemManager
+namespace WebApiCore.Interface.SystemManage
 {
     public interface IUserService
     {

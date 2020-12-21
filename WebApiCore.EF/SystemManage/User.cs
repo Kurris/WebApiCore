@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApiCore.Entity.SystemManager
+namespace WebApiCore.Entity.SystemManage
 {
     [Table("Users")]
     public class User : BaseEntity

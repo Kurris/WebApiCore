@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using WebApiCore.Core;
 using WebApiCore.Core.TokenHelper;
 using WebApiCore.EF;
-using WebApiCore.Entity.SystemManager;
-using WebApiCore.Interface.SystemManager;
+using WebApiCore.Entity.SystemManage;
+using WebApiCore.Interface.SystemManage;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
 
-namespace WebApiCore.Service.SystemManager
+namespace WebApiCore.Service.SystemManage
 {
     public class UserService : IUserService
     {

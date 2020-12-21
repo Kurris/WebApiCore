@@ -4,7 +4,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using WebApiCore.Entity.SystemManager;
+using WebApiCore.Entity.SystemManage;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
 

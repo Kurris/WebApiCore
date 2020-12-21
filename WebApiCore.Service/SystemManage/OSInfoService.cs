@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using WebApiCore.Utils;
 
-namespace WebApiCore.Service.SystemManager
+namespace WebApiCore.Service.SystemManage
 {
     public class OSInfoService
     {
