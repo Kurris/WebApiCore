@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebApiCore.AutoJob
 {
-    public class AutoJobCenter : IJobCenter
+    public class JobCenter : IJobCenter
     {
-        public ILogger<AutoJobCenter> Logger { get; set; }
+        public ILogger<JobCenter> Logger { get; set; }
         public ISchedulerFactory SchedulerFactory { get; set; }
 
         private IScheduler _scheduler = null;
@@ -27,6 +27,7 @@ namespace WebApiCore.AutoJob
                                         .WithSimpleSchedule(x => x.WithIntervalInSeconds(2).RepeatForever())
                                         .UsingJobData(new JobDataMap())
                                         .Build();
+
             //4、创建任务
             var jobDetail = JobBuilder.Create<UserJob>()
                             .WithIdentity(new JobKey("user", "SystemManage"))//放进工厂

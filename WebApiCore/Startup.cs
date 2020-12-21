@@ -145,12 +145,12 @@ namespace WebApiCore
 
             lifetime.ApplicationStarted.Register(async () =>
             {
-                var autoJob = GlobalInvariant.ServiceProvider.GetService<IAutoJobManager>();
+                var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
                 await autoJob.Start();
             });
             lifetime.ApplicationStopping.Register(async () =>
             {
-                var autoJob = GlobalInvariant.ServiceProvider.GetService<IAutoJobManager>();
+                var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
                 await autoJob.Stop();
             });
 

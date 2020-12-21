@@ -28,7 +28,7 @@ namespace WebApiCore.CustomClass
             /*  自动任务注入  */
 
             //管理类注入
-            builder.RegisterType<AutoJobCenter>().As<IJobCenter>().SingleInstance().PropertiesAutowired();
+            builder.RegisterType<JobCenter>().As<IJobCenter>().SingleInstance().PropertiesAutowired();
             //单例调度器工厂
             builder.RegisterType<StdSchedulerFactory>().As<ISchedulerFactory>().SingleInstance().PropertiesAutowired();
             //具体的Job注入

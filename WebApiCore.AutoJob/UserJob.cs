@@ -9,8 +9,7 @@ namespace WebApiCore.AutoJob
 {
     public class UserJob : IJob
     {
-        public ILogger<UserJob> Logger2 { get; set; }
-        private readonly ILogger<UserJob> Logger = GlobalInvariant.ServiceProvider.GetService<ILogger<UserJob>>();
+        public ILogger<UserJob> Logger { get; set; }
 
         public async Task Execute(IJobExecutionContext context)
         {
