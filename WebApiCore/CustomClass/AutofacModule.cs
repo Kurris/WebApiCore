@@ -1,8 +1,12 @@
 ﻿using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 using System;
 using System.Linq;
 using System.Reflection;
+using WebApiCore.AutoJob;
 
 namespace WebApiCore.CustomClass
 {
@@ -21,6 +25,15 @@ namespace WebApiCore.CustomClass
                 .Where(x => x.IsSubclassOf(typeof(ControllerBase))
                          || x.IsSubclassOf(typeof(Attribute))).PropertiesAutowired();
 
+
+            builder.RegisterType<StdSchedulerFactory>().As<ISchedulerFactory>().SingleInstance().PropertiesAutowired();
+            builder.RegisterType<IOCFactory>().As<IJobFactory>().SingleInstance().PropertiesAutowired();
+            builder.RegisterType<AutoJobManager>().As<IAutoJobManager>().SingleInstance().PropertiesAutowired();
+            //builder.RegisterType<UserJob>().InstancePerLifetimeScope().PropertiesAutowired();
+
+
+            builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.AutoJob")).Where(x => x.GetInterfaces().Contains(typeof(IJob)))
+                .InstancePerLifetimeScope().PropertiesAutowired();
         }
     }
 }

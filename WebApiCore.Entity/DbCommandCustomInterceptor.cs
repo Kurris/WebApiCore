@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiCore.Utils;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApiCore.EF
 {

@@ -3,17 +3,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
+using Microsoft.OpenApi.Models;
 using System;
-using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using WebApiCore.AutoJob;
 using WebApiCore.CustomClass;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
@@ -38,20 +36,18 @@ namespace WebApiCore
             GlobalInvariant.Configuration = Configuration;
 
             services.AddControllers().AddControllersAsServices()
-                .AddNewtonsoftJson(x =>
+                    .AddNewtonsoftJson(x =>
                 {
                     x.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 });
-
             services.AddSwaggerGen(setupAction =>
                {
-                   setupAction.SwaggerDoc("V1", new Microsoft.OpenApi.Models.OpenApiInfo()
+                   setupAction.SwaggerDoc("V1", new OpenApiInfo()
                    {
                        Version = "Ver 1",
                        Title = "WebApi",
                    });
                });
-
             //自定义特性
             services.AddMvc(option =>
             {
@@ -59,7 +55,6 @@ namespace WebApiCore
                 option.Filters.AddService<CustomResourceFilterAttribute>();
                 option.Filters.AddService<CustomActionAndResultFilterAttribute>();
             });
-
             services.AddCors(op =>
             {
                 op.AddPolicy(_corsPolicy, builder =>
@@ -70,7 +65,6 @@ namespace WebApiCore
             services.AddHttpContextAccessor();
             services.AddMemoryCache();
             services.AddSession();
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(op =>
                     {
@@ -127,7 +121,7 @@ namespace WebApiCore
         public void ConfigureContainer(ContainerBuilder builder) => builder.RegisterModule<AutofacModule>();
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -147,6 +141,17 @@ namespace WebApiCore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            lifetime.ApplicationStarted.Register(async () =>
+            {
+                var autoJob = GlobalInvariant.ServiceProvider.GetService<IAutoJobManager>();
+                await autoJob.Start();
+            });
+            lifetime.ApplicationStopping.Register(async () =>
+            {
+                var autoJob = GlobalInvariant.ServiceProvider.GetService<IAutoJobManager>();
+                await autoJob.Stop();
             });
 
             GlobalInvariant.ServiceProvider = app.ApplicationServices;

@@ -40,6 +40,7 @@ namespace WebApiCore.Controllers.SystemManager
             return await UserService.SignUp(user);
         }
 
+        [ApiAuth]
         [HttpPost]
         public async Task<TData<User>> EditUser([FromBody] User user)
         {
