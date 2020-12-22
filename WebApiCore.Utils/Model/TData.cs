@@ -13,7 +13,7 @@ namespace WebApiCore.Utils.Model
         /// </summary>
         public TData()
         {
-
+            this.Status = Status.Fail;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace WebApiCore.Utils.Model
         /// <summary>
         /// 状态(默认:Fail)
         /// </summary>
-        public Status Status { get; set; } = Status.Fail;
+        public Status Status { get; set; }
     }
 
     /// <summary>

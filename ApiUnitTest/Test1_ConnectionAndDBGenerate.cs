@@ -11,7 +11,7 @@ namespace ApiUnitTest
         [TestMethod]
         public static IDataBaseOperation GetInterface()
         {
-            return InitDB.Create("SqlServer", "Data Source=.;DataBase=MyBlog;Trusted_Connection=True;")
+            return EFDB.Create("SqlServer", "Data Source=.;DataBase=MyBlog;Trusted_Connection=True;")
                 .GetIDataBaseOperation();
         }
 
@@ -19,7 +19,7 @@ namespace ApiUnitTest
         [TestMethod]
         public async Task CreateDataBase()
         {
-            var op = InitDB.Create("MySql", "data source=localhost;database=MyBlog; uid=root;pwd=Sa123456!;")
+            var op = EFDB.Create("MySql", "data source=localhost;database=MyBlog; uid=root;pwd=Sa123456!;")
                         .GetIDataBaseOperation();
 
             await op.EnsureDeletedAsync();

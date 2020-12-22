@@ -7,7 +7,7 @@ namespace WebApiCore.EF
     /// <summary>
     /// 初始化数据库上下文
     /// </summary>
-    public class InitDB
+    public class EFDB
     {
         /// <summary>
         /// 创建具体数据库

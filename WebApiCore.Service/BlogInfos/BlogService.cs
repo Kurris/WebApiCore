@@ -12,7 +12,7 @@ namespace WebApiCore.Service.BlogInfos
         {
             //var page = new PaginationParam();
 
-            return await InitDB.Create().FindListAsync<Blog>();
+            return await EFDB.Create().FindListAsync<Blog>();
         }
     }
 }

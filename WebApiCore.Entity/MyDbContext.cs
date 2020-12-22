@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiCore.Core;
+using WebApiCore.EF.DataBase;
 using WebApiCore.Entity;
 using WebApiCore.Utils.Extensions;
 

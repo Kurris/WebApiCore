@@ -9,7 +9,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebApiCore.AutoJobInterface\WebApiCore.AutoJobPlugin.csproj" />
+    <ProjectReference Include="..\WebApiCore.EF\WebApiCore.Entity.csproj" />
+    <ProjectReference Include="..\WebApiCore.Interface\WebApiCore.Interface.csproj" />
     <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Job\" />
   </ItemGroup>
 
 </Project>

@@ -23,7 +23,7 @@ namespace WebApiCore.Service.SystemManage
         /// <returns>用户信息</returns>
         public async Task<TData<User>> Login(string userName, string password)
         {
-            var op = await InitDB.Create().BeginTransAsync();
+            var op = await EFDB.Create().BeginTransAsync();
             TData<User> obj = new TData<User>();
             try
             {
@@ -81,7 +81,7 @@ namespace WebApiCore.Service.SystemManage
 
         public async Task<TData<string>> SignOut(string userName, string password)
         {
-            var op = await InitDB.Create().BeginTransAsync();
+            var op = await EFDB.Create().BeginTransAsync();
             TData<string> obj = new TData<string>();
             try
             {
@@ -110,7 +110,7 @@ namespace WebApiCore.Service.SystemManage
 
         public async Task<TData<string>> SignUp(User user)
         {
-            var op = await InitDB.Create().BeginTransAsync();
+            var op = await EFDB.Create().BeginTransAsync();
             TData<string> obj = new TData<string>();
             try
             {
@@ -141,13 +141,13 @@ namespace WebApiCore.Service.SystemManage
         public async Task<string> RefreshToken()
         {
             string userName = await Operator.Instance.GetCurrent();
-            User user = await InitDB.Create().FindAsync<User>(x => x.UserName == userName);
+            User user = await EFDB.Create().FindAsync<User>(x => x.UserName == userName);
             return JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtSetting);
         }
 
         public async Task<TData<User>> EditUser(User user)
         {
-            var op = await InitDB.Create().BeginTransAsync();
+            var op = await EFDB.Create().BeginTransAsync();
             TData<User> obj = new TData<User>();
             try
             {
@@ -164,7 +164,7 @@ namespace WebApiCore.Service.SystemManage
                 return obj;
             }
 
-            obj.Data = await InitDB.Create().FindAsync<User>(user.UserId);
+            obj.Data = await EFDB.Create().FindAsync<User>(user.UserId);
             return obj;
         }
     }

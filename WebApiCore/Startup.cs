@@ -151,7 +151,7 @@ namespace WebApiCore
             lifetime.ApplicationStopping.Register(async () =>
             {
                 var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
-                await autoJob.Stop();
+                await autoJob.StopAll();
             });
 
             GlobalInvariant.ServiceProvider = app.ApplicationServices;
