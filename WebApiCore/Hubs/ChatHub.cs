@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
+using WebApiCore.CustomClass;
 
 /*npm install @microsoft/signalr
  *import * as signalR from '@microsoft/signalr'
  * 
  * const connection = new signalR.HubConnectionBuilder()
-  .withUrl("http://localhost:5000/api/chat")
-  .configureLogging(signalR.LogLevel.Information)
-  .build();
+ *.withUrl("http://localhost:5000/api/chat")
+ *.configureLogging(signalR.LogLevel.Information)
+ *.build();
  * 
  * connection.on('ClientMethod', x => {
- 
-   });
+ * 
+ * });
  * 
  * connection.start()
  * 
@@ -24,11 +25,10 @@ using System.Threading.Tasks;
  * 
  */
 
-
-
-namespace WebApiCore.SignalR
+namespace WebApiCore.Hubs
 {
-    public class ChatHub : Hub
+    [ApiAuth]
+    public class ChatHub :Hub
     {
         /// <summary>
         /// Method to be call by frontend

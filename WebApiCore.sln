@@ -39,8 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.AutoJob", "WebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.AutoJobPlugin", "WebApiCore.AutoJobInterface\WebApiCore.AutoJobPlugin.csproj", "{F8D428F7-6DC3-4CFA-B79A-F402AA826C77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.SignalR", "WebApiCore.Hub\WebApiCore.SignalR.csproj", "{DF40333B-FA88-4BD6-B109-8E6BB290E70D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,10 +93,6 @@ Global
 		{F8D428F7-6DC3-4CFA-B79A-F402AA826C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8D428F7-6DC3-4CFA-B79A-F402AA826C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8D428F7-6DC3-4CFA-B79A-F402AA826C77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF40333B-FA88-4BD6-B109-8E6BB290E70D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF40333B-FA88-4BD6-B109-8E6BB290E70D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF40333B-FA88-4BD6-B109-8E6BB290E70D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF40333B-FA88-4BD6-B109-8E6BB290E70D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,7 +110,6 @@ Global
 		{1A845D59-57EC-468B-B9A3-A426EC812A14} = {A369305D-8E92-494C-81EE-209BEA74662B}
 		{EAE9A54D-6BCC-4A29-A034-A9CC0025BB11} = {535F0BCF-AD7F-40D6-B94B-0C54142AEE95}
 		{F8D428F7-6DC3-4CFA-B79A-F402AA826C77} = {535F0BCF-AD7F-40D6-B94B-0C54142AEE95}
-		{DF40333B-FA88-4BD6-B109-8E6BB290E70D} = {A369305D-8E92-494C-81EE-209BEA74662B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CBE522E4-37DE-4D2E-BC67-5774F47C3C1D}

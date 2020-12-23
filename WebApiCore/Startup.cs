@@ -17,7 +17,7 @@ using System.Text;
 using WebApiCore.AutoJob;
 using WebApiCore.CustomClass;
 using WebApiCore.EF;
-using WebApiCore.SignalR;
+using WebApiCore.Hubs;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
@@ -156,8 +156,8 @@ namespace WebApiCore
 
             lifetime.ApplicationStarted.Register(async () =>
             {
-                //var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
-                //await autoJob.Start();
+                var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
+                await autoJob.Start();
             });
             lifetime.ApplicationStopping.Register(async () =>
             {
