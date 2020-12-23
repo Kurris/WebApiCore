@@ -29,11 +29,11 @@ namespace WebApiCore.Utils
         /// <summary>
         /// 版本号
         /// </summary>
-        private string _version = string.Empty;
+        private static string _version = string.Empty;
         /// <summary>
         /// 版本号
         /// </summary>
-        public string Version
+        public static string Version
         {
             get
             {

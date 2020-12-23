@@ -1,12 +1,11 @@
 ﻿using Quartz;
 using System;
-using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using WebApiCore.AutoJobInterface;
+using System.Reflection;
 using System.Threading.Tasks;
-using AutoJobEntity = WebApiCore.Entity.SystemManage.AutoJob;
+using WebApiCore.AutoJobInterface;
+using AutoJobEntity = WebApiCore.Entity.SystemManage.AutoJobTask;
 
 namespace WebApiCore.AutoJob
 {

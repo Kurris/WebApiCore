@@ -4,10 +4,10 @@ namespace WebApiCore.AutoJob
 {
     public interface IJobCenter
     {
-        Task<string> Start();
-        Task<string> StopAll();
-        Task<string> Edit(string name, string group);
-        Task<string> Remove(string name, string group);
-        Task<string> Add(string name, string group);
+        Task<bool> Start();
+        Task<bool> StopAll();
+        Task<bool> EditJob(string name, string group);
+        Task<bool> RemoveJob(string name, string group);
+        Task<bool> AddNewJob(string name, string group);
     }
 }

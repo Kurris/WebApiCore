@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System;
-using WebApiCore.Utils.Extensions;
+using System.Threading.Tasks;
 using WebApiCore.Interface.SystemManage;
+using WebApiCore.Utils.Extensions;
 
 
 namespace WebApiCore.AutoJob
@@ -18,92 +17,73 @@ namespace WebApiCore.AutoJob
 
         public IAutoJobService AutoJobService { get; set; }
 
-        public async Task<string> Add(string name, string group)
+        public async Task<bool> AddNewJob(string name, string group)
         {
             var scheduler = await SchedulerFactory.GetScheduler();
+            scheduler.JobFactory = IOCFactory;
 
             var jobData = await AutoJobService.GetAutoJob(name, group);
 
             DateTime startTime = jobData.StartTime ?? DateTime.Now;
             DateTime? endTime = jobData.EndTime;
 
-            ITrigger trigger;
+            ITrigger trigger = JobHelper.CreateTrigger(jobData.JobName, jobData.JobGroup, startTime, jobData.CronExpression, endTime);
 
-            if (jobData.Minute.IsEmpty() && jobData.Second.IsEmpty())
-                trigger = JobHelper.CreateTrigger(jobData.Name, jobData.Group, startTime, jobData.CronExpression, endTime);
-            else
-                trigger = JobHelper.CreateTrigger(jobData.Name, jobData.Group, startTime, jobData.Minute.ParseToInt(), jobData.Second.ParseToInt(), endTime);
-
-            IJobDetail jobDetail = JobHelper.CreateDetail<JobExcute>(jobData.Name, jobData.Group, jobData.DeepCloneByXML());
+            IJobDetail jobDetail = JobHelper.CreateDetail<JobExcute>(jobData.JobName, jobData.JobGroup, jobData.DeepCloneByXML());
 
             await scheduler.ScheduleJob(jobDetail, trigger);
-
-            return $"添加任务{name}成功";
+            return true;
         }
 
-        public async Task<string> Edit(string name, string group)
+        public async Task<bool> EditJob(string name, string group)
         {
-            await Remove(name, group);
-            await Add(name, group);
-
-            return $"编辑任务{name}成功";
+            if (await RemoveJob(name, group))
+            {
+                return await AddNewJob(name, group);
+            }
+            return false;
         }
-
-        public async Task<string> Remove(string name, string group)
+        public async Task<bool> RemoveJob(string name, string group)
         {
             var scheduler = await SchedulerFactory.GetScheduler();
-            bool deleteResult = await scheduler.DeleteJob(new JobKey(name, group));
-            if (deleteResult)
-            {
-                return await Task.FromResult($"任务{name}已被移除");
-            }
-
-            return await Task.FromResult($"任务{name}移除失败");
+            return await scheduler.DeleteJob(new JobKey(name, group));
         }
 
-
-        public async Task<string> Start()
+        public async Task<bool> Start()
         {
             var jobDatas = await AutoJobService.GetActiveJobList();
+
+            IScheduler scheduler = await SchedulerFactory.GetScheduler();
+            scheduler.JobFactory = IOCFactory;
 
             try
             {
                 foreach (var jobData in jobDatas)
                 {
-                    IScheduler scheduler = await SchedulerFactory.GetScheduler();
-                    scheduler.JobFactory = IOCFactory;
-                    await scheduler.Start();
                     DateTime startTime = jobData.StartTime ?? DateTime.Now;
                     DateTime? endTime = jobData.EndTime;
 
-                    ITrigger trigger;
+                    ITrigger trigger = JobHelper.CreateTrigger(jobData.JobName, jobData.JobGroup, startTime, jobData.CronExpression, endTime);
 
-                    //if (jobData.Minute == 0 && jobData.Second == 0)
-                        trigger = JobHelper.CreateTrigger(jobData.Name, jobData.Group, startTime, jobData.CronExpression, endTime);
-                    //else
-                    //    trigger = JobHelper.CreateTrigger(jobData.Name, jobData.Group, startTime, jobData.Minute.ParseToInt(), jobData.Second.ParseToInt(), endTime);
-
-                    IJobDetail jobDetail = JobHelper.CreateDetail<JobExcute>(jobData.Name, jobData.Group, jobData.DeepCloneByXML());
+                    IJobDetail jobDetail = JobHelper.CreateDetail<JobExcute>(jobData.JobName, jobData.JobGroup, jobData.DeepCloneByXML());
 
                     await scheduler.ScheduleJob(jobDetail, trigger);
-
                 }
+                await scheduler.Start();
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
-                Logger.LogError(ex, $"自动任务开始终止");
-                return await Task.FromResult($"自动任务开始终止:{ex.Message}");
+                throw;
             }
-
-            return await Task.FromResult("自动任务开启完成");
         }
 
 
-        public async Task<string> StopAll()
+        public async Task<bool> StopAll()
         {
             var scheduer = await SchedulerFactory.GetScheduler();
             await scheduer.PauseAll();
-            return await Task.FromResult("自动任务已全部停止");
+            return true;
         }
     }
 }

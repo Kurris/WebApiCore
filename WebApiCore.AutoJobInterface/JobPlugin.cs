@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebApiCore.EF;
 using WebApiCore.Entity.SystemManage;
 
@@ -23,9 +20,9 @@ namespace WebApiCore.AutoJobInterface
         /// 获取任务当前的配置数据
         /// </summary>
         /// <returns><see cref="Task{AutoJob}"/></returns>
-        protected virtual async Task<AutoJob> GetJobData()
+        protected virtual async Task<AutoJobTask> GetJobData()
         {
-            return await EFDB.Create().FindAsync<AutoJob>(x => x.Name == this.Name && x.Group == this.Group);
+            return await EFDB.Create().FindAsync<AutoJobTask>(x => x.JobName == this.Name && x.JobGroup == this.Group);
         }
 
         public abstract Task Excute(string[] args);

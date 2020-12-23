@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace WebApiCore.Entity.SystemManage
 {
-    [Table("AutoJobs")]
-    public class AutoJob : BaseEntity
+    [Table("AutoJobTasks")]
+    public class AutoJobTask : BaseEntity
     {
-        public int AutoJobId { get; set; }
+        public int AutoJobTaskId { get; set; }
 
         /// <summary>
         /// 任务名称
         /// </summary>
-        public string Name { get; set; }
+        public string JobName { get; set; }
 
         /// <summary>
         /// 组名
         /// </summary>
-        public string Group { get; set; }
+        public string JobGroup { get; set; }
 
         /// <summary>
         /// 任务类型
@@ -33,27 +31,17 @@ namespace WebApiCore.Entity.SystemManage
         /// <summary>
         /// 参数,以逗号分隔
         /// </summary>
-        public string Paramenters { get; set; }
+        public string ExcuteArgs { get; set; }
 
         /// <summary>
         /// 状态
         /// </summary>
-        public int? Status { get; set; }
+        public int? JobStatus { get; set; }
 
         /// <summary>
         /// 任务表达式
         /// </summary>
         public string CronExpression { get; set; }
-
-        /// <summary>
-        /// 任务执行间隔分钟
-        /// </summary>
-        public int? Minute { get; set; }
-
-        /// <summary>
-        /// 任务执行间隔秒数
-        /// </summary>
-        public int? Second { get; set; }
 
         /// <summary>
         /// 开始时间

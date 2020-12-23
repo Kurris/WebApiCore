@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using WebApiCore.EF;
 using WebApiCore.Entity.SystemManage;
@@ -11,23 +10,23 @@ namespace WebApiCore.Service.SystemManage
 {
     public class AutoJobService : IAutoJobService
     {
-        public async Task<TData<string>> AddJob(AutoJob autoJob)
+        public async Task<TData<string>> AddJob(AutoJobTask autoJob)
         {
             TData<string> obj = new TData<string>();
             var op = await EFDB.Create().BeginTransAsync();
             try
             {
-                AutoJob job = await op.FindAsync<AutoJob>(x => x.Name == autoJob.Name && x.Group == autoJob.Group);
+                AutoJobTask job = await op.FindAsync<AutoJobTask>(x => x.JobName == autoJob.JobName && x.JobGroup == autoJob.JobGroup);
                 if (job != null)
                 {
-                    obj.Message = $"任务组{autoJob.Group}已存在任务名{autoJob.Name}";
+                    obj.Message = $"任务组{autoJob.JobGroup}已存在任务名{autoJob.JobName}";
                     return obj;
                 }
 
                 await op.AddAsync(autoJob);
                 await op.CommitTransAsync();
 
-                obj.Message = $"任务{autoJob.Name}添加成功";
+                obj.Message = $"任务{autoJob.JobName}添加成功";
                 return obj;
             }
             catch (Exception ex)
@@ -38,12 +37,12 @@ namespace WebApiCore.Service.SystemManage
             }
         }
 
-        public async Task<TData<string>> EditJob(AutoJob autoJob)
+        public async Task<TData<string>> EditJob(AutoJobTask autoJob)
         {
             TData<string> obj = new TData<string>();
             await EFDB.Create().UpdateAsync(autoJob);
 
-            obj.Message = $"任务{autoJob.Name}修改成功";
+            obj.Message = $"任务{autoJob.JobName}修改成功";
             return obj;
         }
 
@@ -52,29 +51,34 @@ namespace WebApiCore.Service.SystemManage
             await EFDB.Create().ExecProcAsync(procedure);
         }
 
-        public async Task<IEnumerable<AutoJob>> GetActiveJobList()
+        public async Task<IEnumerable<AutoJobTask>> GetActiveJobList()
         {
-            return await EFDB.Create().FindListAsync<AutoJob>(x => x.Status == 1);
+            return await EFDB.Create().FindListAsync<AutoJobTask>(x => x.JobStatus == 1);
         }
 
-        public async Task<AutoJob> GetAutoJob(string name, string group)
+        public async Task<AutoJobTask> GetAutoJob(string name, string group)
         {
-            return await EFDB.Create().FindAsync<AutoJob>(x => x.Name == name && x.Group == group);
+            return await EFDB.Create().FindAsync<AutoJobTask>(x => x.JobName == name && x.JobGroup == group);
         }
 
-        public async Task<IEnumerable<AutoJob>> GetJobList()
+        public async Task<IEnumerable<AutoJobTask>> GetJobList()
         {
-            return await EFDB.Create().FindListAsync<AutoJob>();
+            return await EFDB.Create().FindListAsync<AutoJobTask>();
         }
 
         public async Task<TData<string>> RemoveJob(int id)
         {
-            await EFDB.Create().DeleteAsync<AutoJob>(id);
+            await EFDB.Create().DeleteAsync<AutoJobTask>(id);
             return new TData<string>()
             {
                 Message = "移除自动任务成功",
                 Status = Status.Success
             };
+        }
+
+        public Task StopAll()
+        {
+            return null;
         }
     }
 }

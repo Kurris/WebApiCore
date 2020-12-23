@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WebApiCore.Core;
 using WebApiCore.EF.DataBase;
 using WebApiCore.Entity;
+using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 
 namespace WebApiCore.EF
@@ -24,6 +25,20 @@ namespace WebApiCore.EF
 
         private readonly string _provider;
         private readonly string _connStr;
+
+
+        public MyDbContext()
+        {
+            this._provider = GlobalInvariant.SystemConfig.DBConfig.Provider;
+            if (this._provider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
+            {
+                this._connStr = GlobalInvariant.SystemConfig.DBConfig.SqlServerConnectionString;
+            }
+            else if (this._provider.Equals("MySql", StringComparison.OrdinalIgnoreCase))
+            {
+                this._connStr = GlobalInvariant.SystemConfig.DBConfig.MySqlConnectionString;
+            }       
+        }
 
         /// <summary>
         /// DbContext

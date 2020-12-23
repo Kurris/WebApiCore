@@ -29,6 +29,8 @@ namespace WebApiCore.EF
 
             modelBuilder.Entity<User>()
                 .HasIndex(x => x.UserName).IsUnique();
+
+            modelBuilder.Entity<AutoJobTask>().HasIndex(x => new { x.JobName, x.JobGroup }).IsUnique();
         }
     }
 }

@@ -3,16 +3,20 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Linq;
 using System.Net;
 using System.Text;
 using WebApiCore.AutoJob;
 using WebApiCore.CustomClass;
+using WebApiCore.EF;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
@@ -35,6 +39,7 @@ namespace WebApiCore
             GlobalInvariant.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
             GlobalInvariant.Configuration = Configuration;
 
+            services.AddSignalR();
             services.AddControllers().AddControllersAsServices()
                     .AddNewtonsoftJson(x =>
                 {
@@ -112,6 +117,8 @@ namespace WebApiCore
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey))
                         };
                     });
+
+
         }
 
         /// <summary>
@@ -121,7 +128,7 @@ namespace WebApiCore
         public void ConfigureContainer(ContainerBuilder builder) => builder.RegisterModule<AutofacModule>();
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -129,6 +136,8 @@ namespace WebApiCore
                 //app.UseDeveloperExceptionPage();
             }
 
+
+            app.UseWebSockets(new WebSocketOptions() { KeepAliveInterval = TimeSpan.FromSeconds(120), ReceiveBufferSize = 4 * 1024 });
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
@@ -155,6 +164,20 @@ namespace WebApiCore
             });
 
             GlobalInvariant.ServiceProvider = app.ApplicationServices;
+
+
+            var op = EFDB.Create().GetIDataBaseOperation();
+            if (op.DbContext.Database.GetPendingMigrations().Any())
+            {
+                op.DbContext.Database.Migrate();
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("|≥Ã–Ú∆Ù∂Ø");
+            sb.AppendLine("|ContentRootPath:" + env.ContentRootPath);
+            sb.AppendLine("|WebRootPath:" + env.WebRootPath);
+            sb.AppendLine("|IsDevelopment:" + env.IsDevelopment());
+            sb.AppendLine("|Version:" + GlobalInvariant.Version);
+            logger.LogInformation(sb.ToString());
         }
     }
 }

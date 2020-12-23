@@ -15,7 +15,7 @@ namespace WebApiCore.AutoJob
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var jobData = context.JobDetail.JobDataMap["data"] as WebApiCore.Entity.SystemManage.AutoJob;
+            var jobData = context.JobDetail.JobDataMap["data"] as WebApiCore.Entity.SystemManage.AutoJobTask;
 
             ICronTrigger CronTrigger = context.Trigger as ICronTrigger;
             if (CronTrigger != null)
@@ -25,11 +25,11 @@ namespace WebApiCore.AutoJob
                     CronTrigger.CronExpressionString = jobData.CronExpression;
                     var scheduler = await SchedulerFactory.GetScheduler();
                     await scheduler.RescheduleJob(CronTrigger.Key, CronTrigger);
-                    await Task.FromResult($"自动任务{jobData.Name}有误,已提交到下次执行,cron:{jobData.CronExpression}");
+                    await Task.FromResult($"自动任务{jobData.JobName}有误,已提交到下次执行,cron:{jobData.CronExpression}");
                 }
                 else
                 {
-                    string[] args = jobData.Paramenters.Split(',');
+                    string[] args = jobData.ExcuteArgs.Split(',');
 
                     #region 执行任务
 
@@ -49,7 +49,7 @@ namespace WebApiCore.AutoJob
 
                         //预定任务
                         case JobExecuteType.Destine:
-                            _ = JobHelper.ExcuteDestineJobAsync(jobData.Name, jobData.Group, args);
+                            _ = JobHelper.ExcuteDestineJobAsync(jobData.JobName, jobData.JobGroup, args);
                             break;
                     }
 
