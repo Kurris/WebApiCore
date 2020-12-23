@@ -45,6 +45,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApiCore.AutoJob\WebApiCore.AutoJob.csproj" />
+    <ProjectReference Include="..\WebApiCore.Hub\WebApiCore.SignalR.csproj" />
     <ProjectReference Include="..\WebApiCore.Interface\WebApiCore.Interface.csproj">
       <Private>true</Private>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>

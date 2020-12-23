@@ -17,6 +17,7 @@ using System.Text;
 using WebApiCore.AutoJob;
 using WebApiCore.CustomClass;
 using WebApiCore.EF;
+using WebApiCore.SignalR;
 using WebApiCore.Utils;
 using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
@@ -150,12 +151,13 @@ namespace WebApiCore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("api/chat");
             });
 
             lifetime.ApplicationStarted.Register(async () =>
             {
-                var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
-                await autoJob.Start();
+                //var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
+                //await autoJob.Start();
             });
             lifetime.ApplicationStopping.Register(async () =>
             {
