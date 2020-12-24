@@ -10,7 +10,7 @@ namespace WebApiCore.Utils
         /// <summary>
         /// Http请求上下文
         /// </summary>
-        public static HttpContext? HttpContext
+        public static HttpContext HttpContext
         {
             get => GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>().HttpContext;
         }

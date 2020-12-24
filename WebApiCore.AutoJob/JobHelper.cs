@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using WebApiCore.AutoJobInterface;
+using WebApiCore.Utils;
 using AutoJobEntity = WebApiCore.Entity.SystemManage.AutoJobTask;
 
 namespace WebApiCore.AutoJob
@@ -94,12 +95,12 @@ namespace WebApiCore.AutoJob
         public static async Task ExcuteDestineJobAsync(string name, string group, string[] args)
         {
             Type type = Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(x => x.Name.Equals("WebApiCore.AutoJob.Job" + "." + name));
-            JobPlugin jobPlugin = (JobPlugin)Activator.CreateInstance(type, typeof(string[]));
-            jobPlugin.Name = name;
-            jobPlugin.Group = group;
-            await jobPlugin.Excute(args);
+            if (GlobalInvariant.ServiceProvider.GetService(type) is JobPlugin jobPlugin)
+            {
+                jobPlugin.Name = name;
+                jobPlugin.Group = group;
+                await jobPlugin.Excute(args);
+            }
         }
-
-
     }
 }

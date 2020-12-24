@@ -4,6 +4,9 @@ using WebApiCore.Entity.SystemManage;
 
 namespace WebApiCore.AutoJobInterface
 {
+    /// <summary>
+    /// 任务插件
+    /// </summary>
     public abstract class JobPlugin
     {
         /// <summary>
@@ -25,6 +28,11 @@ namespace WebApiCore.AutoJobInterface
             return await EFDB.Create().FindAsync<AutoJobTask>(x => x.JobName == this.Name && x.JobGroup == this.Group);
         }
 
+        /// <summary>
+        /// 任务执行入口
+        /// </summary>
+        /// <param name="args">参数</param>
+        /// <returns><see cref="Task"/></returns>
         public abstract Task Excute(string[] args);
     }
 }

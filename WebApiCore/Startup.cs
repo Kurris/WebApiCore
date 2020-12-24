@@ -118,11 +118,11 @@ namespace WebApiCore
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseWebSockets(new WebSocketOptions()
-            {
-                KeepAliveInterval = TimeSpan.FromSeconds(120),
-                ReceiveBufferSize = 4 * 1024
-            });
+            //app.UseWebSockets(new WebSocketOptions()
+            //{
+            //    KeepAliveInterval = TimeSpan.FromSeconds(120),
+            //    ReceiveBufferSize = 4 * 1024
+            //});
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {

@@ -75,13 +75,18 @@ namespace WebApiCore.Entity.SystemManage
         Destine = 0,
 
         /// <summary>
+        /// DLL插件
+        /// </summary>
+        DLLPlugin = 1,
+
+        /// <summary>
         /// 存储过程
         /// </summary>
         Procedure = 2,
 
         /// <summary>
-        /// DLL插件
+        /// SQL语句
         /// </summary>
-        DLLPlugin = 1,
+        Sql = 3,
     }
 }

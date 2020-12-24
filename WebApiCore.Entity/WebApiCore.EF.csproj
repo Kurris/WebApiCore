@@ -21,6 +21,8 @@
     <Compile Remove="Migrations\20201202015325_first.Designer.cs" />
     <Compile Remove="Migrations\20201202021726_first.cs" />
     <Compile Remove="Migrations\20201202021726_first.Designer.cs" />
+    <Compile Remove="Migrations\20201224073527_firsttimeadd.cs" />
+    <Compile Remove="Migrations\20201224073527_firsttimeadd.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WebApiCore.Core\WebApiCore.Core.csproj" />
     <ProjectReference Include="..\WebApiCore.EF\WebApiCore.Entity.csproj">
       <Private>true</Private>
@@ -47,6 +45,10 @@
     <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj">
       <Private>true</Private>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

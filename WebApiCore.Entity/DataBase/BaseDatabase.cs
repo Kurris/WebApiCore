@@ -156,8 +156,9 @@ namespace WebApiCore.EF.DataBase
         }
         public virtual async Task<int> ExecProcAsync(string procName, IDictionary<string, object> keyValues = null)
         {
-            await this.RunSqlAsync($"EXEC {procName}", keyValues);
-            return await GetReuslt();
+            //await this.RunSqlAsync($"EXEC {procName}", keyValues);
+            //return await GetReuslt();
+            throw new NotImplementedException();
         }
 
 
@@ -402,7 +403,7 @@ WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
 
 
 
-        private async Task<int> GetReuslt()
+        protected async Task<int> GetReuslt()
         {
             return _dbContextTransaction == null//如果没有事务
                 ? await this.CommitTransAsync() //那么立即提交
