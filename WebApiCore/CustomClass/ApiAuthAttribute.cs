@@ -28,8 +28,6 @@ namespace WebApiCore.CustomClass
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var claimsIndentity = context.HttpContext.User.Identity as ClaimsIdentity;
-
             if (context.HttpContext.User.Identity.IsAuthenticated)
             {
                 var expTimeStr = context.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "exp")?.Value;

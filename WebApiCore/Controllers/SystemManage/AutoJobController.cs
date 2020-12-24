@@ -4,10 +4,6 @@ using WebApiCore.AutoJob;
 using WebApiCore.Interface.SystemManage;
 using WebApiCore.Utils.Model;
 using WebApiCore.Entity.SystemManage;
-using System.Threading;
-using System.Net.WebSockets;
-using System.Text;
-using System.Diagnostics;
 
 namespace WebApiCore.Controllers.SystemManage
 {

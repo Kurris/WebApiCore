@@ -28,6 +28,7 @@ namespace WebApiCore.Controllers.SystemManage
             return await UserService.RefreshToken();
         }
 
+        [ApiAuth]
         [HttpPost]
         public async Task<TData<string>> LoginOff(string userName)
         {

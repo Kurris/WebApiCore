@@ -7,7 +7,7 @@ namespace WebApiCore.Utils.Extensions
     public static partial class Extensions
     {
         #region 验证内容是否为空
-        public static bool IsEmpty(this object? value)
+        public static bool IsEmpty(this object value)
         {
             if (value == null) return false;
 

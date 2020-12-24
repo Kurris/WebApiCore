@@ -12,8 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Linq;
-using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using WebApiCore.AutoJob;
 using WebApiCore.CustomClass;
 using WebApiCore.EF;
@@ -46,15 +46,14 @@ namespace WebApiCore
                 {
                     x.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 });
-            services.AddSwaggerGen(setupAction =>
+            services.AddSwaggerGen(option =>
                {
-                   setupAction.SwaggerDoc("V1", new OpenApiInfo()
+                   option.SwaggerDoc("V1", new OpenApiInfo()
                    {
                        Version = "Ver 1",
                        Title = "WebApi",
                    });
-               });
-            //自定义特性
+               }).AddAuthentication();
             services.AddMvc(option =>
             {
                 option.Filters.AddService<CustomExceptionFilterAttribute>();
@@ -70,41 +69,24 @@ namespace WebApiCore
             });
             services.AddHttpContextAccessor();
             services.AddMemoryCache();
-            services.AddSession();
+            services.AddSession(x => x.IdleTimeout = TimeSpan.FromMinutes(GlobalInvariant.SystemConfig.JwtSetting.Expiration));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(op =>
                     {
                         op.Events = new JwtBearerEvents()
                         {
-                            OnMessageReceived = async context =>
-                             {
-                                 string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
-                                 if (loginProvider == "WebApi")
-                                     context.Token = context.Request.Headers[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
-                                 else if (loginProvider == "Session")
-                                     context.Token = context.HttpContext.Session.GetString(GlobalInvariant.SystemConfig.JwtSetting.TokenName);
-                                 else if (loginProvider == "Cookie")
-                                     context.Token = context.Request.Cookies[GlobalInvariant.SystemConfig.JwtSetting.TokenName].ParseToString();
-                                 else
-                                     throw new NotSupportedException(loginProvider);
-                             },
-                            OnChallenge = async context =>
+                            OnMessageReceived = context =>
                             {
-                                if (!context.HttpContext.User.Identity.IsAuthenticated)
+                                string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
+                                string tokenName = GlobalInvariant.SystemConfig.JwtSetting.TokenName;
+                                context.Token = loginProvider switch
                                 {
-                                    context.Response.StatusCode = (int)HttpStatusCode.OK;
-                                    context.Response.ContentType = "application/json";
-
-                                    string result = JsonHelper.ToJson(new TData<string>()
-                                    {
-                                        Data = null,
-                                        Message = "授权失败",
-                                        Status = Status.AuthorizationFail
-                                    });
-                                    byte[] content = Encoding.UTF8.GetBytes(result);
-                                    context.Response.ContentLength = content.Length;
-                                    await context.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(content));
-                                }
+                                    "WebApi" => context.Request.Headers[tokenName].ParseToString(),
+                                    "Session" => context.Token = context.HttpContext.Session.GetString(tokenName),
+                                    "Cookie" => context.Request.Cookies[tokenName].ParseToString(),
+                                    _ => throw new NotSupportedException(loginProvider)
+                                };
+                                return Task.CompletedTask;
                             }
                         };
                         op.TokenValidationParameters = new TokenValidationParameters()
@@ -118,7 +100,6 @@ namespace WebApiCore
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey))
                         };
                     });
-
 
         }
 
@@ -134,25 +115,39 @@ namespace WebApiCore
             if (env.IsDevelopment())
             {
                 GlobalInvariant.SystemConfig.IsDebug = true;
-                //app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
             }
 
-
-            app.UseWebSockets(new WebSocketOptions() { KeepAliveInterval = TimeSpan.FromSeconds(120), ReceiveBufferSize = 4 * 1024 });
+            app.UseWebSockets(new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+                ReceiveBufferSize = 4 * 1024
+            });
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
                 option.SwaggerEndpoint("/swagger/V1/swagger.json", "WebApi");
             });
+            app.UseSession();
             app.UseRouting();
             app.UseCors(_corsPolicy);
+            app.UseMiddleware<GlobalMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("api/chat");
             });
+
+            GlobalInvariant.ServiceProvider = app.ApplicationServices;
+
+            var op = EFDB.Create().GetIDataBaseOperation();
+            if (op.DbContext.Database.GetPendingMigrations().Any())
+            {
+                op.DbContext.Database.Migrate();
+            }
 
             lifetime.ApplicationStarted.Register(async () =>
             {
@@ -165,14 +160,6 @@ namespace WebApiCore
                 await autoJob.StopAll();
             });
 
-            GlobalInvariant.ServiceProvider = app.ApplicationServices;
-
-
-            var op = EFDB.Create().GetIDataBaseOperation();
-            if (op.DbContext.Database.GetPendingMigrations().Any())
-            {
-                op.DbContext.Database.Migrate();
-            }
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("|程序启动");
             sb.AppendLine("|ContentRootPath:" + env.ContentRootPath);
