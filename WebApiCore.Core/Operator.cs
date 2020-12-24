@@ -78,8 +78,7 @@ namespace WebApiCore.Core
         public async Task<string> GetCurrent()
         {
             var accessor = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-
-            return accessor?.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+            return accessor?.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "name")?.Value;
         }
     }
 }

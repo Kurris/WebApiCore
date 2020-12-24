@@ -1,12 +1,16 @@
-﻿using Quartz;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
+using Quartz;
+using WebApiCore.AutoJobAbstractions;
 using WebApiCore.AutoJobInterface;
+using WebApiCore.EF;
+using WebApiCore.Entity.SystemManage;
 using WebApiCore.Utils;
-using AutoJobEntity = WebApiCore.Entity.SystemManage.AutoJobTask;
 
 namespace WebApiCore.AutoJob
 {
@@ -75,11 +79,11 @@ namespace WebApiCore.AutoJob
         /// <param name="group">任务组</param>
         /// <param name="autoJobData">任务数据</param>
         /// <returns><see cref="IJobDetail"/></returns>
-        public static IJobDetail CreateDetail<T>(string name, string group, AutoJobEntity autoJobData) where T : IJob
+        public static IJobDetail CreateDetail<T>(string name, string group, AutoJobTask autoJobData) where T : IJob
         {
             return JobBuilder.Create(typeof(T))
                    .WithIdentity(name, group)
-                   .UsingJobData(new JobDataMap(new Dictionary<string, AutoJobEntity>()
+                   .UsingJobData(new JobDataMap(new Dictionary<string, AutoJobTask>()
                    {
                        ["data"] = autoJobData
                    })).Build();
@@ -92,7 +96,7 @@ namespace WebApiCore.AutoJob
         /// <param name="group">任务组名</param>
         /// <param name="args">任务参数</param>
         /// <returns></returns>
-        public static async Task ExcuteDestineJobAsync(string name, string group, string[] args)
+        public static async Task ExecuteDestineJobAsync(string name, string group, string[] args)
         {
             Type type = Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(x => x.Name.Equals("WebApiCore.AutoJob.Job" + "." + name));
             if (GlobalInvariant.ServiceProvider.GetService(type) is JobPlugin jobPlugin)
@@ -101,6 +105,72 @@ namespace WebApiCore.AutoJob
                 jobPlugin.Group = group;
                 await jobPlugin.Excute(args);
             }
+        }
+
+        /// <summary>
+        /// 执行插件的异步定时任务
+        /// </summary>
+        /// <param name="executeName">命名空间与类名</param>
+        /// <param name="name">任务名称</param>
+        /// <param name="group">任务组名</param>
+        /// <param name="args">任务参数</param>
+        /// <returns><see cref="Task"/></returns>
+        public static async Task ExecutePluginJobAsync(string executeName, string name, string group, string[] args)
+        {
+            var arrNamespaceAndClass = executeName.Split(",", StringSplitOptions.RemoveEmptyEntries);
+            if (arrNamespaceAndClass.Count() != 2) return;
+
+            string dllName = Path.Combine(Directory.GetCurrentDirectory(), arrNamespaceAndClass.First() + ".dll");
+            var loadassembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(dllName);
+            Type type = loadassembly.GetType(arrNamespaceAndClass.First() + "." + arrNamespaceAndClass.Last());
+            if (GlobalInvariant.ServiceProvider.GetService(type) is JobPlugin jobPlugin)
+            {
+                jobPlugin.Name = name;
+                jobPlugin.Group = group;
+                await jobPlugin.Excute(args);
+
+                AssemblyLoadContext.Default.Unload();
+            }
+        }
+
+
+        /// <summary>
+        /// 执行存储过程的异步定时任务
+        /// </summary>
+        /// <param name="executeName">存储过程名称</param>
+        /// <returns><see cref="Task"/></returns>
+        public static async Task ExecuteProcAsync(string executeName)
+        {
+            await EFDB.Create().ExecProcAsync(executeName);
+        }
+
+        /// <summary>
+        /// 执行sql的异步定时任务
+        /// </summary>
+        /// <param name="executeName">SQL语句</param>
+        /// <returns><see cref="Task"/></returns>
+        public static async Task ExecuteSqlAsync(string executeName)
+        {
+            await EFDB.Create().RunSqlAsync(executeName);
+        }
+
+        /// <summary>
+        /// 获取匹配的任务数据
+        /// </summary>
+        /// <param name="id">任务id</param>
+        /// <returns><see cref="Task{AutoJobTask}"/></returns>
+        public static async Task<AutoJobTask> GetAutoJobAsync(int id)
+        {
+            return await EFDB.Create().FindAsync<AutoJobTask>(id);
+        }
+
+        /// <summary>
+        /// 获取活动任务
+        /// </summary>
+        /// <returns><see cref="Task{IEnumerable{AutoJobTask}}"/></returns>
+        public static async Task<IEnumerable<AutoJobTask>> GetActiveJobListAsync()
+        {
+            return await EFDB.Create().FindListAsync<AutoJobTask>(x => x.JobStatus == 1);
         }
     }
 }

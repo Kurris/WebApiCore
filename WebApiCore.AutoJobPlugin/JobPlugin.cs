@@ -2,7 +2,7 @@
 using WebApiCore.EF;
 using WebApiCore.Entity.SystemManage;
 
-namespace WebApiCore.AutoJobInterface
+namespace WebApiCore.AutoJobAbstractions
 {
     /// <summary>
     /// 任务插件
@@ -23,7 +23,7 @@ namespace WebApiCore.AutoJobInterface
         /// 获取任务当前的配置数据
         /// </summary>
         /// <returns><see cref="Task{AutoJob}"/></returns>
-        protected virtual async Task<AutoJobTask> GetJobData()
+        protected virtual async Task<AutoJobTask> GetCurrentJobData()
         {
             return await EFDB.Create().FindAsync<AutoJobTask>(x => x.JobName == this.Name && x.JobGroup == this.Group);
         }

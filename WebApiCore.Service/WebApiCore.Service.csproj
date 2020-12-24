@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApiCore.Cache\WebApiCore.Cache.csproj" />
+    <ProjectReference Include="..\WebApiCore.AutoJobPlugin\WebApiCore.AutoJobPlugin.csproj" />
     <ProjectReference Include="..\WebApiCore.Core\WebApiCore.Core.csproj" />
     <ProjectReference Include="..\WebApiCore.Entity\WebApiCore.EF.csproj" />
     <ProjectReference Include="..\WebApiCore.Interface\WebApiCore.Interface.csproj" />

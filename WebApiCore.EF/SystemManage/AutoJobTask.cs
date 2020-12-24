@@ -26,12 +26,12 @@ namespace WebApiCore.Entity.SystemManage
         /// <summary>
         /// 执行名称
         /// </summary>
-        public string ExcuteName { get; set; }
+        public string ExecuteName { get; set; }
 
         /// <summary>
         /// 参数,以逗号分隔
         /// </summary>
-        public string ExcuteArgs { get; set; }
+        public string ExecuteArgs { get; set; }
 
         /// <summary>
         /// 状态

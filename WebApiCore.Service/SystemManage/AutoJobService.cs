@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApiCore.AutoJobInterface;
 using WebApiCore.EF;
 using WebApiCore.Entity.SystemManage;
 using WebApiCore.Interface.SystemManage;
+using WebApiCore.Utils.Extensions;
 using WebApiCore.Utils.Model;
 
 namespace WebApiCore.Service.SystemManage
 {
     public class AutoJobService : IAutoJobService
     {
+
+        public IJobCenter JobCenter { get; set; }
+
         public async Task<TData<string>> AddJob(AutoJobTask autoJob)
         {
             TData<string> obj = new TData<string>();
@@ -20,40 +25,44 @@ namespace WebApiCore.Service.SystemManage
                 if (job != null)
                 {
                     obj.Message = $"任务组{autoJob.JobGroup}已存在任务名{autoJob.JobName}";
-                    return obj;
                 }
+                else
+                {
+                    await op.AddAsync(autoJob);
+                    await op.CommitTransAsync();
+                    await JobCenter.AddNewJob(autoJob.AutoJobTaskId);
 
-                await op.AddAsync(autoJob);
-                await op.CommitTransAsync();
+                    obj.Message = $"任务{autoJob.JobName}添加成功";
 
-                obj.Message = $"任务{autoJob.JobName}添加成功";
-                return obj;
+                }
             }
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
                 obj.Message = ex.Message;
-                return obj;
             }
+            return obj;
         }
 
         public async Task<TData<string>> EditJob(AutoJobTask autoJob)
         {
             TData<string> obj = new TData<string>();
-            await EFDB.Create().UpdateAsync(autoJob);
+            var op = await EFDB.Create().BeginTransAsync();
+            try
+            {
+                await op.UpdateAsync(autoJob);
+                await op.CommitTransAsync();
+                await JobCenter.EditJob(autoJob.AutoJobTaskId);
 
-            obj.Message = $"任务{autoJob.JobName}修改成功";
+                obj.Message = $"任务{autoJob.JobName}修改成功";
+            }
+            catch (Exception ex)
+            {
+                await op.RollbackTransAsync();
+                obj.Message = ex.GetInnerException();
+            }
+
             return obj;
-        }
-
-        public async Task ExecProc(string procedure, string[] args)
-        {
-            await EFDB.Create().ExecProcAsync(procedure);
-        }
-
-        public async Task<IEnumerable<AutoJobTask>> GetActiveJobList()
-        {
-            return await EFDB.Create().FindListAsync<AutoJobTask>(x => x.JobStatus == 1);
         }
 
         public async Task<AutoJobTask> GetAutoJob(string name, string group)
@@ -68,17 +77,23 @@ namespace WebApiCore.Service.SystemManage
 
         public async Task<TData<string>> RemoveJob(int id)
         {
-            await EFDB.Create().DeleteAsync<AutoJobTask>(id);
-            return new TData<string>()
+            var obj = new TData<string>();
+
+            if (await JobCenter.RemoveJob(id))
             {
-                Message = "移除自动任务成功",
-                Status = Status.Success
-            };
+                await EFDB.Create().DeleteAsync<AutoJobTask>(id);
+
+                obj.Message = "移除自动任务成功";
+                obj.Status = Status.Success;
+                return obj;
+            }
+            obj.Message = "移除失败";
+            return obj;
         }
 
-        public Task StopAll()
+        public async Task<bool> StopAll()
         {
-            return null;
+            return await JobCenter.StopAll();
         }
     }
 }

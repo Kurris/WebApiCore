@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using WebApiCore.AutoJob;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using WebApiCore.Entity.SystemManage;
 using WebApiCore.Interface.SystemManage;
 using WebApiCore.Utils.Model;
-using WebApiCore.Entity.SystemManage;
 
 namespace WebApiCore.Controllers.SystemManage
 {
@@ -13,17 +12,14 @@ namespace WebApiCore.Controllers.SystemManage
     {
 
         public IAutoJobService AutoJobService { get; set; }
-        public IJobCenter JobCenter { get; set; }
 
         [HttpPost]
         public async Task<TData<string>> AddNewJob([FromBody] AutoJobTask autoJob)
         {
             await AutoJobService.AddJob(autoJob);
-            await JobCenter.AddNewJob(autoJob.JobName, autoJob.JobGroup);
             return null;
         }
 
-        [Area("{jobid?}")]
         [HttpPost]
         public async void StopJob()
         {

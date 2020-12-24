@@ -16,7 +16,7 @@ namespace WebApiCore.EF.DataBase
 
         public override async Task<int> ExecProcAsync(string procName, IDictionary<string, object> keyValues = null)
         {
-            await RunSqlAsync($"CALL {procName}", keyValues);
+            await RunSqlAsync($"CALL {procName};", keyValues);
             return await GetReuslt();
         }
     }

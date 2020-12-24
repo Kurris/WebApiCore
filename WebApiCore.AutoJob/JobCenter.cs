@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Quartz;
+﻿using Quartz;
 using Quartz.Spi;
 using System;
 using System.Threading.Tasks;
-using WebApiCore.Interface.SystemManage;
+using WebApiCore.AutoJobInterface;
 using WebApiCore.Utils.Extensions;
 
 
@@ -11,47 +10,45 @@ namespace WebApiCore.AutoJob
 {
     public class JobCenter : IJobCenter
     {
-        public ILogger<JobCenter> Logger { get; set; }
         public ISchedulerFactory SchedulerFactory { get; set; }
         public IJobFactory IOCFactory { get; set; }
 
-        public IAutoJobService AutoJobService { get; set; }
-
-        public async Task<bool> AddNewJob(string name, string group)
+        public async Task<bool> AddNewJob(int id)
         {
             var scheduler = await SchedulerFactory.GetScheduler();
             scheduler.JobFactory = IOCFactory;
 
-            var jobData = await AutoJobService.GetAutoJob(name, group);
+            var jobData = await JobHelper.GetAutoJobAsync(id);
 
             DateTime startTime = jobData.StartTime ?? DateTime.Now;
             DateTime? endTime = jobData.EndTime;
 
             ITrigger trigger = JobHelper.CreateTrigger(jobData.JobName, jobData.JobGroup, startTime, jobData.CronExpression, endTime);
 
-            IJobDetail jobDetail = JobHelper.CreateDetail<JobExcute>(jobData.JobName, jobData.JobGroup, jobData.DeepCloneByXML());
+            IJobDetail jobDetail = JobHelper.CreateDetail<JobExecute>(jobData.JobName, jobData.JobGroup, jobData.DeepCloneByXML());
 
             await scheduler.ScheduleJob(jobDetail, trigger);
             return true;
         }
 
-        public async Task<bool> EditJob(string name, string group)
+        public async Task<bool> EditJob(int id)
         {
-            if (await RemoveJob(name, group))
+            if (await RemoveJob(id))
             {
-                return await AddNewJob(name, group);
+                return await AddNewJob(id);
             }
             return false;
         }
-        public async Task<bool> RemoveJob(string name, string group)
+        public async Task<bool> RemoveJob(int id)
         {
             var scheduler = await SchedulerFactory.GetScheduler();
-            return await scheduler.DeleteJob(new JobKey(name, group));
+            var jobData = await JobHelper.GetAutoJobAsync(id);
+            return await scheduler.DeleteJob(new JobKey(jobData.JobName, jobData.JobGroup));
         }
 
         public async Task<bool> Start()
         {
-            var jobDatas = await AutoJobService.GetActiveJobList();
+            var jobDatas = await JobHelper.GetActiveJobListAsync();
 
             IScheduler scheduler = await SchedulerFactory.GetScheduler();
             scheduler.JobFactory = IOCFactory;
@@ -65,7 +62,7 @@ namespace WebApiCore.AutoJob
 
                     ITrigger trigger = JobHelper.CreateTrigger(jobData.JobName, jobData.JobGroup, startTime, jobData.CronExpression, endTime);
 
-                    IJobDetail jobDetail = JobHelper.CreateDetail<JobExcute>(jobData.JobName, jobData.JobGroup, jobData.DeepCloneByXML());
+                    IJobDetail jobDetail = JobHelper.CreateDetail<JobExecute>(jobData.JobName, jobData.JobGroup, jobData.DeepCloneByXML());
 
                     await scheduler.ScheduleJob(jobDetail, trigger);
                 }
