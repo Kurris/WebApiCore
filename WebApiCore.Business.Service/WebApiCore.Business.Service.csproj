@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebApiCore.Core\WebApiCore.Core.csproj" />
+    <ProjectReference Include="..\WebApiCore.Data.EF\WebApiCore.Data.EF.csproj" />
+    <ProjectReference Include="..\WebApiCore.Lib.AutoJob.Abstractions\WebApiCore.Lib.AutoJob.Abstractions.csproj" />
+    <ProjectReference Include="..\WebApiCore.Lib.AutoJob\WebApiCore.Lib.AutoJob.csproj" />
+    <ProjectReference Include="..\WebApiCore.Lib.Utils\WebApiCore.Lib.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

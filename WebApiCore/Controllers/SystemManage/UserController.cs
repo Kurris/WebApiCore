@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
-using WebApiCore.Entity.SystemManage;
-using WebApiCore.Interface.SystemManage;
-using WebApiCore.Utils.Model;
+using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.Controllers.SystemManage
 {
@@ -29,10 +29,10 @@ namespace WebApiCore.Controllers.SystemManage
         }
 
         [ApiAuth]
-        [HttpPost]
-        public async Task<TData<string>> LoginOff(string userName)
+        [HttpGet]
+        public async Task<TData<string>> LoginOff()
         {
-            return await UserService.LoginOff(userName);
+            return await UserService.LoginOff();
         }
 
         [HttpPost]

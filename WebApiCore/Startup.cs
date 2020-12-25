@@ -14,13 +14,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using WebApiCore.AutoJobInterface;
 using WebApiCore.CustomClass;
-using WebApiCore.EF;
+using WebApiCore.Data.EF;
 using WebApiCore.Hubs;
-using WebApiCore.Utils;
-using WebApiCore.Utils.Extensions;
-using WebApiCore.Utils.Model;
+using WebApiCore.Lib.AutoJob.Abstractions;
+using WebApiCore.Lib.Utils;
+using WebApiCore.Lib.Utils.Extensions;
+using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore
 {
@@ -69,7 +69,11 @@ namespace WebApiCore
             });
             services.AddHttpContextAccessor();
             services.AddMemoryCache();
-            services.AddSession(x => x.IdleTimeout = TimeSpan.FromMinutes(GlobalInvariant.SystemConfig.JwtSetting.Expiration));
+            services.AddSession(option =>
+            {
+                option.IdleTimeout = TimeSpan.FromMinutes(GlobalInvariant.SystemConfig.JwtSetting.Expiration);
+                option.Cookie.Name = GlobalInvariant.SystemConfig.JwtSetting.TokenName;
+            });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(op =>
                     {
@@ -143,11 +147,12 @@ namespace WebApiCore
 
             GlobalInvariant.ServiceProvider = app.ApplicationServices;
 
-            var op = EFDB.Create().GetIDataBaseOperation();
-            if (op.DbContext.Database.GetPendingMigrations().Any())
+            var dbContext = EFDB.Instance.DbContext;
+            if (dbContext.Database.GetPendingMigrations().Any())
             {
-                op.DbContext.Database.Migrate();
+                dbContext.Database.Migrate();
             }
+            dbContext.Dispose();
 
             lifetime.ApplicationStarted.Register(async () =>
             {

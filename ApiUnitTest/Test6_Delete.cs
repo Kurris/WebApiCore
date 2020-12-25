@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
-using WebApiCore.EF.DataBase;
-using WebApiCore.Entity.BlogInfos;
-
+using WebApiCore.Data.EF.DataBase;
+using WebApiCore.Data.Entity;
+using WebApiCore.Data.Entity.BlogInfos;
 
 namespace ApiUnitTest
 {

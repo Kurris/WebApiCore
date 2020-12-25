@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using WebApiCore.Utils;
+using WebApiCore.Lib.Utils;
 
 namespace WebApiCore.Core.TokenHelper
 {

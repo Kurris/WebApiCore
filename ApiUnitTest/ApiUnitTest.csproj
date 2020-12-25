@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApiCore.Entity\WebApiCore.EF.csproj" />
+    <ProjectReference Include="..\WebApiCore.Data.EF\WebApiCore.Data.EF.csproj" />
   </ItemGroup>
 
 </Project>

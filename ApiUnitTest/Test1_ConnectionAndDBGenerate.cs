@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
-using WebApiCore.EF;
-using WebApiCore.EF.DataBase;
+using WebApiCore.Data.EF;
+using WebApiCore.Data.EF.DataBase;
 
 namespace ApiUnitTest
 {

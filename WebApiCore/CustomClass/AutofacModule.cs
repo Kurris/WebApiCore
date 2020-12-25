@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using WebApiCore.AutoJob;
-using WebApiCore.AutoJobInterface;
+using WebApiCore.Lib.AutoJob.Abstractions;
 
 namespace WebApiCore.CustomClass
 {

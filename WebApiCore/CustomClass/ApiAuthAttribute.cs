@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Linq;
 using System.Security.Claims;
-using WebApiCore.Utils;
-using WebApiCore.Utils.Extensions;
-using WebApiCore.Utils.Model;
+using WebApiCore.Lib.Utils;
+using WebApiCore.Lib.Utils.Extensions;
+using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.CustomClass
 {

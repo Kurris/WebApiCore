@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
-using WebApiCore.Entity.BlogInfos;
-using WebApiCore.Interface.BlogInfos;
-using WebApiCore.Utils;
+using WebApiCore.Data.Entity.BlogInfos;
+
 
 namespace WebApiCore.Controllers.BlogInfos
 {
@@ -23,12 +23,6 @@ namespace WebApiCore.Controllers.BlogInfos
             return await BlogService.GetBlogs();
         }
 
-        [HttpGet]
-        public async Task<OSInfo> GetOSInfo()
-        {
-            //OSInfoService infoService = new OSInfoService();
-            //return await infoService.GetOSInfo();
-            return null;
-        }
+
     }
 }

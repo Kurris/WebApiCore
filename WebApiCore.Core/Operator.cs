@@ -3,16 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApiCore.Cache;
 using WebApiCore.Core.TokenHelper;
-using WebApiCore.Entity.SystemManage;
-using WebApiCore.Utils;
+using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Lib.Utils;
 
 namespace WebApiCore.Core
 {
     public class Operator
     {
-        private static Operator _instance = new Operator();
+        private static readonly Operator _instance = new Operator();
         public static Operator Instance { get => _instance; }
 
         private readonly string _loginProvider = GlobalInvariant.SystemConfig?.LoginProvider;
@@ -44,15 +43,14 @@ namespace WebApiCore.Core
 
             user.Token = jwtToken;
 
-            return user;
+            return await Task.FromResult(user);
         }
 
         /// <summary>
         /// 移除当前凭证
         /// </summary>
-        /// <param name="userName">用户账号</param>
         /// <returns></returns>
-        public async Task<bool> RemoveCurrent(string userName)
+        public async Task<bool> RemoveCurrent()
         {
             switch (_loginProvider)
             {
@@ -68,7 +66,7 @@ namespace WebApiCore.Core
                     throw new NotSupportedException(_loginProvider);
             }
 
-            return CacheFactory.Instance.RemoveCache(userName);
+            return await Task.FromResult(true);
         }
 
         /// <summary>
@@ -78,7 +76,7 @@ namespace WebApiCore.Core
         public async Task<string> GetCurrent()
         {
             var accessor = GlobalInvariant.ServiceProvider?.GetService<IHttpContextAccessor>();
-            return accessor?.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "name")?.Value;
+            return await Task.FromResult(accessor?.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "name")?.Value);
         }
     }
 }

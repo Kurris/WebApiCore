@@ -12,9 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApiCore.Cache\WebApiCore.Cache.csproj" />
-    <ProjectReference Include="..\WebApiCore.EF\WebApiCore.Entity.csproj" />
-    <ProjectReference Include="..\WebApiCore.Utils\WebApiCore.Utils.csproj" />
+    <ProjectReference Include="..\WebApiCore.Data.Entity\WebApiCore.Data.Entity.csproj" />
+    <ProjectReference Include="..\WebApiCore.Lib.Utils\WebApiCore.Lib.Utils.csproj" />
   </ItemGroup>
 
 </Project>

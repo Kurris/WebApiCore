@@ -4,9 +4,9 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using WebApiCore.Entity.SystemManage;
-using WebApiCore.Utils.Extensions;
-using WebApiCore.Utils.Model;
+using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Lib.Utils.Extensions;
+using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.Core.TokenHelper
 {

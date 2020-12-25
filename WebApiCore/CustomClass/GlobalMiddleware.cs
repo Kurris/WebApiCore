@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebApiCore.Utils;
-using WebApiCore.Utils.Model;
+using WebApiCore.Lib.Utils;
+using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.CustomClass
 {

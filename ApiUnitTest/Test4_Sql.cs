@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApiCore.EF.DataBase;
+using WebApiCore.Data.EF.DataBase;
+using WebApiCore.Data.Entity;
+using WebApiCore.Data.Entity.BlogInfos;
 
 namespace ApiUnitTest
 {

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebApiCore.Data.Entity\WebApiCore.Data.Entity.csproj" />
+    <ProjectReference Include="..\WebApiCore.Lib.Utils\WebApiCore.Lib.Utils.csproj" />
+  </ItemGroup>
+
+</Project>
