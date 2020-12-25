@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions;
-using WebApiCore.Business.Service;
+using WebApiCore.Business.BLL.SystemMange;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity.SystemManage;
 using WebApiCore.Lib.Utils.Model;
@@ -15,13 +15,14 @@ namespace WebApiCore.Controllers.SystemManage
     {
 
         public IAutoJobService AutoJobService { get; set; }
-        public BaseService<AutoJobTask> BaseAutoJob { get; set; }
+        public IBaseService<AutoJobTask> BaseAutoJob { get; set; }
+
+        public AutoJobBLL AutoJobBLL { get; set; }
 
         [HttpPost]
         public async Task<TData<string>> SaveNewJob([FromBody] AutoJobTask autoJob)
         {
-            //return await AutoJobService(autoJob);
-            return null;
+            return await BaseAutoJob.SaveAsync(autoJob);
         }
 
         [HttpPost]

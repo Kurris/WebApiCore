@@ -16,10 +16,12 @@ namespace WebApiCore.CustomClass
         protected override void Load(ContainerBuilder builder)
         {
             //业务注入
-            builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.Service"), Assembly.Load("WebApiCore.Interface"))
+            builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.Business.Service"), Assembly.Load("WebApiCore.Business.Abstractions"))
                    .InstancePerLifetimeScope()
                    .AsImplementedInterfaces()
                    .PropertiesAutowired();
+
+            builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.Business.BLL")).PropertiesAutowired();
 
             //控制器和过滤器注入,可使用属性
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
@@ -33,7 +35,7 @@ namespace WebApiCore.CustomClass
             //单例调度器工厂
             builder.RegisterType<StdSchedulerFactory>().As<ISchedulerFactory>().SingleInstance().PropertiesAutowired();
             //具体的Job注入
-            builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.AutoJob")).Where(x => x.GetInterfaces().Contains(typeof(IJob)))
+            builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.Lib.AutoJob")).Where(x => x.GetInterfaces().Contains(typeof(IJob)))
                .InstancePerLifetimeScope().PropertiesAutowired();
             //替换调度器的工厂实现,实现Job任务可依赖注入
             builder.RegisterType<IOCFactory>().As<IJobFactory>().SingleInstance().PropertiesAutowired();

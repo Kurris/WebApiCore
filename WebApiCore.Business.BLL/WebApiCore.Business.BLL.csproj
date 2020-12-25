@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebApiCore.Business.Abstractions\WebApiCore.Business.Abstractions.csproj" />
+    <ProjectReference Include="..\WebApiCore.Business.Service\WebApiCore.Business.Service.csproj" />
+  </ItemGroup>
+
 </Project>

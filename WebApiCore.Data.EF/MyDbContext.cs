@@ -37,7 +37,7 @@ namespace WebApiCore.Data.EF
             else if (this._provider.Equals("MySql", StringComparison.OrdinalIgnoreCase))
             {
                 this._connStr = GlobalInvariant.SystemConfig.DBConfig.MySqlConnectionString;
-            }       
+            }
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace WebApiCore.Data.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var entityTypes = Assembly.Load(new AssemblyName("WebApiCore.Entity"))
+            var entityTypes = Assembly.Load(new AssemblyName("WebApiCore.Data.Entity"))
                    .GetTypes().Where(x => x.IsSubclassOf(typeof(BaseEntity))
                                   && x.IsDefined(typeof(TableAttribute)));
 

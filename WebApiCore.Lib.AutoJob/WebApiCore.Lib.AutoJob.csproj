@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApiCore.Business.Abstractions\WebApiCore.Business.Abstractions.csproj" />
     <ProjectReference Include="..\WebApiCore.Data.EF\WebApiCore.Data.EF.csproj" />
     <ProjectReference Include="..\WebApiCore.Lib.AutoJob.Abstractions\WebApiCore.Lib.AutoJob.Abstractions.csproj" />
   </ItemGroup>
