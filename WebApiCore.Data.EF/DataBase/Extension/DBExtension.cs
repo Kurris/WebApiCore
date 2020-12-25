@@ -93,7 +93,7 @@ namespace WebApiCore.Data.EF.DataBase.Extension
                 var subEntityType = FindTrackingEntity(dbContext, obj);
 
                 //List<Entity>
-                if (prop.PropertyType.IsGenericType)
+                if (prop.PropertyType.IsGenericType&& prop.PropertyType.IsClass)
                 {
                     IEnumerable<object> objs = (IEnumerable<object>)obj;
                     foreach (var item in objs)

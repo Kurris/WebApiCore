@@ -122,11 +122,6 @@ namespace WebApiCore
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseWebSockets(new WebSocketOptions()
-            //{
-            //    KeepAliveInterval = TimeSpan.FromSeconds(120),
-            //    ReceiveBufferSize = 4 * 1024
-            //});
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
@@ -154,16 +149,20 @@ namespace WebApiCore
             }
             dbContext.Dispose();
 
-            lifetime.ApplicationStarted.Register(async () =>
+
+            if (!GlobalInvariant.SystemConfig.IsDebug)
             {
-                var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
-                await autoJob.Start();
-            });
-            lifetime.ApplicationStopping.Register(async () =>
-            {
-                var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
-                await autoJob.StopAll();
-            });
+                lifetime.ApplicationStarted.Register(async () =>
+                {
+                    var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
+                    await autoJob.Start();
+                });
+                lifetime.ApplicationStopping.Register(async () =>
+                {
+                    var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
+                    await autoJob.StopAll();
+                });
+            }
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("|≥Ã–Ú∆Ù∂Ø");

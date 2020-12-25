@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions;
-using WebApiCore.Business.BLL.SystemMange;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity.SystemManage;
 using WebApiCore.Lib.Utils.Model;
+using System.Collections.Generic;
 
 namespace WebApiCore.Controllers.SystemManage
 {
@@ -15,17 +15,40 @@ namespace WebApiCore.Controllers.SystemManage
     {
 
         public IAutoJobService AutoJobService { get; set; }
-        public IBaseService<AutoJobTask> BaseAutoJob { get; set; }
 
-        public AutoJobBLL AutoJobBLL { get; set; }
-
+        #region 数据操作
         [HttpPost]
         public async Task<TData<string>> SaveNewJob([FromBody] AutoJobTask autoJob)
         {
-            return await BaseAutoJob.SaveAsync(autoJob);
+            return await AutoJobService.SaveAsync(autoJob);
         }
 
-        [HttpPost]
+        [HttpGet]
+        public async Task<TData<IEnumerable<AutoJobTask>>> FindListJob()
+        {
+            return await AutoJobService.FindListAsync(null);
+        }
+
+        #endregion
+
+        #region JobCenter
+
+        [HttpPost("{id}")]
+        public async Task<TData<string>> Start(int id)
+        {
+            var td = await AutoJobService.SaveAsync(new AutoJobTask()
+            {
+                AutoJobTaskId = id,
+                JobStatus = 1
+            });
+            if (td.Status == Status.Success)
+            {
+                td.Message = await AutoJobService.StartJob(id);
+            }
+            return td;
+        }
+
+        [HttpPost("{id}")]
         public async Task<TData<string>> StopJob(int id)
         {
             return new TData<string>()
@@ -34,5 +57,17 @@ namespace WebApiCore.Controllers.SystemManage
                 Status = Status.Success
             };
         }
+
+        [HttpPost("{id}")]
+        public async Task<TData<string>> Restart(int id)
+        {
+            return new TData<string>()
+            {
+                Message = await AutoJobService.RestartJob(id),
+                Status = Status.Success
+            };
+        }
+
+        #endregion
     }
 }

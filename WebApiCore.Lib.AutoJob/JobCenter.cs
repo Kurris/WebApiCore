@@ -24,7 +24,10 @@ namespace WebApiCore.AutoJob
             scheduler.JobFactory = IOCFactory;
 
             var jobData = await JobHelper.GetAutoJobAsync(id);
-
+            if (jobData.JobStatus==0)
+            {
+                return false;
+            }
             DateTime startTime = jobData.StartTime ?? DateTime.Now;
             DateTime? endTime = jobData.EndTime;
 

@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using WebApiCore.Data.EF;
-using WebApiCore.Data.Entity.SystemManage;
 
 namespace WebApiCore.Lib.AutoJob.Abstractions
 {
@@ -19,14 +17,6 @@ namespace WebApiCore.Lib.AutoJob.Abstractions
         /// </summary>
         public string Group { get; set; }
 
-        /// <summary>
-        /// 获取任务当前的配置数据
-        /// </summary>
-        /// <returns><see cref="Task{AutoJob}"/></returns>
-        protected virtual async Task<AutoJobTask> GetCurrentJobData()
-        {
-            return await EFDB.Instance.FindAsync<AutoJobTask>(x => x.JobName == this.Name && x.JobGroup == this.Group);
-        }
 
         /// <summary>
         /// 任务执行入口

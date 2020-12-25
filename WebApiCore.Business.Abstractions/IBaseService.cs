@@ -15,7 +15,7 @@ namespace WebApiCore.Business.Abstractions
     {
         Task<TData<T>> FindAsync(int id);
         Task<TData<T>> FindAsync(Expression<Func<T, bool>> predicate);
-        Task<TData<IEnumerable<T>>> FindListAsync(Expression<Func<T, bool>> predicate);
+        Task<TData<IEnumerable<T>>> FindListAsync(Expression<Func<T, bool>> predicate = null);
         Task<TData<string>> SaveAsync(IEnumerable<T> ts);
         Task<TData<string>> SaveAsync(T t);
         Task<TData<string>> DeleteAsync(int id);

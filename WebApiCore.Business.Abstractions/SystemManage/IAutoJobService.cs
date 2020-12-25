@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApiCore.Data.Entity.SystemManage;
 
 namespace WebApiCore.Business.Abstractions
 {
-    public interface IAutoJobService 
+    public interface IAutoJobService :IBaseService<AutoJobTask>
     {
 
         #region JobCenter
@@ -16,11 +17,11 @@ namespace WebApiCore.Business.Abstractions
         Task<string> StartJob(int id);
 
         /// <summary>
-        /// 修改任务
+        /// 重启任务
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<string> EditJob(int id);
+        Task<string> RestartJob(int id);
 
         /// <summary>
         /// 移除任务

@@ -97,7 +97,8 @@ namespace WebApiCore.Business.Service
             }
             return td;
         }
-        public virtual async Task<TData<IEnumerable<T>>> FindListAsync(Expression<Func<T, bool>> predicate)
+
+        public virtual async Task<TData<IEnumerable<T>>> FindListAsync(Expression<Func<T, bool>> predicate = null)
         {
             var td = new TData<IEnumerable<T>>();
             try
@@ -171,6 +172,7 @@ namespace WebApiCore.Business.Service
                     await op.UpdateAsync(t);
                     obj.Message = "修改成功";
                 }
+                obj.Status = Status.Success;
             }
             catch (Exception ex)
             {

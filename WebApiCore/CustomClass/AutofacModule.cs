@@ -4,6 +4,7 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using WebApiCore.AutoJob;
@@ -15,20 +16,21 @@ namespace WebApiCore.CustomClass
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //业务注入
-            builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.Business.Service"), Assembly.Load("WebApiCore.Business.Abstractions"))
-                   .InstancePerLifetimeScope()
-                   .AsImplementedInterfaces()
-                   .PropertiesAutowired();
+            string local = AppContext.BaseDirectory;
 
-            builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.Business.BLL")).PropertiesAutowired();
+            //业务注入
+            var businessService = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Business.Service.dll"));
+            var businessAbstraction = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Business.Abstractions.dll"));
+            builder.RegisterAssemblyTypes(businessService, businessAbstraction).InstancePerLifetimeScope()
+                                                                               .AsImplementedInterfaces()
+                                                                               .PropertiesAutowired();
 
             //控制器和过滤器注入,可使用属性
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .Where(x => x.IsSubclassOf(typeof(ControllerBase))
                          || x.IsSubclassOf(typeof(Attribute))).PropertiesAutowired();
 
-            /*  自动任务注入  */
+            /*---自动任务注入---*/
 
             //管理类注入
             builder.RegisterType<JobCenter>().As<IJobCenter>().SingleInstance().PropertiesAutowired();

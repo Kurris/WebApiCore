@@ -52,8 +52,8 @@ namespace WebApiCore.Data.EF.DataBase
         {
             string log = $"异常:{eventData.Exception.Message}\r\n" +
                          $"语句:{command.CommandText}";
-            _logger?.LogWarning(log);
-             await base.CommandFailedAsync(command, eventData, cancellationToken);
+            _logger?.LogError(log);
+            await base.CommandFailedAsync(command, eventData, cancellationToken);
         }
     }
 }

@@ -20,15 +20,22 @@ namespace WebApiCore.Business.Service.SystemManage
         {
             try
             {
-                await JobCenter.Start(id);
-                return "任务启动成功";
+                if (await JobCenter.Start(id))
+                {
+                    return "任务启动成功";
+                }
+                else
+                {
+                    return "任务启动失败";
+                }
+                
             }
             catch (Exception ex)
             {
                 return ex.GetInnerException();
             }
         }
-        public async Task<string> EditJob(int id)
+        public async Task<string> RestartJob(int id)
         {
             try
             {

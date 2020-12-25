@@ -34,6 +34,7 @@ namespace WebApiCore.CustomClass
                  && !context.Request.Path.StartsWithSegments("/api/User/Login")//登录和注册不需要验证
                  && !context.Request.Path.StartsWithSegments("/api/User/SignUp"))
                 {
+                    context.Response.StatusCode = 200;
                     string result = JsonHelper.ToJson(new TData<string>()
                     {
                         Data = null,

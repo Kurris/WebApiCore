@@ -31,7 +31,7 @@
         /// <summary>
         /// 是否在调试中
         /// </summary>
-        public bool? IsDebug { get; set; }
+        public bool IsDebug { get; set; }
 
 
         /// <summary>
