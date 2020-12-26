@@ -45,8 +45,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApiCore.Business.Abstractions\WebApiCore.Business.Abstractions.csproj" />
+    <ProjectReference Include="..\WebApiCore.Business.Service\WebApiCore.Business.Service.csproj" />
     <ProjectReference Include="..\WebApiCore.Lib.AutoJob\WebApiCore.Lib.AutoJob.csproj" />
-    <ProjectReference Include="..\WebApiCore.Lib.Utils\WebApiCore.Lib.Utils.csproj" />
+    <ProjectReference Include="..\WebApiCore.Lib.CacheAbstractions\WebApiCore.Lib.CacheAbstractions.csproj" />
+    <ProjectReference Include="..\WebApiCore.Lib.Cache\WebApiCore.Lib.Cache.csproj" />
   </ItemGroup>
 
   <ItemGroup>

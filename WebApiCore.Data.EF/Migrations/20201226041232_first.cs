@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiCore.Data.EF.Migrations
 {
-    public partial class firsttimeadd : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +13,7 @@ namespace WebApiCore.Data.EF.Migrations
                 columns: table => new
                 {
                     AutoJobTaskId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Creator = table.Column<string>(nullable: true),
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
@@ -39,7 +40,7 @@ namespace WebApiCore.Data.EF.Migrations
                 columns: table => new
                 {
                     BlogId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Creator = table.Column<string>(nullable: true),
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
@@ -56,7 +57,7 @@ namespace WebApiCore.Data.EF.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Creator = table.Column<string>(nullable: true),
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
@@ -77,7 +78,7 @@ namespace WebApiCore.Data.EF.Migrations
                 columns: table => new
                 {
                     PostId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Creator = table.Column<string>(nullable: true),
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
@@ -102,7 +103,7 @@ namespace WebApiCore.Data.EF.Migrations
                 columns: table => new
                 {
                     ProfileId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Creator = table.Column<string>(nullable: true),
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
@@ -129,8 +130,7 @@ namespace WebApiCore.Data.EF.Migrations
                 name: "IX_AutoJobTasks_JobName_JobGroup",
                 table: "AutoJobTasks",
                 columns: new[] { "JobName", "JobGroup" },
-                unique: true,
-                filter: "[JobName] IS NOT NULL AND [JobGroup] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_BlogId",
@@ -141,37 +141,13 @@ namespace WebApiCore.Data.EF.Migrations
                 name: "IX_Profiles_BlogId",
                 table: "Profiles",
                 column: "BlogId",
-                unique: true,
-                filter: "[BlogId] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_UserName",
                 table: "Users",
                 column: "UserName",
-                unique: true,
-                filter: "[UserName] IS NOT NULL");
-
-            migrationBuilder.Sql(@"
-if OBJECT_ID('TestA') is not null
-drop proc  TestA
-go
-create proc TestA
-as
-begin 
-
-INSERT INTO [dbo].[Users]
-           ([Creator]
-           ,[CreateTime]
-           ,[Modifier]
-           ,[ModifyTime]
-           ,[UserName]
-           ,[Password]
-           ,[Email]
-           ,[MobilePhone]
-           ,[LastLogin])
-     VALUES ('sys',GETDATE(),'sys',GETDATE(),RAND(),'111','','',GETDATE())
-          
-end");
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -190,10 +166,6 @@ end");
 
             migrationBuilder.DropTable(
                 name: "Blogs");
-
-            migrationBuilder.Sql(@"
-if OBJECT_ID('TestA') is not null
-drop proc  TestA");
         }
     }
 }

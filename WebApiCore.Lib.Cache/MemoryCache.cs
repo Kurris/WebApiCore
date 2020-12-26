@@ -1,13 +1,17 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using WebApiCore.Lib.Utils;
+﻿using System;
+using Microsoft.Extensions.Caching.Memory;
+using WebApiCore.Lib.CacheAbstractions;
 
 namespace WebApiCore.Lib.Cache
 {
     internal class MemoryCache : ICache
     {
-        private readonly IMemoryCache _cache = GlobalInvariant.ServiceProvider.GetService<IMemoryCache>();
+        private readonly IMemoryCache _cache = null;
+
+        public MemoryCache(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
 
         public T GetCache<T>(string key)
         {

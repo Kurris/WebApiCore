@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Linq;
-using System.Security.Claims;
 using WebApiCore.Lib.Utils;
 using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;

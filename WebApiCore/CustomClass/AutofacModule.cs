@@ -1,12 +1,12 @@
-﻿using Autofac;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using WebApiCore.AutoJob;
 using WebApiCore.Lib.AutoJob.Abstractions;
 
@@ -18,19 +18,30 @@ namespace WebApiCore.CustomClass
         {
             string local = AppContext.BaseDirectory;
 
-            //业务注入
+            #region 缓存注入
+
+            Assembly cacheImp = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Lib.Cache.dll"));
+            builder.RegisterAssemblyTypes(cacheImp).InstancePerLifetimeScope().AsImplementedInterfaces().PropertiesAutowired();
+
+            #endregion
+
+            #region 业务注入
             var businessService = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Business.Service.dll"));
             var businessAbstraction = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Business.Abstractions.dll"));
             builder.RegisterAssemblyTypes(businessService, businessAbstraction).InstancePerLifetimeScope()
                                                                                .AsImplementedInterfaces()
                                                                                .PropertiesAutowired();
 
+            #endregion
+
+            #region 控制器和过滤器
             //控制器和过滤器注入,可使用属性
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .Where(x => x.IsSubclassOf(typeof(ControllerBase))
                          || x.IsSubclassOf(typeof(Attribute))).PropertiesAutowired();
+            #endregion
 
-            /*---自动任务注入---*/
+            #region 自动任务注入
 
             //管理类注入
             builder.RegisterType<JobCenter>().As<IJobCenter>().SingleInstance().PropertiesAutowired();
@@ -40,7 +51,8 @@ namespace WebApiCore.CustomClass
             builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.Lib.AutoJob")).Where(x => x.GetInterfaces().Contains(typeof(IJob)))
                .InstancePerLifetimeScope().PropertiesAutowired();
             //替换调度器的工厂实现,实现Job任务可依赖注入
-            builder.RegisterType<IOCFactory>().As<IJobFactory>().SingleInstance().PropertiesAutowired();
+            builder.RegisterType<IOCFactory>().As<IJobFactory>().SingleInstance().PropertiesAutowired(); 
+            #endregion
         }
     }
 }

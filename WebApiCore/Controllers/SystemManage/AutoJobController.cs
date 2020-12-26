@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity.SystemManage;
 using WebApiCore.Lib.Utils.Model;
-using System.Collections.Generic;
 
 namespace WebApiCore.Controllers.SystemManage
 {

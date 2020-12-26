@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebApiCore.Lib.Cache
+namespace WebApiCore.Lib.CacheAbstractions
 {
     /// <summary>
     /// 缓存实现接口

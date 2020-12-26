@@ -1,18 +1,23 @@
-﻿using StackExchange.Redis;
-using System;
+﻿using System;
+using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
+using WebApiCore.Lib.CacheAbstractions;
 using WebApiCore.Lib.Utils;
+using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.Lib.Cache
 {
     internal class RedisCache : ICache, IDisposable
     {
         private readonly IDatabase _cache;
-        private readonly ConnectionMultiplexer _connection;
+        private readonly IConfiguration _configuration;
 
-        public RedisCache()
+        public RedisCache(IConfiguration configuration)
         {
-            _connection = ConnectionMultiplexer.Connect(GlobalInvariant.SystemConfig.RedisConnectionString);
-            _cache = _connection.GetDatabase();
+            this._configuration = configuration;
+            string redisConnString = this._configuration.GetSection("SystemConfig:RedisConnectionString").Value;
+
+            _cache = ConnectionMultiplexer.Connect(redisConnString).GetDatabase();
         }
 
         public bool SetCache<T>(string key, T value, DateTime? expireDateTime = null)
@@ -23,7 +28,7 @@ namespace WebApiCore.Lib.Cache
             {
                 return false;
             }
-
+            
             if (expireDateTime == null)
             {
                 return _cache.StringSet(key, strValue);
@@ -57,9 +62,10 @@ namespace WebApiCore.Lib.Cache
 
         public void Dispose()
         {
-            if (_connection != null)
+            if (_cache.Multiplexer != null)
             {
-                _connection.Close();
+                _cache.Multiplexer.Close();
+                _cache.Multiplexer.Dispose();
             }
             GC.SuppressFinalize(this);
         }

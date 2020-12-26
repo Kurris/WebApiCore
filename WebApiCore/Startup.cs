@@ -17,7 +17,6 @@ using Microsoft.OpenApi.Models;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.EF;
 using WebApiCore.Hubs;
-using WebApiCore.Lib.AutoJob.Abstractions;
 using WebApiCore.Lib.Utils;
 using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;
@@ -41,19 +40,18 @@ namespace WebApiCore
             GlobalInvariant.Configuration = Configuration;
 
             services.AddSignalR();
-            services.AddControllers().AddControllersAsServices()
-                    .AddNewtonsoftJson(x =>
-                {
-                    x.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-                });
+            services.AddControllers().AddControllersAsServices().AddNewtonsoftJson(x =>
+            {
+                x.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+            });
             services.AddSwaggerGen(option =>
                {
-                   option.SwaggerDoc("V1", new OpenApiInfo()
+                   option.SwaggerDoc("v1", new OpenApiInfo()
                    {
                        Version = "Ver 1",
                        Title = "WebApi",
                    });
-               }).AddAuthentication();
+               });
             services.AddMvc(option =>
             {
                 option.Filters.AddService<CustomExceptionFilterAttribute>();
@@ -101,7 +99,8 @@ namespace WebApiCore
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = GlobalInvariant.SystemConfig.JwtSetting.Issuer,
                             ValidAudience = GlobalInvariant.SystemConfig.JwtSetting.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey))
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey)),
+                            RequireExpirationTime=true,
                         };
                     });
 
@@ -125,7 +124,7 @@ namespace WebApiCore
             app.UseSwagger();
             app.UseSwaggerUI(option =>
             {
-                option.SwaggerEndpoint("/swagger/V1/swagger.json", "WebApi");
+                option.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi");
             });
             app.UseSession();
             app.UseRouting();
@@ -152,24 +151,24 @@ namespace WebApiCore
 
             if (!GlobalInvariant.SystemConfig.IsDebug)
             {
-                lifetime.ApplicationStarted.Register(async () =>
-                {
-                    var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
-                    await autoJob.Start();
-                });
-                lifetime.ApplicationStopping.Register(async () =>
-                {
-                    var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
-                    await autoJob.StopAll();
-                });
+                //lifetime.ApplicationStarted.Register(async () =>
+                //{
+                //    var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
+                //    await autoJob.Start();
+                //});
+                //lifetime.ApplicationStopping.Register(async () =>
+                //{
+                //    var autoJob = GlobalInvariant.ServiceProvider.GetService<IJobCenter>();
+                //    await autoJob.StopAll();
+                //});
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("|≥Ã–Ú∆Ù∂Ø");
-            sb.AppendLine("|ContentRootPath:" + env.ContentRootPath);
-            sb.AppendLine("|WebRootPath:" + env.WebRootPath);
-            sb.AppendLine("|IsDevelopment:" + env.IsDevelopment());
-            sb.AppendLine("|Version:" + GlobalInvariant.Version);
+            sb.AppendLine("|StartUp:  "+DateTime.Now);
+            sb.AppendLine("|Machine:  " + Environment.MachineName+"  " + Environment.OSVersion.Platform + "  " + Environment.OSVersion.VersionString);
+            sb.AppendLine("|ContentRootPath:  " + env.ContentRootPath);
+            sb.AppendLine("|IsDevelopment:  " + env.IsDevelopment());
+            sb.AppendLine("|Version:  " + GlobalInvariant.Version);
             logger.LogInformation(sb.ToString());
         }
     }
