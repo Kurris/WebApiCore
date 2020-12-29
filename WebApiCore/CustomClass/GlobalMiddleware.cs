@@ -50,6 +50,20 @@ namespace WebApiCore.CustomClass
             catch (Exception ex)
             {
                 _logger.LogError(ex.GetInnerException());
+
+                context.Response.StatusCode = 200;
+                string msg = "内部发生异常" + Environment.NewLine + ex.GetInnerException();
+                string result = JsonHelper.ToJson(new TData<string>()
+                {
+                    Data = null,
+                    Message = msg,
+                    Status = Status.Error
+                });
+                byte[] content = Encoding.UTF8.GetBytes(result);
+
+                context.Response.ContentType = "application/json";
+                context.Response.ContentLength = content.Length;
+                await context.Response.BodyWriter.WriteAsync(new ReadOnlyMemory<byte>(content));
             }
         }
     }

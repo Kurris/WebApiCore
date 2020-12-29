@@ -28,7 +28,7 @@ namespace ApiUnitTest
                     {
                         Age = 23,
                         Name = "Ligy",
-                        Gender = Gender.Å®,
+                        Gender = Gender.Male,
                         Email = "Ligy.97@foxmail.com",
                     },
                     Posts = new List<Post>()
@@ -55,13 +55,13 @@ namespace ApiUnitTest
             {
                 await op.AddAsync<Blog>(new[]
                    {
-   new Blog(){
+                new Blog(){
                     Url = "Ligy.site",
                     Profile = new Profile()
                     {
                         Age = 23,
                         Name = "Ligy",
-                        Gender = Gender.ÄÐ,
+                        Gender = Gender.Female,
                         Email = "Ligy.97@foxmail.com",
                     },
                     Posts = new List<Post>()
@@ -77,7 +77,7 @@ namespace ApiUnitTest
                     {
                         Age = 23,
                         Name = "Ligy",
-                        Gender = Gender.ÄÐ,
+                        Gender = Gender.Female,
                         Email = "Ligy.97@foxmail.com",
                     },
                     Posts = new List<Post>()
@@ -111,7 +111,7 @@ namespace ApiUnitTest
                         Url = Guid.NewGuid().ToString()
                     });
                 }
-               
+
                 await op.CommitTransAsync();
             }
             catch (Exception)

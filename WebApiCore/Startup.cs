@@ -100,7 +100,7 @@ namespace WebApiCore
                             ValidIssuer = GlobalInvariant.SystemConfig.JwtSetting.Issuer,
                             ValidAudience = GlobalInvariant.SystemConfig.JwtSetting.Audience,
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey)),
-                            RequireExpirationTime=true,
+                            RequireExpirationTime = true,
                         };
                     });
 
@@ -164,8 +164,8 @@ namespace WebApiCore
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("|StartUp:  "+DateTime.Now);
-            sb.AppendLine("|Machine:  " + Environment.MachineName+"  " + Environment.OSVersion.Platform + "  " + Environment.OSVersion.VersionString);
+            sb.AppendLine("|StartUp:  " + DateTime.Now);
+            sb.AppendLine("|Machine:  " + Environment.MachineName + "  " + Environment.OSVersion.Platform + "  " + Environment.OSVersion.VersionString);
             sb.AppendLine("|ContentRootPath:  " + env.ContentRootPath);
             sb.AppendLine("|IsDevelopment:  " + env.IsDevelopment());
             sb.AppendLine("|Version:  " + GlobalInvariant.Version);

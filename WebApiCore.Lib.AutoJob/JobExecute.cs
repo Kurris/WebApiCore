@@ -21,7 +21,7 @@ namespace WebApiCore.AutoJob
 
             string[] args = jobData.ExecuteArgs.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
-            _ = jobData.JobType switch
+            var Tjob = jobData.JobType switch
             {
                 JobExecuteType.Destine => JobHelper.ExecuteDestineJobAsync(jobData.JobName, jobData.JobGroup, args),
                 JobExecuteType.DLLPlugin => JobHelper.ExecutePluginJobAsync(jobData.ExecuteName, jobData.JobName, jobData.JobGroup, args),
@@ -29,7 +29,9 @@ namespace WebApiCore.AutoJob
                 JobExecuteType.Sql => JobHelper.ExecuteSqlAsync(jobData.ExecuteName),
                 _ => throw new NotImplementedException(),
             };
+            await Tjob;
 
+            Logger.LogInformation($"自动任务执行:{jobData.JobType.ToString()}:{jobData.ExecuteName}");
         }
     }
 }

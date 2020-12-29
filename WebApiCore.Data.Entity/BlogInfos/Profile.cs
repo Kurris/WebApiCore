@@ -18,7 +18,7 @@ namespace WebApiCore.Data.Entity.BlogInfos
 
     public enum Gender
     {
-        男 = 0,
-        女 = 1
+        Female = 0,
+        Male = 1,
     }
 }
