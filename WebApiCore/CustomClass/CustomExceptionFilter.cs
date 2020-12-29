@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;
-using System.Threading.Tasks;
 
 namespace WebApiCore.CustomClass
 {
@@ -24,6 +23,8 @@ namespace WebApiCore.CustomClass
             context.ExceptionHandled = true;
 
             context.Result = new ObjectResult(new TData<string>(msg, string.Empty, Status.Error));
+
+            await Task.FromResult(true);
         }
     }
 }
