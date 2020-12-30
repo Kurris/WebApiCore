@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 using WebApiCore.Lib.CacheAbstractions;
 using WebApiCore.Lib.Utils;
-using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.Lib.Cache
 {

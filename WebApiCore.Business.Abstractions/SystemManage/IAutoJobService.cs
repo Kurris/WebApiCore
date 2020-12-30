@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebApiCore.Data.Entity.SystemManage;
 
 namespace WebApiCore.Business.Abstractions

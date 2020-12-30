@@ -2,7 +2,7 @@
 using WebApiCore.Data.Entity.BlogInfos;
 
 namespace WebApiCore.Data.Entity
-{ 
+{
     [Table("Posts")]
     public class Post:BaseEntity
     {

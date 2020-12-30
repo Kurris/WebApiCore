@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using Quartz;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Quartz;
 using WebApiCore.Data.Entity.SystemManage;
 
 namespace WebApiCore.AutoJob

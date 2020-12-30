@@ -1,9 +1,9 @@
-﻿using IdentityModel;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using IdentityModel;
+using Microsoft.IdentityModel.Tokens;
 using WebApiCore.Data.Entity.SystemManage;
 using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;

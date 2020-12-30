@@ -1,6 +1,6 @@
-﻿using Quartz;
+﻿using System;
+using Quartz;
 using Quartz.Spi;
-using System;
 
 namespace WebApiCore.AutoJob
 {

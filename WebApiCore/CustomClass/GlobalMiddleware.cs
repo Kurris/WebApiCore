@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Lib.Utils;
-using WebApiCore.Lib.Utils.Model;
 using WebApiCore.Lib.Utils.Extensions;
+using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.CustomClass
 {

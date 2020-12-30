@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using WebApiCore.Lib.Utils.Extensions;
 
 namespace WebApiCore.Lib.Utils

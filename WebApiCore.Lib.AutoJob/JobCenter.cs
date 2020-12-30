@@ -1,7 +1,7 @@
-﻿using Quartz;
-using Quartz.Spi;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Quartz;
+using Quartz.Spi;
 using WebApiCore.Lib.AutoJob.Abstractions;
 using WebApiCore.Lib.Utils.Extensions;
 
