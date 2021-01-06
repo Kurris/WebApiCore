@@ -44,8 +44,4 @@
     <ProjectReference Include="..\WebApiCore.Lib.Utils\WebApiCore.Lib.Utils.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

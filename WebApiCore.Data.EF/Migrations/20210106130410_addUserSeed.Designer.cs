@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiCore.Data.EF;
 
 namespace WebApiCore.Data.EF.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210106130410_addUserSeed")]
+    partial class addUserSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,10 +293,9 @@ namespace WebApiCore.Data.EF.Migrations
                         new
                         {
                             UserId = 1,
-                            CreateTime = new DateTime(2021, 1, 6, 21, 8, 18, 0, DateTimeKind.Unspecified),
-                            Creator = "System",
+                            CreateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "Ligy.97@foxmail.com",
-                            Password = "546677201aae8c8cb69893a4a30d4464",
+                            Password = "zxc111",
                             Phone = "13790166319",
                             UserName = "ligy"
                         });

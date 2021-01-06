@@ -28,8 +28,36 @@ namespace WebApiCore.Data.EF
                 v => (Gender)Enum.Parse(typeof(Gender), v)
                 );
 
+            modelBuilder.Entity<Profile>()
+                .HasData(new Profile()
+                {
+                    ProfileId = 1,
+                    CreateTime = DateTime.Now,
+                    Creator = "ligy",
+                    Email = "Ligy.97@foxmail.com",
+                    Age = 23,
+                    Gender = Gender.Male,
+                    Name = "ligy",
+                    Phone = "13790166319",
+                    GithubUrl = "https://github.com/Kurris",
+                });
+
             modelBuilder.Entity<User>()
                 .HasIndex(x => x.UserName).IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasData(new User()
+                {
+                    UserId = 1,
+                    UserName = "ligy",
+                    Password = "546677201aae8c8cb69893a4a30d4464",
+                    Phone = "13790166319",
+                    Email = "Ligy.97@foxmail.com",
+                    Creator = "System",
+                    CreateTime = DateTime.Now
+                });
+
+
 
             modelBuilder.Entity<AutoJobTask>().HasIndex(x => new { x.JobName, x.JobGroup }).IsUnique();
         }
