@@ -9,6 +9,7 @@ using Quartz.Impl;
 using Quartz.Spi;
 using WebApiCore.AutoJob;
 using WebApiCore.Lib.AutoJob.Abstractions;
+using WebApiCore.Lib.Utils;
 
 namespace WebApiCore.CustomClass
 {
@@ -20,8 +21,8 @@ namespace WebApiCore.CustomClass
 
             #region 缓存注入
 
-            Assembly cacheImp = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Lib.Cache.dll"));
-            builder.RegisterAssemblyTypes(cacheImp).InstancePerLifetimeScope().AsImplementedInterfaces().PropertiesAutowired();
+            var cacheImp = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Lib.Cache.dll")).GetTypes().Where(x=>x.Name.StartsWith(GlobalInvariant.SystemConfig.CacheProvider)).FirstOrDefault();
+            builder.RegisterType(cacheImp).InstancePerLifetimeScope().AsImplementedInterfaces().PropertiesAutowired();
 
             #endregion
 

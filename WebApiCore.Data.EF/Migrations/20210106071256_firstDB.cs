@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiCore.Data.EF.Migrations
 {
-    public partial class first : Migration
+    public partial class firstDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -62,10 +62,10 @@ namespace WebApiCore.Data.EF.Migrations
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
                     ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
-                    UserName = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    MobilePhone = table.Column<string>(nullable: true),
+                    UserName = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Phone = table.Column<string>(nullable: true),
                     LastLogin = table.Column<DateTime>(maxLength: 14, nullable: true)
                 },
                 constraints: table =>
@@ -85,6 +85,8 @@ namespace WebApiCore.Data.EF.Migrations
                     ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
                     Title = table.Column<string>(nullable: true),
                     Content = table.Column<string>(nullable: true),
+                    Stars = table.Column<int>(nullable: false),
+                    Shits = table.Column<int>(nullable: false),
                     BlogId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -109,10 +111,12 @@ namespace WebApiCore.Data.EF.Migrations
                     Modifier = table.Column<string>(nullable: true),
                     ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
                     Avatar = table.Column<byte[]>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Gender = table.Column<string>(nullable: true),
                     Age = table.Column<int>(nullable: false),
-                    Email = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    GithubUrl = table.Column<string>(nullable: true),
                     BlogId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -126,11 +130,41 @@ namespace WebApiCore.Data.EF.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    CommentId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Creator = table.Column<string>(nullable: true),
+                    CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
+                    Modifier = table.Column<string>(nullable: true),
+                    ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    PostId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.CommentId);
+                    table.ForeignKey(
+                        name: "FK_Comments_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "PostId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AutoJobTasks_JobName_JobGroup",
                 table: "AutoJobTasks",
                 columns: new[] { "JobName", "JobGroup" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_PostId",
+                table: "Comments",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_BlogId",
@@ -156,13 +190,16 @@ namespace WebApiCore.Data.EF.Migrations
                 name: "AutoJobTasks");
 
             migrationBuilder.DropTable(
-                name: "Posts");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Profiles");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "Blogs");

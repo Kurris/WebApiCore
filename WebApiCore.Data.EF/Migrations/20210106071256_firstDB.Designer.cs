@@ -9,8 +9,8 @@ using WebApiCore.Data.EF;
 namespace WebApiCore.Data.EF.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20201226041232_first")]
-    partial class first
+    [Migration("20210106071256_firstDB")]
+    partial class firstDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,6 +47,42 @@ namespace WebApiCore.Data.EF.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("WebApiCore.Data.Entity.BlogInfos.Comment", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime(6)")
+                        .HasMaxLength(14);
+
+                    b.Property<string>("Creator")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Modifier")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime(6)")
+                        .HasMaxLength(14);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("WebApiCore.Data.Entity.BlogInfos.Profile", b =>
                 {
                     b.Property<int>("ProfileId")
@@ -70,9 +106,13 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Gender")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("GithubUrl")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Modifier")
@@ -83,6 +123,11 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasMaxLength(14);
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("ProfileId");
@@ -118,6 +163,12 @@ namespace WebApiCore.Data.EF.Migrations
                     b.Property<DateTime?>("ModifyTime")
                         .HasColumnType("datetime(6)")
                         .HasMaxLength(14);
+
+                    b.Property<int>("Shits")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stars")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -207,14 +258,12 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("datetime(6)")
                         .HasMaxLength(14);
-
-                    b.Property<string>("MobilePhone")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Modifier")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -224,9 +273,14 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasMaxLength(14);
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Phone")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.HasKey("UserId");
@@ -235,6 +289,13 @@ namespace WebApiCore.Data.EF.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("WebApiCore.Data.Entity.BlogInfos.Comment", b =>
+                {
+                    b.HasOne("WebApiCore.Data.Entity.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId");
                 });
 
             modelBuilder.Entity("WebApiCore.Data.Entity.BlogInfos.Profile", b =>

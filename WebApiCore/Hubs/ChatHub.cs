@@ -26,7 +26,7 @@ using WebApiCore.CustomClass;
 namespace WebApiCore.Hubs
 {
     [ApiAuth]
-    public class ChatHub :Hub
+    public class ChatHub : Hub
     {
         /// <summary>
         /// Method to be call by frontend

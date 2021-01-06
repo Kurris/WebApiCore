@@ -136,7 +136,7 @@ namespace WebApiCore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("api/chat");
+                endpoints.MapHub<ChatHub>("/chat");
             });
 
             GlobalInvariant.ServiceProvider = app.ApplicationServices;
