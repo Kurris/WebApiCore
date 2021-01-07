@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiCore.Data.EF.Migrations
 {
-    public partial class firstDB : Migration
+    public partial class tmp : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,7 +64,7 @@ namespace WebApiCore.Data.EF.Migrations
                     ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
                     UserName = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: true),
                     Phone = table.Column<string>(nullable: true),
                     LastLogin = table.Column<DateTime>(maxLength: 14, nullable: true)
                 },
@@ -110,7 +110,7 @@ namespace WebApiCore.Data.EF.Migrations
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
                     ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
-                    Avatar = table.Column<byte[]>(nullable: true),
+                    AvatarUrl = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: false),
                     Gender = table.Column<string>(nullable: true),
                     Age = table.Column<int>(nullable: false),
@@ -154,6 +154,16 @@ namespace WebApiCore.Data.EF.Migrations
                         principalColumn: "PostId",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Profiles",
+                columns: new[] { "ProfileId", "Age", "AvatarUrl", "BlogId", "CreateTime", "Creator", "Email", "Gender", "GithubUrl", "Modifier", "ModifyTime", "Name", "Phone" },
+                values: new object[] { 1, 23, "https://avatars3.githubusercontent.com/u/42861557?s=460&u=bea03f68386386ea61fc88c76f27c8db90b509fc&v=4", null, new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified), "ligy", "Ligy.97@foxmail.com", "Male", "https://github.com/Kurris", null, null, "ligy", "13790166319" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserId", "CreateTime", "Creator", "Email", "LastLogin", "Modifier", "ModifyTime", "Password", "Phone", "UserName" },
+                values: new object[] { 1, new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified), "System", "Ligy.97@foxmail.com", null, null, null, "546677201aae8c8cb69893a4a30d4464", "13790166319", "ligy" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AutoJobTasks_JobName_JobGroup",

@@ -25,6 +25,8 @@
     <Compile Remove="Migrations\20201224073527_firsttimeadd.Designer.cs" />
     <Compile Remove="Migrations\20210106065045_firstDB.cs" />
     <Compile Remove="Migrations\20210106065045_firstDB.Designer.cs" />
+    <Compile Remove="Migrations\20210107070354_changeAvatorType.cs" />
+    <Compile Remove="Migrations\20210107070354_changeAvatorType.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

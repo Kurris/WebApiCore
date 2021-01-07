@@ -7,7 +7,7 @@ namespace WebApiCore.Data.Entity.BlogInfos
     public class Profile : BaseEntity
     {
         public int ProfileId { get; set; }
-        public byte[] Avatar { get; set; }
+        public string AvatarUrl { get; set; }
         [Required]
         public string Name { get; set; }
         public Gender? Gender { get; set; }

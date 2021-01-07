@@ -34,6 +34,7 @@ namespace WebApiCore.Data.EF
                     ProfileId = 1,
                     CreateTime = DateTime.Now,
                     Creator = "ligy",
+                    AvatarUrl = "https://avatars3.githubusercontent.com/u/42861557?s=460&u=bea03f68386386ea61fc88c76f27c8db90b509fc&v=4",
                     Email = "Ligy.97@foxmail.com",
                     Age = 23,
                     Gender = Gender.Male,

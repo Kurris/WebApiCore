@@ -90,8 +90,8 @@ namespace WebApiCore.Data.EF.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Avatar")
-                        .HasColumnType("longblob");
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int?>("BlogId")
                         .HasColumnType("int");
@@ -134,6 +134,21 @@ namespace WebApiCore.Data.EF.Migrations
                         .IsUnique();
 
                     b.ToTable("Profiles");
+
+                    b.HasData(
+                        new
+                        {
+                            ProfileId = 1,
+                            Age = 23,
+                            AvatarUrl = "https://avatars3.githubusercontent.com/u/42861557?s=460&u=bea03f68386386ea61fc88c76f27c8db90b509fc&v=4",
+                            CreateTime = new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified),
+                            Creator = "ligy",
+                            Email = "Ligy.97@foxmail.com",
+                            Gender = "Male",
+                            GithubUrl = "https://github.com/Kurris",
+                            Name = "ligy",
+                            Phone = "13790166319"
+                        });
                 });
 
             modelBuilder.Entity("WebApiCore.Data.Entity.Post", b =>
@@ -291,7 +306,7 @@ namespace WebApiCore.Data.EF.Migrations
                         new
                         {
                             UserId = 1,
-                            CreateTime = new DateTime(2021, 1, 6, 21, 8, 18, 0, DateTimeKind.Unspecified),
+                            CreateTime = new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified),
                             Creator = "System",
                             Email = "Ligy.97@foxmail.com",
                             Password = "546677201aae8c8cb69893a4a30d4464",

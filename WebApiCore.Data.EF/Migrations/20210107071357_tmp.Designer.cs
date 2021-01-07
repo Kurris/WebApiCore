@@ -9,8 +9,8 @@ using WebApiCore.Data.EF;
 namespace WebApiCore.Data.EF.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20210106071256_firstDB")]
-    partial class firstDB
+    [Migration("20210107071357_tmp")]
+    partial class tmp
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -92,8 +92,8 @@ namespace WebApiCore.Data.EF.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Avatar")
-                        .HasColumnType("longblob");
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int?>("BlogId")
                         .HasColumnType("int");
@@ -136,6 +136,21 @@ namespace WebApiCore.Data.EF.Migrations
                         .IsUnique();
 
                     b.ToTable("Profiles");
+
+                    b.HasData(
+                        new
+                        {
+                            ProfileId = 1,
+                            Age = 23,
+                            AvatarUrl = "https://avatars3.githubusercontent.com/u/42861557?s=460&u=bea03f68386386ea61fc88c76f27c8db90b509fc&v=4",
+                            CreateTime = new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified),
+                            Creator = "ligy",
+                            Email = "Ligy.97@foxmail.com",
+                            Gender = "Male",
+                            GithubUrl = "https://github.com/Kurris",
+                            Name = "ligy",
+                            Phone = "13790166319"
+                        });
                 });
 
             modelBuilder.Entity("WebApiCore.Data.Entity.Post", b =>
@@ -258,7 +273,6 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime?>("LastLogin")
@@ -289,6 +303,18 @@ namespace WebApiCore.Data.EF.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            CreateTime = new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified),
+                            Creator = "System",
+                            Email = "Ligy.97@foxmail.com",
+                            Password = "546677201aae8c8cb69893a4a30d4464",
+                            Phone = "13790166319",
+                            UserName = "ligy"
+                        });
                 });
 
             modelBuilder.Entity("WebApiCore.Data.Entity.BlogInfos.Comment", b =>
