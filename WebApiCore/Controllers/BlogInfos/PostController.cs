@@ -12,7 +12,7 @@ using WebApiCore.Lib.Utils.Model;
 namespace WebApiCore.Controllers.BlogInfos
 {
     [ApiAuth]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class PostController : ControllerBase
     {
@@ -25,16 +25,11 @@ namespace WebApiCore.Controllers.BlogInfos
         }
 
 
-        [HttpPost]
-        public async Task<TData<string>> AddPost([FromBody] Post post)
-        {
-            return await PostService.SaveAsync(post);
-        }
-
         [HttpPost("{id}")]
-        public async Task<TData<string>> DeletePost(int postId)
+        public async Task<TData<string>> DeletePost(int id)
         {
-            return await PostService.DeleteAsync(postId);
+            var td = await PostService.DeleteAsync(id);
+            return td;
         }
     }
 }

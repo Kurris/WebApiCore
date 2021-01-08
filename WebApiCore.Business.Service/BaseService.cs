@@ -33,6 +33,7 @@ namespace WebApiCore.Business.Service
             {
                 await EFDB.Instance.DeleteAsync<T>(id);
                 obj.Message = "删除成功";
+                obj.Status = Status.Success;
             }
             catch (Exception ex)
             {
@@ -174,13 +175,12 @@ namespace WebApiCore.Business.Service
                 if (value == 0)
                 {
                     await op.AddAsync(t);
-                    obj.Message = "新增成功";
                 }
                 else
                 {
                     await op.UpdateAsync(t);
-                    obj.Message = "修改成功";
                 }
+                obj.Message = "保存成功";
                 obj.Status = Status.Success;
             }
             catch (Exception ex)

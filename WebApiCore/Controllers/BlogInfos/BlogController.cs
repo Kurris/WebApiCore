@@ -16,7 +16,7 @@ namespace WebApiCore.Controllers.BlogInfos
         public IBlogService BlogService { get; set; }
 
         [HttpPost]
-        public async Task<TData<string>> NewOne([FromBody] Blog blog)
+        public async Task<TData<string>> SaveBlog([FromBody] Blog blog)
         {
             return await BlogService.SaveAsync(blog);
         }
