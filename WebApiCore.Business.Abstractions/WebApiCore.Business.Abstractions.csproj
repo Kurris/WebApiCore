@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WebApiCore.Data.Entity\WebApiCore.Data.Entity.csproj" />
     <ProjectReference Include="..\WebApiCore.Lib.Utils\WebApiCore.Lib.Utils.csproj" />
   </ItemGroup>

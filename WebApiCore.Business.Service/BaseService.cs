@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.Data.EF;
 using WebApiCore.Data.Entity;
@@ -17,6 +19,13 @@ namespace WebApiCore.Business.Service
     /// <typeparam name="T">实体类型</typeparam>
     public abstract class BaseService<T> : IBaseService<T> where T : BaseEntity
     {
+        public DbContext DbContext { get => EFDB.Instance.DbContext; }
+
+        public IQueryable<T> AsQueryable()
+        {
+            return EFDB.Instance.AsQueryable<T>();
+        }
+
         public virtual async Task<TData<string>> DeleteAsync(int id)
         {
             var obj = new TData<string>();

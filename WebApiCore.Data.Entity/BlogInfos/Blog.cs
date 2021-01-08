@@ -7,11 +7,9 @@ namespace WebApiCore.Data.Entity.BlogInfos
     [Table("Blogs")]
     public class Blog : BaseEntity
     {
-        [Key]
         public int BlogId { get; set; }
         public string Url { get; set; }
-        public Profile Profile { get; set; }
-       
+        public string UserName { get; set; }
         public List<Post> Posts { get; set; }
     }
 }

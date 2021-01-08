@@ -40,6 +40,9 @@ namespace WebApiCore.Data.EF.Migrations
                     b.Property<string>("Url")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("UserName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.HasKey("BlogId");
 
                     b.ToTable("Blogs");
@@ -93,9 +96,6 @@ namespace WebApiCore.Data.EF.Migrations
                     b.Property<string>("AvatarUrl")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int?>("BlogId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime(6)")
                         .HasMaxLength(14);
@@ -130,9 +130,6 @@ namespace WebApiCore.Data.EF.Migrations
 
                     b.HasKey("ProfileId");
 
-                    b.HasIndex("BlogId")
-                        .IsUnique();
-
                     b.ToTable("Profiles");
 
                     b.HasData(
@@ -141,7 +138,7 @@ namespace WebApiCore.Data.EF.Migrations
                             ProfileId = 1,
                             Age = 23,
                             AvatarUrl = "https://avatars3.githubusercontent.com/u/42861557?s=460&u=bea03f68386386ea61fc88c76f27c8db90b509fc&v=4",
-                            CreateTime = new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified),
+                            CreateTime = new DateTime(2021, 1, 8, 15, 6, 48, 0, DateTimeKind.Unspecified),
                             Creator = "ligy",
                             Email = "Ligy.97@foxmail.com",
                             Gender = "Male",
@@ -161,6 +158,7 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("CreateTime")
@@ -168,6 +166,10 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasMaxLength(14);
 
                     b.Property<string>("Creator")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Instruction")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Modifier")
@@ -184,6 +186,7 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("PostId");
@@ -306,7 +309,7 @@ namespace WebApiCore.Data.EF.Migrations
                         new
                         {
                             UserId = 1,
-                            CreateTime = new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified),
+                            CreateTime = new DateTime(2021, 1, 8, 15, 6, 48, 0, DateTimeKind.Unspecified),
                             Creator = "System",
                             Email = "Ligy.97@foxmail.com",
                             Password = "546677201aae8c8cb69893a4a30d4464",
@@ -322,20 +325,11 @@ namespace WebApiCore.Data.EF.Migrations
                         .HasForeignKey("PostId");
                 });
 
-            modelBuilder.Entity("WebApiCore.Data.Entity.BlogInfos.Profile", b =>
-                {
-                    b.HasOne("WebApiCore.Data.Entity.BlogInfos.Blog", "Blog")
-                        .WithOne("Profile")
-                        .HasForeignKey("WebApiCore.Data.Entity.BlogInfos.Profile", "BlogId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("WebApiCore.Data.Entity.Post", b =>
                 {
                     b.HasOne("WebApiCore.Data.Entity.BlogInfos.Blog", "Blog")
                         .WithMany("Posts")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BlogId");
                 });
 #pragma warning restore 612, 618
         }

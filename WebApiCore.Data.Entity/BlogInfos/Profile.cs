@@ -19,7 +19,6 @@ namespace WebApiCore.Data.Entity.BlogInfos
         [Required]
         public string Email { get; set; }
         public string GithubUrl { get; set; }
-        public Blog Blog { get; set; }
     }
 
     public enum Gender

@@ -16,31 +16,33 @@ namespace WebApiCore.CustomClass
         {
             ResourceExecutedContext executedContext = null;
 
-            var path = context.HttpContext.Request.Path;
-            if (path.StartsWithSegments("/api/Blog/GetBlogs"))
-            {
-                var result = Cache.GetCache<ObjectResult>(path);
-                if (result != null)
-                {
-                    context.Result = result;
-                }
-                else
-                {
-                    executedContext = await next();                
-                }
-            }
-            else
-            {
-                executedContext = await next();
-            }
+            //var path = context.HttpContext.Request.Path;
+            //if (path.StartsWithSegments("/api/Blog/GetBlogs"))
+            //{
+            //    var result = Cache.GetCache<ObjectResult>(path);
+            //    if (result != null)
+            //    {
+            //        context.Result = result;
+            //    }
+            //    else
+            //    {
+            //        executedContext = await next();                
+            //    }
+            //}
+            //else
+            //{
+            //    executedContext = await next();
+            //}
 
-            if (executedContext != null)
-            {
-                if (path.StartsWithSegments("/api/Blog/GetBlogs"))
-                {
-                    Cache.SetCache(path, (ObjectResult)executedContext.Result);
-                }
-            }
+            //if (executedContext != null)
+            //{
+            //    if (path.StartsWithSegments("/api/Blog/GetBlogs"))
+            //    {
+            //        Cache.SetCache(path, (ObjectResult)executedContext.Result);
+            //    }
+            //}
+
+             await next();
         }
     }
 }

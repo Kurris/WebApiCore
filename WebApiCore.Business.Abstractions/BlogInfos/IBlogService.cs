@@ -4,8 +4,8 @@ using WebApiCore.Data.Entity.BlogInfos;
 
 namespace WebApiCore.Business.Abstractions
 {
-    public interface IBlogService
+    public interface IBlogService : IBaseService<Blog>
     {
-        Task<IEnumerable<Blog>> GetBlogs();
+
     }
 }

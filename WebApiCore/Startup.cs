@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.EF;
 using WebApiCore.Hubs;
@@ -43,6 +44,7 @@ namespace WebApiCore
             services.AddControllers().AddControllersAsServices().AddNewtonsoftJson(x =>
             {
                 x.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
             services.AddSwaggerGen(option =>
                {

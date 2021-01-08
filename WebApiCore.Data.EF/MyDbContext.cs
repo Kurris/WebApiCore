@@ -70,6 +70,8 @@ namespace WebApiCore.Data.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            new ConfigModel().Build(modelBuilder);
+
             var entityTypes = Assembly.Load(new AssemblyName("WebApiCore.Data.Entity"))
                    .GetTypes().Where(x => x.IsSubclassOf(typeof(BaseEntity))
                                   && x.IsDefined(typeof(TableAttribute)));
@@ -97,8 +99,6 @@ namespace WebApiCore.Data.EF
                     prop.SetMaxLength(14);
                 }
             }
-
-            ConfigModel.Build(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -27,6 +27,10 @@
     <Compile Remove="Migrations\20210106065045_firstDB.Designer.cs" />
     <Compile Remove="Migrations\20210107070354_changeAvatorType.cs" />
     <Compile Remove="Migrations\20210107070354_changeAvatorType.Designer.cs" />
+    <Compile Remove="Migrations\20210108065051_first.cs" />
+    <Compile Remove="Migrations\20210108065051_first.Designer.cs" />
+    <Compile Remove="Migrations\20210108065225_first.cs" />
+    <Compile Remove="Migrations\20210108065225_first.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +48,10 @@
     <ProjectReference Include="..\WebApiCore.Core\WebApiCore.Core.csproj" />
     <ProjectReference Include="..\WebApiCore.Data.Entity\WebApiCore.Data.Entity.csproj" />
     <ProjectReference Include="..\WebApiCore.Lib.Utils\WebApiCore.Lib.Utils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiCore.Data.EF.Migrations
 {
-    public partial class tmp : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,11 +45,35 @@ namespace WebApiCore.Data.EF.Migrations
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
                     ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
-                    Url = table.Column<string>(nullable: true)
+                    Url = table.Column<string>(nullable: true),
+                    UserName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Blogs", x => x.BlogId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Profiles",
+                columns: table => new
+                {
+                    ProfileId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Creator = table.Column<string>(nullable: true),
+                    CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
+                    Modifier = table.Column<string>(nullable: true),
+                    ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
+                    AvatarUrl = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
+                    Gender = table.Column<string>(nullable: true),
+                    Age = table.Column<int>(nullable: false),
+                    Phone = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    GithubUrl = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Profiles", x => x.ProfileId);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,8 +107,9 @@ namespace WebApiCore.Data.EF.Migrations
                     CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
                     Modifier = table.Column<string>(nullable: true),
                     ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
+                    Instruction = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(nullable: false),
                     Stars = table.Column<int>(nullable: false),
                     Shits = table.Column<int>(nullable: false),
                     BlogId = table.Column<int>(nullable: true)
@@ -97,37 +122,7 @@ namespace WebApiCore.Data.EF.Migrations
                         column: x => x.BlogId,
                         principalTable: "Blogs",
                         principalColumn: "BlogId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Profiles",
-                columns: table => new
-                {
-                    ProfileId = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Creator = table.Column<string>(nullable: true),
-                    CreateTime = table.Column<DateTime>(maxLength: 14, nullable: false),
-                    Modifier = table.Column<string>(nullable: true),
-                    ModifyTime = table.Column<DateTime>(maxLength: 14, nullable: true),
-                    AvatarUrl = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: false),
-                    Gender = table.Column<string>(nullable: true),
-                    Age = table.Column<int>(nullable: false),
-                    Phone = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    GithubUrl = table.Column<string>(nullable: true),
-                    BlogId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Profiles", x => x.ProfileId);
-                    table.ForeignKey(
-                        name: "FK_Profiles_Blogs_BlogId",
-                        column: x => x.BlogId,
-                        principalTable: "Blogs",
-                        principalColumn: "BlogId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,13 +152,13 @@ namespace WebApiCore.Data.EF.Migrations
 
             migrationBuilder.InsertData(
                 table: "Profiles",
-                columns: new[] { "ProfileId", "Age", "AvatarUrl", "BlogId", "CreateTime", "Creator", "Email", "Gender", "GithubUrl", "Modifier", "ModifyTime", "Name", "Phone" },
-                values: new object[] { 1, 23, "https://avatars3.githubusercontent.com/u/42861557?s=460&u=bea03f68386386ea61fc88c76f27c8db90b509fc&v=4", null, new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified), "ligy", "Ligy.97@foxmail.com", "Male", "https://github.com/Kurris", null, null, "ligy", "13790166319" });
+                columns: new[] { "ProfileId", "Age", "AvatarUrl", "CreateTime", "Creator", "Email", "Gender", "GithubUrl", "Modifier", "ModifyTime", "Name", "Phone" },
+                values: new object[] { 1, 23, "https://avatars3.githubusercontent.com/u/42861557?s=460&u=bea03f68386386ea61fc88c76f27c8db90b509fc&v=4", new DateTime(2021, 1, 8, 15, 6, 48, 0, DateTimeKind.Unspecified), "ligy", "Ligy.97@foxmail.com", "Male", "https://github.com/Kurris", null, null, "ligy", "13790166319" });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "CreateTime", "Creator", "Email", "LastLogin", "Modifier", "ModifyTime", "Password", "Phone", "UserName" },
-                values: new object[] { 1, new DateTime(2021, 1, 7, 15, 13, 57, 0, DateTimeKind.Unspecified), "System", "Ligy.97@foxmail.com", null, null, null, "546677201aae8c8cb69893a4a30d4464", "13790166319", "ligy" });
+                values: new object[] { 1, new DateTime(2021, 1, 8, 15, 6, 48, 0, DateTimeKind.Unspecified), "System", "Ligy.97@foxmail.com", null, null, null, "546677201aae8c8cb69893a4a30d4464", "13790166319", "ligy" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AutoJobTasks_JobName_JobGroup",
@@ -180,12 +175,6 @@ namespace WebApiCore.Data.EF.Migrations
                 name: "IX_Posts_BlogId",
                 table: "Posts",
                 column: "BlogId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Profiles_BlogId",
-                table: "Profiles",
-                column: "BlogId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_UserName",

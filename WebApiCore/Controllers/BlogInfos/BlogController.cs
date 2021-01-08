@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity.BlogInfos;
-
+using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.Controllers.BlogInfos
 {
@@ -16,13 +15,16 @@ namespace WebApiCore.Controllers.BlogInfos
 
         public IBlogService BlogService { get; set; }
 
-
-        [HttpGet]
-        public async Task<IEnumerable<Blog>> GetBlogs()
+        [HttpPost]
+        public async Task<TData<string>> NewOne([FromBody] Blog blog)
         {
-            return await BlogService.GetBlogs();
+            return await BlogService.SaveAsync(blog);
         }
 
-
+        [HttpGet]
+        public async Task<TData<Blog>> GetBlog(string userName)
+        {
+            return await BlogService.FindAsync(x => x.UserName == userName);
+        }
     }
 }
