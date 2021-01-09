@@ -26,6 +26,7 @@ namespace WebApiCore.Business.Service.SystemManage
         {
             var op = await EFDB.Create().BeginTransAsync();
             TData<User> obj = new TData<User>();
+            obj.Status = Status.Fail;
             try
             {
                 User user = await op.FindAsync<User>(x => x.UserName == userName);

@@ -9,14 +9,17 @@ namespace WebApiCore.Data.Entity
     public class Post : BaseEntity
     {
         public int PostId { get; set; }
+
         [Required]
-        [Range(3, 20, ErrorMessage = "博客标题在 3 到 20 个字符")]
+        [StringLength(10, ErrorMessage = "博客介绍在 3 到 10 个字符", MinimumLength = 3)]
         public string Title { get; set; }
+
         [Required]
-        [Range(3, 50, ErrorMessage = "博客介绍在 3 到 50 个字符")]
+        [StringLength(50, ErrorMessage = "博客介绍在 3 到 50 个字符", MinimumLength = 3)]
         public string Introduction { get; set; }
+
         [Required]
-        [MinLength(10, ErrorMessage = "博客内容最小需要 10 个字符")]
+        [MinLength(10, ErrorMessage = "内容至少需要 10 个字符")]
         public string Content { get; set; }
         public int Stars { get; set; }
         public int Shits { get; set; }
