@@ -34,7 +34,7 @@ namespace WebApiCore.CustomClass
                  && !context.Request.Path.StartsWithSegments("/api/User/SignUp"))
                 {
                     context.Response.StatusCode = 200;
-                    string result = JsonHelper.ToJson(new TData<string>()
+                    string result = JsonHelper.ToJsonCamelCase(new TData<string>()
                     {
                         Data = null,
                         Message = "授权失败",
@@ -53,7 +53,7 @@ namespace WebApiCore.CustomClass
 
                 context.Response.StatusCode = 200;
                 string msg = "内部发生异常" + Environment.NewLine + ex.GetInnerException();
-                string result = JsonHelper.ToJson(new TData<string>()
+                string result = JsonHelper.ToJsonCamelCase(new TData<string>()
                 {
                     Data = null,
                     Message = msg,

@@ -18,7 +18,7 @@ namespace WebApiCore.Controllers.SystemManage
 
         #region 数据操作
         [HttpPost]
-        public async Task<TData<string>> SaveNewJob([FromBody] AutoJobTask autoJob)
+        public async Task<TData<int>> SaveNewJob([FromBody] AutoJobTask autoJob)
         {
             return await AutoJobService.SaveAsync(autoJob);
         }
@@ -34,7 +34,7 @@ namespace WebApiCore.Controllers.SystemManage
         #region JobCenter
 
         [HttpPost("{id}")]
-        public async Task<TData<string>> Start(int id)
+        public async Task<TData<int>> Start(int id)
         {
             var td = await AutoJobService.SaveAsync(new AutoJobTask()
             {

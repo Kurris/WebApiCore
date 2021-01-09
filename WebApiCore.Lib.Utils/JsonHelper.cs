@@ -12,6 +12,15 @@ namespace WebApiCore.Lib.Utils
         public static JObject ToJObject(string json) => json.IsEmpty() ? JObject.Parse("{}") : JObject.Parse(json);
 
         public static string ToJson(object obj) => obj.IsEmpty() ? string.Empty : JsonConvert.SerializeObject(obj);
+        public static string ToJsonCamelCase(object obj)
+        {
+            if (obj.IsEmpty()) return string.Empty;
+
+            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+            {
+                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+            });
+        }
 
         public static string ToJsonIgnoreLoop(object obj) =>
             obj.IsEmpty()
@@ -20,6 +29,7 @@ namespace WebApiCore.Lib.Utils
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
+
     }
 
     public class DateTimeJsonConverter : JsonConverter

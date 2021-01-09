@@ -240,7 +240,7 @@ namespace WebApiCore.Data.EF.DataBase
             var list = await tmpdata.ToListAsync();
             if (list?.Count > 0)
             {
-                var currentData = list.Skip<T>(pageSize * (pageIndex - 1)).Take<T>(pageSize);
+                var currentData = list.Skip(pageSize * (pageIndex - 1)).Take(pageSize);
                 return (list.Count, currentData);
             }
             else

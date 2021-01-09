@@ -18,13 +18,6 @@ namespace WebApiCore.Controllers.BlogInfos
     {
         public IPostService PostService { get; set; }
 
-        [HttpGet]
-        public async Task<TData<IEnumerable<Post>>> GetPosts(int blogId)
-        {
-            return await PostService.FindListAsync(x => x.Blog.BlogId == blogId);
-        }
-
-
         [HttpPost("{id}")]
         public async Task<TData<string>> DeletePost(int id)
         {

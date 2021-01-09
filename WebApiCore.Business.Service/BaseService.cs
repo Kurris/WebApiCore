@@ -135,9 +135,9 @@ namespace WebApiCore.Business.Service
 
 
 
-        public virtual async Task<TData<string>> SaveAsync(IEnumerable<T> ts)
+        public virtual async Task<TData<IEnumerable<int>>> SaveAsync(IEnumerable<T> ts)
         {
-            var td = new TData<string>();
+            var td = new TData<IEnumerable<int>>();
             var op = await EFDB.Instance.BeginTransAsync();
 
             try
@@ -165,12 +165,12 @@ namespace WebApiCore.Business.Service
             }
             return td;
         }
-        public virtual async Task<TData<string>> SaveAsync(T t)
+        public virtual async Task<TData<int>> SaveAsync(T t)
         {
-            var obj = new TData<string>();
+            var obj = new TData<int>();
+            var op = await EFDB.Instance.BeginTransAsync();
             try
             {
-                var op = EFDB.Instance.GetIDataBaseOperation();
                 (string key, int value) = op.FindPrimaryKeyValue(t);
                 if (value == 0)
                 {
@@ -182,10 +182,14 @@ namespace WebApiCore.Business.Service
                 }
                 obj.Message = "保存成功";
                 obj.Status = Status.Success;
+                obj.Data = value;
+
+                await op.CommitTransAsync();
             }
             catch (Exception ex)
             {
                 obj.Message = ex.GetInnerException();
+                await op.RollbackTransAsync();
             }
             return obj;
         }

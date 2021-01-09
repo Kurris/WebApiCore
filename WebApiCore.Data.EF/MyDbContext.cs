@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 using WebApiCore.Core;
 using WebApiCore.Data.EF.DataBase;
 using WebApiCore.Data.Entity;
@@ -65,6 +66,12 @@ namespace WebApiCore.Data.EF
                 throw new NotImplementedException("未知的数据引擎");
 
             optionsBuilder.AddInterceptors(new DbCommandCustomInterceptor());
+            optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder =>
+            {
+                builder.AddFilter((string category, LogLevel level) =>
+                category == DbLoggerCategory.Database.Command.Name
+                && level == LogLevel.Information).AddConsole();
+            }));
         }
 
 
