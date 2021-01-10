@@ -1,5 +1,5 @@
 ﻿
-namespace WebApiCore.Lib.Utils.Model
+namespace WebApiCore.Lib.Model
 {
     /// <summary>
     /// 数据结果返回模型

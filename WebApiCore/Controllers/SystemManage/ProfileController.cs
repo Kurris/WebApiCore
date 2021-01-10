@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions.SystemManage;
 using WebApiCore.Data.Entity.BlogInfos;
 using WebApiCore.Lib.Utils.Extensions;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Controllers.SystemManage
 {

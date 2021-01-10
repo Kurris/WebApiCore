@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using WebApiCore.Business.Abstractions.SystemManage;
 using WebApiCore.Data.EF;
 using WebApiCore.Data.Entity.BlogInfos;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Business.Service.SystemManage
 {

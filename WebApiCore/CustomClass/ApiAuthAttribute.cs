@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WebApiCore.Lib.Utils;
 using WebApiCore.Lib.Utils.Extensions;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.CustomClass
 {

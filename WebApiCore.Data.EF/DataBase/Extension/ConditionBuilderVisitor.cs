@@ -30,7 +30,7 @@ namespace WebApiCore.Data.EF.DataBase.Extension
         }
 
         /// <summary>
-        /// 组合
+        /// 组合,带上Where 1=1 and
         /// </summary>
         /// <returns>条件表达式</returns>
         public string CombineWithWhere()
@@ -39,7 +39,7 @@ namespace WebApiCore.Data.EF.DataBase.Extension
 
             string condition = string.Concat(this._stringStack);
             this._stringStack.Clear();
-            return " WHERE " + condition;
+            return " WHERE 1=1 and" + condition;
         }
 
 

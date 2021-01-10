@@ -33,17 +33,6 @@ namespace WebApiCore.Data.EF.DataBase
         /// <returns><see cref="IDataBaseOperation"/></returns>
         IDataBaseOperation GetIDataBaseOperation();
 
-        /// <summary>
-        /// 确保数据库被删除
-        /// </summary>
-        /// <returns><see cref="IDataBaseOperation"/></returns>
-        Task<IDataBaseOperation> EnsureDeletedAsync();
-
-        /// <summary>
-        /// 确保数据库被创建
-        /// </summary>
-        /// <returns><see cref="IDataBaseOperation"/></returns>
-        Task<IDataBaseOperation> EnsureCreatedAsync();
 
         /// <summary>
         /// 开始事务
@@ -85,23 +74,33 @@ namespace WebApiCore.Data.EF.DataBase
 
 
         /// <summary>
-        /// 查找主键
+        /// 查找主键和主键值
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="t">实例</param>
-        /// <returns>主键和值<see cref="(string key, int value)"/></returns>
+        /// <returns>主键和值 <see cref="(string key, int value)"/> </returns>
         (string key, int value) FindPrimaryKeyValue<T>(T t) where T : BaseEntity;
+
+        /// <summary>
+        /// 查找表名称和主键
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <returns>表名称和主键 <see cref="(string table, string key)"/> </returns>
+        (string table, string key) FindPrimaryKeyWithTable<T>() where T : BaseEntity;
 
         /// <summary>
         /// 查找主键
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
-        /// <returns>主键名称<see cref="string"/></returns>
+        /// <returns>主键名称 <see cref="string"/></returns>
         string FindPrimaryKey<T>() where T : BaseEntity;
 
         /// <summary>
         /// 转成IQueryable
         /// </summary>
+        /// <remarks>
+        /// 如果表达式为 <see cref="null"/>, 则返回无条件的 IQueryable
+        /// </remarks>
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="predicate">表达式</param>
         /// <returns><see cref="IQueryable{T}"/></returns>
@@ -131,7 +130,7 @@ namespace WebApiCore.Data.EF.DataBase
         Task<int> RunSqlAsync(string strSql, IDictionary<string, object> keyValues = null);
 
         /// <summary>
-        /// 执行SQL
+        /// 执行SQL(插值)
         /// </summary>
         /// <param name="strSql">内插sql字符串</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
@@ -209,7 +208,7 @@ namespace WebApiCore.Data.EF.DataBase
         /// 删除实体
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="key">主键</param>
+        /// <param name="keyValue">主键</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
         Task<int> DeleteAsync<T>(int keyValue) where T : BaseEntity;
 
@@ -220,15 +219,6 @@ namespace WebApiCore.Data.EF.DataBase
         /// <param name="keyValues">一组主键</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
         Task<int> DeleteAsync<T>(IEnumerable<int> keyValues) where T : BaseEntity;
-
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="propName">字段</param>
-        /// <param name="propValue">值</param>
-        /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> DeleteAsync<T>(string propName, object propValue) where T : BaseEntity;
 
 
         /// <summary>
@@ -319,7 +309,7 @@ namespace WebApiCore.Data.EF.DataBase
 
 
         /// <summary>
-        /// 获取首行数据
+        /// 获取首行数据(需要对IDataReader数据在使用后及时释放)
         /// </summary>
         /// <param name="strSql">sql字符串</param>
         /// <param name="keyValues">参数</param>

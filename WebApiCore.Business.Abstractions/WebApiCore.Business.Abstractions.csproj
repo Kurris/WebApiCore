@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApiCore.Data.Entity\WebApiCore.Data.Entity.csproj" />
-    <ProjectReference Include="..\WebApiCore.Lib.Utils\WebApiCore.Lib.Utils.csproj" />
+    <ProjectReference Include="..\WebApiCore.Lib.Model\WebApiCore.Lib.Model.csproj" />
   </ItemGroup>
 
 </Project>

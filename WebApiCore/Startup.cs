@@ -20,7 +20,7 @@ using WebApiCore.Data.EF;
 using WebApiCore.Hubs;
 using WebApiCore.Lib.Utils;
 using WebApiCore.Lib.Utils.Extensions;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Utils.Config;
 
 namespace WebApiCore
 {
@@ -71,8 +71,8 @@ namespace WebApiCore
             services.AddMemoryCache();
             services.AddSession(option =>
             {
-                option.IdleTimeout = TimeSpan.FromMinutes(GlobalInvariant.SystemConfig.JwtSetting.Expiration);
-                option.Cookie.Name = GlobalInvariant.SystemConfig.JwtSetting.TokenName;
+                option.IdleTimeout = TimeSpan.FromMinutes(GlobalInvariant.SystemConfig.JwtConfig.Expiration);
+                option.Cookie.Name = GlobalInvariant.SystemConfig.JwtConfig.TokenName;
             });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(op =>
@@ -82,7 +82,7 @@ namespace WebApiCore
                             OnMessageReceived = context =>
                             {
                                 string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
-                                string tokenName = GlobalInvariant.SystemConfig.JwtSetting.TokenName;
+                                string tokenName = GlobalInvariant.SystemConfig.JwtConfig.TokenName;
                                 context.Token = loginProvider switch
                                 {
                                     "WebApi" => context.Request.Headers[tokenName].ParseToStr(),
@@ -99,9 +99,9 @@ namespace WebApiCore
                             ValidateAudience = true,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
-                            ValidIssuer = GlobalInvariant.SystemConfig.JwtSetting.Issuer,
-                            ValidAudience = GlobalInvariant.SystemConfig.JwtSetting.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenSecretKey)),
+                            ValidIssuer = GlobalInvariant.SystemConfig.JwtConfig.Issuer,
+                            ValidAudience = GlobalInvariant.SystemConfig.JwtConfig.Audience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtConfig.TokenSecretKey)),
                             RequireExpirationTime = true,
                         };
                     });

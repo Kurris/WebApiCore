@@ -39,9 +39,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Data.EF", "WebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Lib.Cache", "WebApiCore.Lib.Cache\WebApiCore.Lib.Cache.csproj", "{658052CD-5308-47ED-A3FF-3B6BB4BCBB0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheUnitTest", "CacheUnitTest\CacheUnitTest.csproj", "{C4095E7C-9487-4C95-BAC6-F8B4A06B3A75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheUnitTest", "CacheUnitTest\CacheUnitTest.csproj", "{C4095E7C-9487-4C95-BAC6-F8B4A06B3A75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Lib.CacheAbstractions", "WebApiCore.Lib.CacheAbstractions\WebApiCore.Lib.CacheAbstractions.csproj", "{069AB68B-E6F8-489D-A723-72F4E7B1CC10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Lib.CacheAbstractions", "WebApiCore.Lib.CacheAbstractions\WebApiCore.Lib.CacheAbstractions.csproj", "{069AB68B-E6F8-489D-A723-72F4E7B1CC10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Lib.Model", "WebApiCore.Lib.Model\WebApiCore.Lib.Model.csproj", "{91944E40-68F7-4F98-A827-AABE55BA13F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{069AB68B-E6F8-489D-A723-72F4E7B1CC10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{069AB68B-E6F8-489D-A723-72F4E7B1CC10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{069AB68B-E6F8-489D-A723-72F4E7B1CC10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91944E40-68F7-4F98-A827-AABE55BA13F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91944E40-68F7-4F98-A827-AABE55BA13F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91944E40-68F7-4F98-A827-AABE55BA13F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91944E40-68F7-4F98-A827-AABE55BA13F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,6 +130,7 @@ Global
 		{658052CD-5308-47ED-A3FF-3B6BB4BCBB0B} = {B2EEBED3-F185-4731-81CD-05D15C1BF4FD}
 		{C4095E7C-9487-4C95-BAC6-F8B4A06B3A75} = {78BF3298-1B9B-4DE4-8FE5-5811345811CA}
 		{069AB68B-E6F8-489D-A723-72F4E7B1CC10} = {B2EEBED3-F185-4731-81CD-05D15C1BF4FD}
+		{91944E40-68F7-4F98-A827-AABE55BA13F2} = {535F0BCF-AD7F-40D6-B94B-0C54142AEE95}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CBE522E4-37DE-4D2E-BC67-5774F47C3C1D}

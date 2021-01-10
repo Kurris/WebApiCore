@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity.SystemManage;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Controllers.SystemManage
 {

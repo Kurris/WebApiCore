@@ -5,8 +5,8 @@ using System.Text;
 using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Lib.Utils.Config;
 using WebApiCore.Lib.Utils.Extensions;
-using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.Core.TokenHelper
 {
@@ -21,7 +21,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <param name="user">用户信息</param>
         /// <param name="jwtSetting">Jwt配置信息</param>
         /// <returns>Token</returns>
-        public static string GenerateToken(User user, JwtSetting jwtSetting)
+        public static string GenerateToken(User user, JwtConfig jwtSetting)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.TokenSecretKey));
 

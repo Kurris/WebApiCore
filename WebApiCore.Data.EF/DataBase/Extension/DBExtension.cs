@@ -153,6 +153,4 @@ namespace WebApiCore.Data.EF.DataBase.Extension
 
         #endregion
     }
-
-
 }

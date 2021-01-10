@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using WebApiCore.Data.EF.DataBase;
 using WebApiCore.Lib.Utils;
 
@@ -51,6 +52,31 @@ namespace WebApiCore.Data.EF
                 default:
                     throw new NotImplementedException("未知的数据引擎");
             }
+        }
+    }
+
+    public static class IDataBaseOperationExtension
+    {
+        /// <summary>
+        /// DbContext 转成无跟踪
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        public static IDataBaseOperation AsNoTracking(this IDataBaseOperation operation)
+        {
+            operation.DbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            return operation;
+        }
+
+        /// <summary>
+        /// DbContext 转成跟踪
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        public static IDataBaseOperation AsTracking(this IDataBaseOperation operation)
+        {
+            operation.DbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+            return operation;
         }
     }
 }

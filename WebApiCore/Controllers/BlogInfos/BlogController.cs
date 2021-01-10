@@ -5,7 +5,7 @@ using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity.BlogInfos;
 using WebApiCore.Lib.Utils.Extensions;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Controllers.BlogInfos
 {

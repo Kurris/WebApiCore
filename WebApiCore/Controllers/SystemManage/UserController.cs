@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity.SystemManage;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Controllers.SystemManage
 {
@@ -13,7 +13,6 @@ namespace WebApiCore.Controllers.SystemManage
     public class UserController : ControllerBase
     {
         public IUserService UserService { get; set; }
-        public ILogger<UserController> Logger { get; set; }
 
         [HttpPost]
         public async Task<TData<User>> Login([FromBody] User user)

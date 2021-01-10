@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Utils.Config;
 
 namespace WebApiCore.Lib.Utils
 {

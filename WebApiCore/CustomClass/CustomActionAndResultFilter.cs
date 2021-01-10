@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Lib.Utils;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.CustomClass
 {
@@ -30,24 +30,31 @@ namespace WebApiCore.CustomClass
         {
             if (!context.ModelState.IsValid)
             {
-                var result = context.ModelState.Keys
-                                    .SelectMany(key => context.ModelState[key].Errors.Select(x => new EntityErrorParam(key, x.ErrorMessage)));
+                var errorResult = context.ModelState.Keys.SelectMany(key =>
+                context.ModelState[key].Errors.Select(x => new
+                {
+                    Field = key,
+                    Message = x.ErrorMessage
+                })
+                );
 
-                context.Result = new ObjectResult(new TData<IEnumerable<EntityErrorParam>>("参数不合法", result, Status.ValidateEntityError));
+
+                context.Result = new ObjectResult(new TData<IEnumerable<object>>(
+                    message: "参数不合法",
+                    data: errorResult,
+                    status: Status.ValidateEntityError));
             }
             else
             {
-                object resultValue = (context.Result as ObjectResult)?.Value;
+                object successResult = (context.Result as ObjectResult)?.Value;
 
-                if (resultValue != null && resultValue.GetType().Name.StartsWith("TData"))
-                {
-                    context.Result = new ObjectResult(resultValue);
-                }
+                if (successResult != null && successResult.GetType().Name.StartsWith("TData"))
+                    context.Result = new ObjectResult(successResult);
                 else
-                {
-                    context.Result = new ObjectResult(new TData<object>("请求成功", resultValue, Status.Success));
-                }
+                    context.Result = new ObjectResult(new TData<object>("请求成功", successResult, Status.Success));
+
             }
+
             await base.OnResultExecutionAsync(context, next);
         }
     }

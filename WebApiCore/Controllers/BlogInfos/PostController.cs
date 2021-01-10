@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions.BlogInfos;
 using WebApiCore.CustomClass;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Controllers.BlogInfos
 {

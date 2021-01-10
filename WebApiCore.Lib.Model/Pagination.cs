@@ -1,4 +1,4 @@
-﻿namespace WebApiCore.Lib.Utils.Model
+﻿namespace WebApiCore.Lib.Model
 {
     /// <summary>
     /// 分页参数

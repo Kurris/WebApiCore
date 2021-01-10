@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using WebApiCore.Data.Entity.BlogInfos;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Business.Abstractions.SystemManage
 {
     public interface IProfileService : IBaseService<Profile>
     {
-        Task<TData<Profile>> GetProfile(string name);
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.Data.EF;
 using WebApiCore.Data.Entity;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 
 namespace WebApiCore.Business.Service
@@ -32,6 +32,9 @@ namespace WebApiCore.Business.Service
             }
             return obj;
         }
+
+
+
         public virtual async Task<TData<string>> DeleteAsync(T t)
         {
             var obj = new TData<string>();
@@ -48,7 +51,26 @@ namespace WebApiCore.Business.Service
             return obj;
         }
 
+        public async Task<TData<string>> DeleteAsync(IEnumerable<T> ts)
+        {
+            var obj = new TData<string>();
+            var op = await EFDB.Instance.BeginTransAsync();
 
+            try
+            {
+                await op.DeleteAsync(ts);
+                obj.Status = Status.Success;
+                obj.Message = "删除成功";
+
+                await op.CommitTransAsync();
+            }
+            catch (Exception ex)
+            {
+                obj.Message = ex.GetBaseException().Message;
+                await op.RollbackTransAsync();
+            }
+            return obj;
+        }
 
         public virtual async Task<TData<T>> FindAsync(int id)
         {
@@ -125,6 +147,41 @@ namespace WebApiCore.Business.Service
         }
 
 
+        public async Task<TData<IEnumerable<T>>> FindWithPagination(Pagination pagination)
+        {
+            var td = new TData<IEnumerable<T>>();
+            var op = await EFDB.Instance.BeginTransAsync();
+
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                await op.RollbackTransAsync();
+                td.Message = ex.GetBaseException().Message;
+            }
+
+            return td;
+        }
+
+        public async Task<TData<IEnumerable<T>>> FindWithPagination(Expression<Func<T, bool>> predicate, Pagination pagination)
+        {
+            var td = new TData<IEnumerable<T>>();
+            var op = await EFDB.Instance.BeginTransAsync();
+
+            try
+            {
+                await op.FindListAsync(predicate, pagination.SortColumn, pagination.IsASC, pagination.PageSize, pagination.PageIndex);
+            }
+            catch (Exception ex)
+            {
+                await op.RollbackTransAsync();
+                td.Message = ex.GetBaseException().Message;
+            }
+
+            return td;
+        }
 
         public virtual async Task<TData<IEnumerable<int>>> SaveAsync(IEnumerable<T> ts)
         {

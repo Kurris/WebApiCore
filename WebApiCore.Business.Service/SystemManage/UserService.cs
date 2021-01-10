@@ -7,7 +7,7 @@ using WebApiCore.Core.TokenHelper;
 using WebApiCore.Data.EF;
 using WebApiCore.Data.Entity.SystemManage;
 using WebApiCore.Lib.Utils;
-using WebApiCore.Lib.Utils.Model;
+using WebApiCore.Lib.Model;
 
 
 namespace WebApiCore.Business.Service.SystemManage
@@ -23,7 +23,7 @@ namespace WebApiCore.Business.Service.SystemManage
         /// <returns>用户信息</returns>
         public async Task<TData<User>> Login(string userName, string password)
         {
-            var op = await EFDB.Create().BeginTransAsync();
+            var op = await EFDB.Instance.AsNoTracking().BeginTransAsync();
             TData<User> obj = new TData<User>();
             obj.Status = Status.Fail;
             try
@@ -143,7 +143,7 @@ namespace WebApiCore.Business.Service.SystemManage
         {
             string userName = await Operator.Instance.GetCurrent();
             User user = await EFDB.Create().FindAsync<User>(x => x.UserName == userName);
-            return JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtSetting);
+            return JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtConfig);
         }
 
         public async Task<TData<User>> EditUser(User user)

@@ -15,7 +15,7 @@ namespace WebApiCore.Core
         public static Operator Instance { get => _instance; }
 
         private readonly string _loginProvider = GlobalInvariant.SystemConfig?.LoginProvider;
-        private readonly string _tokenName = GlobalInvariant.SystemConfig?.JwtSetting?.TokenName;
+        private readonly string _tokenName = GlobalInvariant.SystemConfig?.JwtConfig?.TokenName;
 
         /// <summary>
         /// 添加当前操作
@@ -24,8 +24,8 @@ namespace WebApiCore.Core
         /// <returns>用户信息<see cref="User"/></returns>
         public async Task<User> AddCurrent(User user)
         {
-            user.RefreshTime = DateTime.Now.AddMinutes(GlobalInvariant.SystemConfig.JwtSetting.Expiration);
-            string jwtToken = JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtSetting);
+            user.RefreshTime = DateTime.Now.AddMinutes(GlobalInvariant.SystemConfig.JwtConfig.Expiration);
+            string jwtToken = JwtHelper.GenerateToken(user, GlobalInvariant.SystemConfig.JwtConfig);
 
             switch (_loginProvider)
             {
