@@ -8,6 +8,11 @@ namespace WebApiCore.Lib.Utils.Extensions
     {
 
         #region 验证内容是否为默认值
+        /// <summary>
+        /// 验证内容是否等于CLR默认值
+        /// </summary>
+        /// <param name="value">内容</param>
+        /// <returns><see cref="bool"/></returns>
         public static bool IsDefault(this object value)
         {
             return value == default;
@@ -15,86 +20,72 @@ namespace WebApiCore.Lib.Utils.Extensions
         #endregion
 
         #region 验证内容是否为空
+        /// <summary>
+        /// 验证内容是否为 string.Empty/null
+        /// </summary>
+        /// <param name="value">内容</param>
+        /// <returns><see cref="bool"/></returns>
         public static bool IsEmpty(this object value)
         {
             if (value == null) return false;
 
-            if (value != null && !string.IsNullOrEmpty(value.ParseToString()))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return value == null || string.IsNullOrEmpty(value.ToString());
         }
         #endregion
 
         #region  验证输入字符串为数字(带小数)
         /// <summary>
-        /// 验证输入字符串为带小数点正数
+        /// 验证内容是否为带小数点正数
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsNumber(this string str)
-        {
-            return Regex.IsMatch(str, "^([0]|([1-9]+\\d{0,}?))(.[\\d]+)?$");
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsNumber(this string str) => Regex.IsMatch(str, "^([0]|([1-9]+\\d{0,}?))(.[\\d]+)?$");
+
         /// <summary>
-        /// 验证输入字符串为带小数点正负数
+        /// 验证内容是否为带小数点正负数
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsNumberic(this string str)
-        {
-            return Regex.IsMatch(str, "^-?\\d+$|^(-?\\d+)(\\.\\d+)?$");
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsNumberic(this string str) => Regex.IsMatch(str, "^-?\\d+$|^(-?\\d+)(\\.\\d+)?$");
+
         #endregion
 
         #region 验证中国电话格式是否有效，格式010-85849685
         /// <summary>
         /// 验证中国电话格式是否有效，格式010-85849685
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsTel(this string str)
-        {
-            return Regex.IsMatch(str, @"^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$", RegexOptions.IgnoreCase);
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsCNTel(this string str) => Regex.IsMatch(str, @"^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$", RegexOptions.IgnoreCase);
         #endregion
 
         #region 验证输入字符串为电话号码
+        //弱一点的验证：  @"\d{3,4}-\d{7,8}"         
         /// <summary>
         /// 验证输入字符串为电话号码
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsPhone(this string str)
-        {
-            return Regex.IsMatch(str, @"(^(\d{2,4}[-_－—]?)?\d{3,8}([-_－—]?\d{3,8})?([-_－—]?\d{1,7})?$)|(^0?1[35]\d{9}$)");
-            //弱一点的验证：  @"\d{3,4}-\d{7,8}"         
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsTel(this string str) => Regex.IsMatch(str, @"(^(\d{2,4}[-_－—]?)?\d{3,8}([-_－—]?\d{3,8})?([-_－—]?\d{1,7})?$)|(^0?1[35]\d{9}$)");
+
         #endregion
 
         #region 验证是否是有效传真号码
         /// <summary>
         /// 验证是否是有效传真号码
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsFax(this string str)
-        {
-            return Regex.IsMatch(str, @"^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$");
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsFax(this string str) => Regex.IsMatch(str, @"^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$");
         #endregion
 
         #region 验证手机号是否合法
         /// <summary>
         /// 验证手机号是否合法 号段为13,14,15,16,17,18,19  0，86开头将自动识别
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsMobile(this string str)
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsPhone(this string str)
         {
             if (!str.StartsWith("1"))
             {
@@ -108,31 +99,21 @@ namespace WebApiCore.Lib.Utils.Extensions
         /// <summary>
         /// 验证身份证是否有效
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsIDCard(this string str)
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsIDCard(this string str) => str.Length switch
         {
-            switch (str.Length)
-            {
-                case 18:
-                    {
-                        return str.IsIDCard18();
-                    }
-                case 15:
-                    {
-                        return str.IsIDCard15();
-                    }
-                default:
-                    return false;
-            }
-        }
+            18 => IsIDCard18(str),
+            15 => IsIDCard15(str),
+            _ => false,
+        };
 
         /// <summary>
         /// 验证输入字符串为18位的身份证号码
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsIDCard18(this string str)
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        private static bool IsIDCard18(string str)
         {
             if (long.TryParse(str.Remove(17), out long n) == false || n < Math.Pow(10, 16) || long.TryParse(str.Replace('x', '0').Replace('X', '0'), out _) == false)
             {
@@ -160,12 +141,13 @@ namespace WebApiCore.Lib.Utils.Extensions
             Math.DivRem(sum, 11, out int y);
             return arrVarifyCode[y] == str.Substring(17, 1).ToLower();
         }
+
         /// <summary>
         /// 验证输入字符串为15位的身份证号码
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsIDCard15(this string str)
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        private static bool IsIDCard15(string str)
         {
             if (long.TryParse(str, out long n) == false || n < Math.Pow(10, 14))
             {
@@ -185,33 +167,27 @@ namespace WebApiCore.Lib.Utils.Extensions
         /// <summary>
         /// 验证是否是有效邮箱地址
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsEmail(this string str)
-        {
-            return Regex.IsMatch(str, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsEmail(this string str) => Regex.IsMatch(str, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
         #endregion
 
         #region 验证是否只含有汉字
         /// <summary>
         /// 验证是否只含有汉字
         /// </summary>
-        /// <param name="strln">输入字符</param>
-        /// <returns></returns>
-        public static bool IsOnlyChinese(this string strln)
-        {
-            return Regex.IsMatch(strln, @"^[\u4e00-\u9fa5]+$");
-        }
+        /// <param name="strln">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsOnlyChinese(this string strln) => Regex.IsMatch(strln, @"^[\u4e00-\u9fa5]+$");
         #endregion
 
         #region 是否有多余的字符 防止SQL注入
         /// <summary>
         /// 是否有多余的字符 防止SQL注入
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns></returns>
-        public static bool IsBadString(this string str)
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsSqlBadStr(this string str)
         {
             if (string.IsNullOrEmpty(str))
                 return false;
@@ -226,57 +202,45 @@ namespace WebApiCore.Lib.Utils.Extensions
         /// <summary>
         /// 是否由数字、26个英文字母或者下划线組成的字串 
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns></returns>
-        public static bool IsNzx(this string str)
-        {
-            return Regex.Match(str, "^[0-9a-zA-Z_]+$").Success;
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsNzx(this string str) => Regex.Match(str, "^[0-9a-zA-Z_]+$").Success;
         #endregion
 
         #region 由数字、26个英文字母、汉字組成的字串
         /// <summary>
         /// 由数字、26个英文字母、汉字組成的字串
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns></returns>
-        public static bool IsSzzmChinese(this string str)
-        {
-            return Regex.Match(str, @"^[0-9a-zA-Z\u4e00-\u9fa5]+$").Success;
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsSzzmChinese(this string str) => Regex.Match(str, @"^[0-9a-zA-Z\u4e00-\u9fa5]+$").Success;
         #endregion
 
         #region 由数字、26个英文字母組成的字串
         /// <summary>
         /// 是否由数字、26个英文字母組成的字串
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns></returns>
-        public static bool IsSzzm(this string str)
-        {
-            return Regex.Match(str, @"^[0-9a-zA-Z]+$").Success;
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsSzzm(this string str) => Regex.Match(str, @"^[0-9a-zA-Z]+$").Success;
         #endregion
 
         #region 验证输入字符串为邮政编码
         /// <summary>
         /// 验证输入字符串为邮政编码
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
-        public static bool IsPostCode(this string str)
-        {
-            return Regex.IsMatch(str, @"\d{6}");
-        }
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
+        public static bool IsPostCode(this string str) => Regex.IsMatch(str, @"\d{6}");
         #endregion
 
         #region 检查对象的输入长度
         /// <summary>
         /// 检查对象的输入长度
         /// </summary>
-        /// <param name="str">输入字符</param>
+        /// <param name="str">内容</param>
         /// <param name="length">指定的长度</param>
-        /// <returns>false 太长，true -太短</returns>
+        /// <returns><see cref="bool"/></returns>
         public static bool IslegalLength(this string str, int length)
         {
             if (str.Length > length)
@@ -292,8 +256,8 @@ namespace WebApiCore.Lib.Utils.Extensions
         /// <summary>
         /// 判断用户输入是否为日期
         /// </summary>
-        /// <param name="str">输入字符</param>
-        /// <returns>返回一个bool类型的值</returns>
+        /// <param name="str">内容</param>
+        /// <returns><see cref="bool"/></returns>
         /// <remarks>
         /// 可判断格式如下（其中-可替换为/，不影响验证)
         /// YYYY | YYYY-MM | YYYY-MM-DD | YYYY-MM-DD HH:MM:SS | YYYY-MM-DD HH:MM:SS.FFF

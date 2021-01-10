@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions.BlogInfos;
 using WebApiCore.CustomClass;
-using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.Controllers.BlogInfos

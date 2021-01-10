@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Utils.Model;
 
@@ -22,7 +20,5 @@ namespace WebApiCore.Business.Abstractions
         Task<TData<int>> SaveAsync(T t);
         Task<TData<string>> DeleteAsync(int id);
         Task<TData<string>> DeleteAsync(T t);
-        IQueryable<T> AsQueryable();
-        DbContext DbContext { get; }
     }
 }

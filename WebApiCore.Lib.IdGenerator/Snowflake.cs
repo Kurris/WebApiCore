@@ -51,7 +51,7 @@ namespace WebApiCore.IdGenerator
             {
                 throw new ArgumentException($"datacenter Id can't be greater than {MaxDatacenterId} or less than 0");
             }
-       
+
             WorkerId = workerId;
             DatacenterId = datacenterId;
             _sequence = sequence;
@@ -64,11 +64,11 @@ namespace WebApiCore.IdGenerator
         public long NextId()
         {
             lock (_lock)
-            { 
+            {
                 var timestamp = ((DateTimeOffset)DateTime.Now).ToUnixTimeMilliseconds();
                 if (timestamp < _lastTimestamp)
                 {
-                    
+
                     throw new Exception(
                         $"Clock moved backwards or wrapped around. Refusing to generate id for {_lastTimestamp - timestamp} ticks");
                 }

@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.CustomClass
@@ -13,16 +13,16 @@ namespace WebApiCore.CustomClass
 
         public override async Task OnExceptionAsync(ExceptionContext context)
         {
-            string msg = context.Exception.GetInnerException();
+            Exception ex = context.Exception.GetBaseException();
 
-            var sLog = $"【Source】:{context.Exception.TargetSite}\r\n" +
-                        $"【StackTrace】:{context.Exception.StackTrace}\r\n" +
-                        $"【ErrorMessage】:{msg}\r\n";
+            var sLog = $"【Source】:{ex.TargetSite}\r\n" +
+                        $"【StackTrace】:{ex.StackTrace}\r\n" +
+                        $"【ErrorMessage】:{ex.Message}\r\n";
             Logger.LogError(sLog);
 
             context.ExceptionHandled = true;
 
-            context.Result = new ObjectResult(new TData<string>(msg, string.Empty, Status.Error));
+            context.Result = new ObjectResult(new TData<string>(ex.Message, string.Empty, Status.Error));
 
             await Task.FromResult(true);
         }

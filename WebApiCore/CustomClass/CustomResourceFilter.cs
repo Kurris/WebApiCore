@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Lib.CacheAbstractions;
@@ -42,7 +41,7 @@ namespace WebApiCore.CustomClass
             //    }
             //}
 
-             await next();
+            await next();
         }
     }
 }

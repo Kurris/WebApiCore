@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace WebApiCore.Lib.Utils.Extensions
 {
-    public static class Serialization
+    public static partial class Extensions
     {
         /// <summary>
         /// 影子克隆

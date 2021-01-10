@@ -313,7 +313,7 @@ namespace WebApiCore.Lib.Utils.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string ParseToString(this object obj)
+        public static string ParseToStr(this object obj)
         {
             try
             {
@@ -338,11 +338,11 @@ namespace WebApiCore.Lib.Utils.Extensions
         /// <param name="obj"></param>
         /// <param name="formatProvider"></param>
         /// <returns></returns>
-        public static string ParseToString(this object obj, IFormatProvider formatProvider)
+        public static string ParseToStr(this object obj, IFormatProvider formatProvider)
         {
-            return obj.ParseToString()?.ToString(formatProvider);
+            return obj.ParseToStr()?.ToString(formatProvider);
         }
-        public static string ParseToStrings<T>(this object obj)
+        public static string ParseToStrs<T>(this object obj)
         {
             try
             {

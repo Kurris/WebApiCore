@@ -1,7 +1,13 @@
 ﻿namespace WebApiCore.Lib.Utils.Model
 {
+    /// <summary>
+    /// 系统配置信息
+    /// </summary>
     public class SystemConfig
     {
+        /// <summary>
+        /// 数据库配置
+        /// </summary>
         public DBConfig DBConfig { get; set; }
 
 
@@ -18,6 +24,9 @@
 
         /// <summary>
         /// 登录引擎
+        /// <code>
+        /// Jwt,Cookie,Session
+        /// </code>
         /// </summary>
         public string LoginProvider { get; set; }
 

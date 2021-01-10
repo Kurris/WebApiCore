@@ -3,7 +3,7 @@ using WebApiCore.Lib.Utils;
 
 namespace WebApiCore.Core.TokenHelper
 {
-    internal class SessionHelper 
+    internal class SessionHelper
     {
 
         /// <summary>

@@ -36,7 +36,7 @@ namespace WebApiCore.Data.EF.DataBase.Extension
         public string CombineWithWhere()
         {
             if (this._stringStack.Count == 0) throw new ArgumentException("表达式不存在");
-            
+
             string condition = string.Concat(this._stringStack);
             this._stringStack.Clear();
             return " WHERE " + condition;

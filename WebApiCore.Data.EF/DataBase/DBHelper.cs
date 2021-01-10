@@ -90,7 +90,7 @@ namespace WebApiCore.Data.EF.DataBase
                     }
                 }
             }
-          
+
         }
 
         /// <summary>

@@ -80,7 +80,7 @@ namespace WebApiCore.Data.EF.DataBase.Extension
 
             if (entityType == null)
                 dbContext.Attach(entity);
-            else if (entityType.State == EntityState.Modified || entityType.State== EntityState.Added)
+            else if (entityType.State == EntityState.Modified || entityType.State == EntityState.Added)
                 return;
 
             foreach (var prop in entity.GetType().GetProperties().Where(x => !x.IsDefined(typeof(NotMappedAttribute), false)))
@@ -93,7 +93,7 @@ namespace WebApiCore.Data.EF.DataBase.Extension
                 var subEntityType = FindTrackingEntity(dbContext, obj);
 
                 //List<Entity>
-                if (prop.PropertyType.IsGenericType&& prop.PropertyType.IsClass)
+                if (prop.PropertyType.IsGenericType && prop.PropertyType.IsClass)
                 {
                     IEnumerable<object> objs = (IEnumerable<object>)obj;
                     foreach (var item in objs)
@@ -124,9 +124,9 @@ namespace WebApiCore.Data.EF.DataBase.Extension
         {
             foreach (var item in dbContext.ChangeTracker.Entries())
             {
-                if (item.State== EntityState.Added)
+                if (item.State == EntityState.Added)
                 {
-                    if (item.Entity== entity)
+                    if (item.Entity == entity)
                     {
                         return item;
                     }
@@ -154,5 +154,5 @@ namespace WebApiCore.Data.EF.DataBase.Extension
         #endregion
     }
 
-    
+
 }

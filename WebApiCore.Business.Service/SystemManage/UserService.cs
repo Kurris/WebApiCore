@@ -7,7 +7,6 @@ using WebApiCore.Core.TokenHelper;
 using WebApiCore.Data.EF;
 using WebApiCore.Data.Entity.SystemManage;
 using WebApiCore.Lib.Utils;
-using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;
 
 
@@ -61,7 +60,7 @@ namespace WebApiCore.Business.Service.SystemManage
             {
                 await op.RollbackTransAsync();
                 obj.Status = Status.Error;
-                obj.Message = ex.GetInnerException();
+                obj.Message = ex.GetBaseException().Message;
                 return obj;
             }
         }
@@ -105,7 +104,7 @@ namespace WebApiCore.Business.Service.SystemManage
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
-                obj.Message = ex.GetInnerException();
+                obj.Message = ex.GetBaseException().Message;
                 return obj;
             }
         }
@@ -134,7 +133,7 @@ namespace WebApiCore.Business.Service.SystemManage
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
-                obj.Message = ex.GetInnerException();
+                obj.Message = ex.GetBaseException().Message;
                 obj.Status = Status.Error;
                 return obj;
             }
@@ -161,7 +160,7 @@ namespace WebApiCore.Business.Service.SystemManage
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
-                obj.Message = ex.GetInnerException();
+                obj.Message = ex.GetBaseException().Message;
                 obj.Status = Status.Error;
                 return obj;
             }

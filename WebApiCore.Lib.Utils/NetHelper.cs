@@ -27,7 +27,7 @@ namespace WebApiCore.Lib.Utils
         {
             get
             {
-                var agent = UserAgent.ParseToString();
+                var agent = UserAgent.ParseToStr();
                 return BrowserHelper.GetBrwoserInfo(agent);
             }
         }

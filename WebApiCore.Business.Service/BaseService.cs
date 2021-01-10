@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.Data.EF;
 using WebApiCore.Data.Entity;
-using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;
 
 
@@ -19,12 +16,6 @@ namespace WebApiCore.Business.Service
     /// <typeparam name="T">实体类型</typeparam>
     public abstract class BaseService<T> : IBaseService<T> where T : BaseEntity
     {
-        public DbContext DbContext { get => EFDB.Instance.DbContext; }
-
-        public IQueryable<T> AsQueryable()
-        {
-            return EFDB.Instance.AsQueryable<T>();
-        }
 
         public virtual async Task<TData<string>> DeleteAsync(int id)
         {
@@ -37,7 +28,7 @@ namespace WebApiCore.Business.Service
             }
             catch (Exception ex)
             {
-                obj.Message = ex.GetInnerException();
+                obj.Message = ex.GetBaseException().Message;
             }
             return obj;
         }
@@ -52,7 +43,7 @@ namespace WebApiCore.Business.Service
             }
             catch (Exception ex)
             {
-                obj.Message = ex.GetInnerException();
+                obj.Message = ex.GetBaseException().Message;
             }
             return obj;
         }
@@ -79,7 +70,7 @@ namespace WebApiCore.Business.Service
             }
             catch (Exception ex)
             {
-                td.Message = ex.GetInnerException();
+                td.Message = ex.GetBaseException().Message;
             }
             return td;
         }
@@ -103,7 +94,7 @@ namespace WebApiCore.Business.Service
             }
             catch (Exception ex)
             {
-                td.Message = ex.GetInnerException();
+                td.Message = ex.GetBaseException().Message;
             }
             return td;
         }
@@ -128,7 +119,7 @@ namespace WebApiCore.Business.Service
             }
             catch (Exception ex)
             {
-                td.Message = ex.GetInnerException();
+                td.Message = ex.GetBaseException().Message;
             }
             return td;
         }
@@ -161,7 +152,7 @@ namespace WebApiCore.Business.Service
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
-                td.Message = ex.GetInnerException();
+                td.Message = ex.GetBaseException().Message;
             }
             return td;
         }
@@ -188,7 +179,7 @@ namespace WebApiCore.Business.Service
             }
             catch (Exception ex)
             {
-                obj.Message = ex.GetInnerException();
+                obj.Message = ex.GetBaseException().Message;
                 await op.RollbackTransAsync();
             }
             return obj;

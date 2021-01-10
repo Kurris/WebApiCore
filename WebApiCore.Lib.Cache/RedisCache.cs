@@ -22,12 +22,12 @@ namespace WebApiCore.Lib.Cache
         public bool SetCache<T>(string key, T value, DateTime? expireDateTime = null)
         {
 
-            string strValue = JsonHelper.ToJsonIgnoreLoop(value);
+            string strValue = JsonHelper.ToJson(value, new JsonSetting() { LoopHandling = LoopHandling.Ignore });
             if (string.IsNullOrEmpty(strValue))
             {
                 return false;
             }
-            
+
             if (expireDateTime == null)
             {
                 return _cache.StringSet(key, strValue);

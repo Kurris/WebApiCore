@@ -85,9 +85,9 @@ namespace WebApiCore
                                 string tokenName = GlobalInvariant.SystemConfig.JwtSetting.TokenName;
                                 context.Token = loginProvider switch
                                 {
-                                    "WebApi" => context.Request.Headers[tokenName].ParseToString(),
+                                    "WebApi" => context.Request.Headers[tokenName].ParseToStr(),
                                     "Session" => context.Token = context.HttpContext.Session.GetString(tokenName),
-                                    "Cookie" => context.Request.Cookies[tokenName].ParseToString(),
+                                    "Cookie" => context.Request.Cookies[tokenName].ParseToStr(),
                                     _ => throw new NotSupportedException(loginProvider)
                                 };
                                 return Task.CompletedTask;
@@ -101,7 +101,7 @@ namespace WebApiCore
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = GlobalInvariant.SystemConfig.JwtSetting.Issuer,
                             ValidAudience = GlobalInvariant.SystemConfig.JwtSetting.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenKey)),
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(GlobalInvariant.SystemConfig.JwtSetting.TokenSecretKey)),
                             RequireExpirationTime = true,
                         };
                     });

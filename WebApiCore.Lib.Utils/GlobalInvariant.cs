@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
-using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.Lib.Utils
@@ -37,7 +36,7 @@ namespace WebApiCore.Lib.Utils
         {
             get
             {
-                if (_version.IsEmpty())
+                if (string.IsNullOrEmpty(_version))
                 {
                     Version version = Assembly.GetEntryAssembly().GetName().Version;
                     _version = version.Major + "." + version.Minor;

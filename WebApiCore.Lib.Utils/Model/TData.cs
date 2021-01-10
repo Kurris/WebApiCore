@@ -9,6 +9,11 @@ namespace WebApiCore.Lib.Utils.Model
     {
         /// <summary>
         /// 数据结果返回模型
+        /// <code>
+        /// Message = null;
+        /// Status = Status.Error;
+        /// Data = Default(T)
+        /// </code>
         /// </summary>
         public TData()
         {
@@ -39,7 +44,7 @@ namespace WebApiCore.Lib.Utils.Model
         public T Data { get; set; }
 
         /// <summary>
-        /// 状态(默认:Error5000)
+        /// 状态(默认:Error 5000)
         /// </summary>
         public Status Status { get; set; }
     }

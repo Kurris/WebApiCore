@@ -3,7 +3,7 @@ using WebApiCore.Data.Entity.SystemManage;
 
 namespace WebApiCore.Business.Abstractions
 {
-    public interface IAutoJobService :IBaseService<AutoJobTask>
+    public interface IAutoJobService : IBaseService<AutoJobTask>
     {
 
         #region JobCenter

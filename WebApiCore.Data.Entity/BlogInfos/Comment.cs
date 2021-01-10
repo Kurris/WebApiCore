@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApiCore.Data.Entity.BlogInfos
 {
@@ -12,6 +9,6 @@ namespace WebApiCore.Data.Entity.BlogInfos
         public string Content { get; set; }
         public string Name { get; set; }
 
-        public Post  Post { get; set; }
+        public Post Post { get; set; }
     }
 }

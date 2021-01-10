@@ -69,7 +69,7 @@ namespace WebApiCore.Lib.Utils
                     string output = ShellHelper.Bash("uptime -s");
                     output = output.Trim();
                     runTime = DateTimeHelper.UnixTimeToString((DateTime.Now - output.ParseToDateTime())
-                                            .TotalMilliseconds.ParseToString().Split('.').First().ParseToLong());
+                                            .TotalMilliseconds.ParseToStr().Split('.').First().ParseToLong());
                 }
                 else
                 {
@@ -78,9 +78,9 @@ namespace WebApiCore.Lib.Utils
                     if (outputArr.Length == 2)
                     {
                         runTime = DateTimeHelper.UnixTimeToString((DateTime.Now - outputArr[1].Split('.')[0].ParseToDateTime())
-                                                .TotalMilliseconds.ParseToString().Split('.')[0].ParseToLong());
+                                                .TotalMilliseconds.ParseToStr().Split('.')[0].ParseToLong());
                     }
-                } 
+                }
 
                 return runTime;
             }

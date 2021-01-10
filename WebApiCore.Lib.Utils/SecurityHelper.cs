@@ -3,6 +3,9 @@ using System.Text;
 
 namespace WebApiCore.Lib.Utils
 {
+    /// <summary>
+    /// 安全帮助类
+    /// </summary>
     public class SecurityHelper
     {
         /// <summary>
@@ -10,7 +13,7 @@ namespace WebApiCore.Lib.Utils
         /// </summary>
         /// <param name="str">待加密的字符串</param>
         /// <param name="bit">位数，一般取值16 或 32</param>
-        /// <returns>返回的加密后的字符串</returns>
+        /// <returns>MD5字符串</returns>
         public static string MD5Encrypt(string str, int bit = 32)
         {
             MD5CryptoServiceProvider md5Hasher = new MD5CryptoServiceProvider();

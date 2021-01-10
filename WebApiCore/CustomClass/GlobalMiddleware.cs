@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Lib.Utils;
-using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Model;
 
 namespace WebApiCore.CustomClass
@@ -34,12 +33,12 @@ namespace WebApiCore.CustomClass
                  && !context.Request.Path.StartsWithSegments("/api/User/SignUp"))
                 {
                     context.Response.StatusCode = 200;
-                    string result = JsonHelper.ToJsonCamelCase(new TData<string>()
+                    string result = JsonHelper.ToJson(new TData<string>()
                     {
                         Data = null,
                         Message = "授权失败",
                         Status = Status.AuthorizationFail
-                    });
+                    }, new JsonSetting() { ContractResolver = ContractResolver.CamelCase });
                     byte[] content = Encoding.UTF8.GetBytes(result);
 
                     context.Response.ContentType = "application/json";
@@ -49,16 +48,17 @@ namespace WebApiCore.CustomClass
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.GetInnerException());
+                string msg = ex.GetBaseException().Message;
+                _logger.LogError(msg);
 
                 context.Response.StatusCode = 200;
-                string msg = "内部发生异常" + Environment.NewLine + ex.GetInnerException();
-                string result = JsonHelper.ToJsonCamelCase(new TData<string>()
+                msg = "内部发生异常" + Environment.NewLine + msg;
+                string result = JsonHelper.ToJson(new TData<string>()
                 {
                     Data = null,
                     Message = msg,
                     Status = Status.Error
-                });
+                }, new JsonSetting() { ContractResolver = ContractResolver.CamelCase });
                 byte[] content = Encoding.UTF8.GetBytes(result);
 
                 context.Response.ContentType = "application/json";

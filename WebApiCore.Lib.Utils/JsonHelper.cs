@@ -1,63 +1,76 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using WebApiCore.Lib.Utils.Extensions;
+using Newtonsoft.Json.Serialization;
 
 namespace WebApiCore.Lib.Utils
 {
     public class JsonHelper
     {
-        public static T ToObejct<T>(string json) => json.IsEmpty() ? default(T) : JsonConvert.DeserializeObject<T>(json);
-
-        public static JObject ToJObject(string json) => json.IsEmpty() ? JObject.Parse("{}") : JObject.Parse(json);
-
-        public static string ToJson(object obj) => obj.IsEmpty() ? string.Empty : JsonConvert.SerializeObject(obj);
-        public static string ToJsonCamelCase(object obj)
+        /// <summary>
+        /// Json序列化
+        /// </summary>
+        /// <param name="obj">对象实例</param>
+        /// <returns>Json字符串</returns>
+        public static string ToJson(object obj)
         {
-            if (obj.IsEmpty()) return string.Empty;
-
-            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
-            {
-                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
-            });
+            if (obj == null) return string.Empty;
+            return JsonConvert.SerializeObject(obj);
         }
 
-        public static string ToJsonIgnoreLoop(object obj) =>
-            obj.IsEmpty()
-            ? string.Empty
-            : JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+        public static string ToJson(object obj, JsonSetting jsonSetting)
+        {
+            if (obj == null) return string.Empty;
+
+            JsonSerializerSettings settings = new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+                ContractResolver = jsonSetting.ContractResolver switch
+                {
+                    ContractResolver.CamelCase => new CamelCasePropertyNamesContractResolver(),
+                    _ => null,
+                },
+                ReferenceLoopHandling = (ReferenceLoopHandling)jsonSetting.LoopHandling
+            };
+
+            return JsonConvert.SerializeObject(obj, settings);
+        }
+
+        /// <summary>
+        /// Json反序列化
+        /// </summary>
+        /// <typeparam name="T">对象类型</typeparam>
+        /// <param name="json">字符串</param>
+        /// <returns><see cref="{T}"/></returns>
+        public static T ToObejct<T>(string jsonStr) => string.IsNullOrEmpty(jsonStr) ? default(T) : JsonConvert.DeserializeObject<T>(jsonStr);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonStr"></param>
+        /// <returns><see cref="JObject"/></returns>
+        public static JObject ToJObject(string jsonStr) => string.IsNullOrEmpty(jsonStr) ? JObject.Parse("{}") : JObject.Parse(jsonStr);
 
     }
 
-    public class DateTimeJsonConverter : JsonConverter
+    public class JsonSetting
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return true;
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            return reader.Value?.ParseToString().ParseToDateTime();
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            if (value == null)
-            {
-                writer.WriteNull();
-                return;
-            }
-            DateTime? dt = value as DateTime?;
-            if (dt == null)
-            {
-                writer.WriteNull();
-                return;
-            }
-            writer.WriteValue(dt.Value.ToString("yyyy-MM-dd HH:mm:ss"));
-        }
+        public LoopHandling LoopHandling { get; set; }
+        public ContractResolver? ContractResolver { get; set; }
     }
+
+    public enum ContractResolver
+    {
+        CamelCase = 0
+    }
+
+    public enum LoopHandling
+    {
+
+        Error = 0,
+
+        Ignore = 1,
+
+        Serialize = 2
+    }
+
 }
+

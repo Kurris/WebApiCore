@@ -23,7 +23,7 @@ namespace WebApiCore.Core.TokenHelper
         /// <returns>Token</returns>
         public static string GenerateToken(User user, JwtSetting jwtSetting)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.TokenKey));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.TokenSecretKey));
 
             DateTime dtNow = DateTime.Now;
             DateTime dtExpires = DateTime.Now.AddMinutes(jwtSetting.Expiration);
@@ -34,11 +34,11 @@ namespace WebApiCore.Core.TokenHelper
                 {
                     new Claim(JwtClaimTypes.Issuer,jwtSetting.Issuer),
                     new Claim(JwtClaimTypes.Audience,jwtSetting.Audience),
-                    new Claim(JwtClaimTypes.Id, user.UserId.ParseToString()),
+                    new Claim(JwtClaimTypes.Id, user.UserId.ParseToStr()),
                     new Claim(JwtClaimTypes.Name, user.UserName),
                     new Claim("permission", user.UserName),
-                    new Claim(JwtClaimTypes.NotBefore, dtNow.ParseToString()),
-                    new Claim(JwtClaimTypes.Expiration,dtExpires.ParseToString())
+                    new Claim(JwtClaimTypes.NotBefore, dtNow.ParseToStr()),
+                    new Claim(JwtClaimTypes.Expiration,dtExpires.ParseToStr())
                 }),
                 IssuedAt = dtNow,//颁发时间
                 NotBefore = dtNow,

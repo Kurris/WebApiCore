@@ -17,7 +17,7 @@ namespace WebApiCore.Data.Entity.SystemManage
         public string Email { get; set; }
 
         public string Phone { get; set; }
-        
+
         public DateTime? LastLogin { get; set; }
 
 

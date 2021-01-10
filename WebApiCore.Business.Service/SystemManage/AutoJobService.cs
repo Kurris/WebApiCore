@@ -6,7 +6,6 @@ using WebApiCore.Data.EF;
 using WebApiCore.Data.Entity.SystemManage;
 
 using WebApiCore.Lib.AutoJob.Abstractions;
-using WebApiCore.Lib.Utils.Extensions;
 
 namespace WebApiCore.Business.Service.SystemManage
 {
@@ -28,11 +27,11 @@ namespace WebApiCore.Business.Service.SystemManage
                 {
                     return "任务启动失败";
                 }
-                
+
             }
             catch (Exception ex)
             {
-                return ex.GetInnerException();
+                return ex.GetBaseException().Message;
             }
         }
         public async Task<string> RestartJob(int id)
@@ -44,7 +43,7 @@ namespace WebApiCore.Business.Service.SystemManage
             }
             catch (Exception ex)
             {
-                return ex.GetInnerException();
+                return ex.GetBaseException().Message;
             }
         }
         public async Task<string> StopAll()
@@ -57,8 +56,9 @@ namespace WebApiCore.Business.Service.SystemManage
             }
             catch (Exception ex)
             {
-                return ex.GetInnerException();
+                return ex.GetBaseException().Message;
             }
+
         }
         public async Task<string> StopJob(int id)
         {
@@ -70,7 +70,7 @@ namespace WebApiCore.Business.Service.SystemManage
             }
             catch (Exception ex)
             {
-                return ex.GetInnerException();
+                return ex.GetBaseException().Message;
             }
         }
 

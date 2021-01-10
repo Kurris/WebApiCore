@@ -21,7 +21,7 @@ namespace WebApiCore.CustomClass
 
             #region 缓存注入
 
-            var cacheImp = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Lib.Cache.dll")).GetTypes().Where(x=>x.Name.StartsWith(GlobalInvariant.SystemConfig.CacheProvider)).FirstOrDefault();
+            var cacheImp = Assembly.LoadFrom(Path.Combine(local, "WebApiCore.Lib.Cache.dll")).GetTypes().Where(x => x.Name.StartsWith(GlobalInvariant.SystemConfig.CacheProvider)).FirstOrDefault();
             builder.RegisterType(cacheImp).InstancePerLifetimeScope().AsImplementedInterfaces().PropertiesAutowired();
 
             #endregion
@@ -52,7 +52,7 @@ namespace WebApiCore.CustomClass
             builder.RegisterAssemblyTypes(Assembly.Load("WebApiCore.Lib.AutoJob")).Where(x => x.GetInterfaces().Contains(typeof(IJob)))
                .InstancePerLifetimeScope().PropertiesAutowired();
             //替换调度器的工厂实现,实现Job任务可依赖注入
-            builder.RegisterType<IOCFactory>().As<IJobFactory>().SingleInstance().PropertiesAutowired(); 
+            builder.RegisterType<IOCFactory>().As<IJobFactory>().SingleInstance().PropertiesAutowired();
             #endregion
         }
     }
