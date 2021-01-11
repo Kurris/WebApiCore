@@ -19,18 +19,22 @@ namespace WebApiCore.Business.Service
             var blogAll = await GetBlog(userName);
             if (blogAll.Status == Status.Success)
             {
-                Blog blog = blogAll.Data;
-                IEnumerable<Post> posts = blog.Posts;
-
-                pagination.Total = posts.Count();
-                var currentData = posts?.Skip(pagination.PageSize * (pagination.PageIndex - 1)).Take(pagination.PageSize)?.ToList();
-
-                td.Data = new
+                if (blogAll.Data != null)
                 {
-                    total = pagination.Total,
-                    blog,
-                    posts = currentData,
-                };
+                    Blog blog = blogAll.Data;
+                    IEnumerable<Post> posts = blog.Posts;
+
+                    pagination.Total = posts.Count();
+                    var currentData = posts?.Skip(pagination.PageSize * (pagination.PageIndex - 1)).Take(pagination.PageSize)?.ToList();
+
+                    td.Data = new
+                    {
+                        total = pagination.Total,
+                        blog,
+                        posts = currentData,
+                    };
+                }
+              
                 td.Status = Status.Success;
                 td.Message = "查询成功";
             }
