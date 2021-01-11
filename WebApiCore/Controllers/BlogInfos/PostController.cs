@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApiCore.Business.Abstractions.BlogInfos;
+using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
 using WebApiCore.Lib.Model;
 

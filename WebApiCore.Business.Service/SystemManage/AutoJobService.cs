@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.Data.EF;
-using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Data.Entity;
 
 using WebApiCore.Lib.AutoJob.Abstractions;
 
-namespace WebApiCore.Business.Service.SystemManage
+namespace WebApiCore.Business.Service
 {
     public class AutoJobService : BaseService<AutoJobTask>, IAutoJobService
     {

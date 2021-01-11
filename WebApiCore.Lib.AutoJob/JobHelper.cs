@@ -7,7 +7,7 @@ using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Quartz;
 using WebApiCore.Data.EF;
-using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Data.Entity;
 using WebApiCore.Lib.AutoJob.Abstractions;
 using WebApiCore.Lib.Utils;
 

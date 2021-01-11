@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
-using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Controllers.SystemManage

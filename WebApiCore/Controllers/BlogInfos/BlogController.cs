@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
-using WebApiCore.Data.Entity.BlogInfos;
-using WebApiCore.Lib.Utils.Extensions;
+using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Controllers.BlogInfos
@@ -26,84 +24,18 @@ namespace WebApiCore.Controllers.BlogInfos
         [HttpGet]
         public async Task<TData<object>> GetBlogWithPagniation(string userName, int pageSize, int pageIndex)
         {
-            var td = new TData<object>();
-            var tdblog = await GetBlog(userName);
-            if (tdblog.Status == Status.Success)
+            TData<object> tobj = await BlogService.GetBlogWithPagination(userName, new Pagination()
             {
-                var blog = tdblog.Data;
-                var posts = blog.Posts;
-
-                int count = posts.Count;
-                var currentData = posts?.Skip(pageSize * (pageIndex - 1)).Take(pageSize)?.ToList();
-
-                td.Data = new
-                {
-                    count = count,
-                    blog = blog,
-                    posts = currentData,
-                };
-                td.Status = Status.Success;
-                td.Message = "查询成功";
-            }
-            else
-            {
-                td.Status = tdblog.Status;
-                td.Message = tdblog.Message;
-            }
-
-            return td;
+                PageSize = pageSize,
+                PageIndex = pageIndex
+            });
+            return tobj;
         }
 
-
-
         [HttpGet]
-        public async Task<TData<Blog>> GetBlog(string userName)
+        public async Task<TData<Blog>> GetBlogCurrentPost([FromQuery] int blogId, [FromQuery] int postId)
         {
-            var td = new TData<Blog>();
-            if (userName.IsEmpty())
-            {
-                td.Status = Status.Fail;
-                td.Message = "用户名称不能为空";
-            }
-            else
-            {
-                //    td.Data = await BlogService.DbContext.Set<Blog>().Include(x => x.Posts)
-                //                                              .ThenInclude(x => x.Comments).Where(x => x.UserName == userName).FirstOrDefaultAsync();
-                td.Status = Status.Success;
-                td.Message = "获取成功";
-            }
-            return td;
-        }
-
-
-        [HttpGet]
-        public async Task<TData<Blog>> GetPost(int blogId, int postId)
-        {
-            var td = new TData<Blog>();
-            // var blog = await BlogService.DbContext.Set<Blog>().Include(x => x.Posts)
-            //                                 .ThenInclude(x => x.Comments).Where(x => x.BlogId == blogId).FirstOrDefaultAsync();
-
-            //List<Post> post;
-            //if (postId == 0)
-            //{
-            //    post = new List<Post>();
-            //    post.Add(blog?.Posts?.ToList().LastOrDefault());
-            //}
-            //else
-            //    post = blog?.Posts?.Where(x => x.PostId == postId).ToList();
-
-            //if (post == null)
-            //{
-            //    td.Message = "查询失败";
-            //    td.Status = Status.Fail;
-            //}
-            //else
-            //{
-            //    blog.Posts = post;
-            //    td.Data = blog;
-            //    td.Message = "查询成功";
-            //    td.Status = Status.Success;
-            //}
+            var td =await BlogService.GetCurrentPost(blogId, postId);
             return td;
         }
     }

@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
-using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Utils.Config;
 using WebApiCore.Lib.Utils.Extensions;
 

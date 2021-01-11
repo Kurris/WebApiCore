@@ -5,12 +5,11 @@ using WebApiCore.Business.Abstractions;
 using WebApiCore.Core;
 using WebApiCore.Core.TokenHelper;
 using WebApiCore.Data.EF;
-using WebApiCore.Data.Entity.SystemManage;
 using WebApiCore.Lib.Utils;
 using WebApiCore.Lib.Model;
+using WebApiCore.Data.Entity;
 
-
-namespace WebApiCore.Business.Service.SystemManage
+namespace WebApiCore.Business.Service
 {
     public class UserService : IUserService
     {
@@ -25,13 +24,14 @@ namespace WebApiCore.Business.Service.SystemManage
         {
             var op = await EFDB.Instance.AsNoTracking().BeginTransAsync();
             TData<User> obj = new TData<User>();
-            obj.Status = Status.Fail;
+
             try
             {
                 User user = await op.FindAsync<User>(x => x.UserName == userName);
                 if (user == null)
                 {
                     obj.Message = "用户不存在";
+                    obj.Status = Status.Fail;
                 }
                 else
                 {
@@ -39,6 +39,7 @@ namespace WebApiCore.Business.Service.SystemManage
                     if (user.Password != encrypt)
                     {
                         obj.Message = "密码错误";
+                        obj.Status = Status.Fail;
                     }
                     else
                     {
@@ -54,15 +55,13 @@ namespace WebApiCore.Business.Service.SystemManage
                     }
                 }
                 await op.CommitTransAsync();
-                return obj;
             }
             catch (Exception ex)
             {
                 await op.RollbackTransAsync();
-                obj.Status = Status.Error;
                 obj.Message = ex.GetBaseException().Message;
-                return obj;
             }
+            return obj;
         }
 
         /// <summary>

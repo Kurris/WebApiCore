@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using WebApiCore.Business.Abstractions.SystemManage;
+using WebApiCore.Business.Abstractions;
 using WebApiCore.Data.EF;
-using WebApiCore.Data.Entity.BlogInfos;
+using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Model;
 
-namespace WebApiCore.Business.Service.SystemManage
+namespace WebApiCore.Business.Service
 {
     public class ProfileService : BaseService<Profile>, IProfileService
     {

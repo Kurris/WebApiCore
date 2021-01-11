@@ -13,6 +13,7 @@ namespace WebApiCore.Business.Abstractions
     /// <typeparam name="T">实体类型</typeparam>
     public interface IBaseService<T> where T : BaseEntity
     {
+
         #region 查询
         /// <summary>
         /// 查询一个实体
@@ -35,6 +36,10 @@ namespace WebApiCore.Business.Abstractions
         /// <returns><see cref="TData{Enumerable{int}}"/></returns>
         Task<TData<IEnumerable<T>>> FindListAsync(Expression<Func<T, bool>> predicate = null);
 
+
+        #endregion
+
+        #region 分页查询
         /// <summary>
         /// 查询多个实体
         /// </summary>

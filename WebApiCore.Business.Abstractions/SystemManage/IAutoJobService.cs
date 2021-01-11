@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Data.Entity;
 
 namespace WebApiCore.Business.Abstractions
 {

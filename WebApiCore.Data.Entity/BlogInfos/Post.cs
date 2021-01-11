@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using WebApiCore.Data.Entity.BlogInfos;
 
 namespace WebApiCore.Data.Entity
 {

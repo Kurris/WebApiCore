@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApiCore.Data.Entity.SystemManage
+namespace WebApiCore.Data.Entity
 {
     [Table("AutoJobTasks")]
     public class AutoJobTask : BaseEntity

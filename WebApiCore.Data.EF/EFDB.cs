@@ -32,6 +32,9 @@ namespace WebApiCore.Data.EF
         /// <summary>
         /// 创建具体数据库
         /// </summary>
+        /// <remarks>
+        /// 不建议使用此方法
+        /// </remarks>
         /// <param name="provider">数据库引擎</param>
         /// <param name="connStr">数据库连接字符串</param>
         /// <returns>操作对象<see cref="IDataBaseOperation"/></returns>

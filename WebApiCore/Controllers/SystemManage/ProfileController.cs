@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApiCore.Business.Abstractions.SystemManage;
-using WebApiCore.Data.Entity.BlogInfos;
+using WebApiCore.Business.Abstractions;
+using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Model;
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApiCore.Data.Entity.BlogInfos
+namespace WebApiCore.Data.Entity
 {
     [Table("Blogs")]
     public class Blog : BaseEntity

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using WebApiCore.Core.TokenHelper;
-using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Utils;
 
 namespace WebApiCore.Core

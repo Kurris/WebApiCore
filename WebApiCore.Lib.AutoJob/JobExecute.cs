@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Quartz;
-using WebApiCore.Data.Entity.SystemManage;
+using WebApiCore.Data.Entity;
 
 namespace WebApiCore.AutoJob
 {
@@ -31,7 +31,7 @@ namespace WebApiCore.AutoJob
             };
             await Tjob;
 
-            Logger.LogInformation($"自动任务执行:{jobData.JobType.ToString()}:{jobData.ExecuteName}");
+            Logger.LogInformation($"自动任务执行:{jobData.JobType}:{jobData.ExecuteName}");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApiCore.Data.Entity.BlogInfos
+namespace WebApiCore.Data.Entity
 {
     [Table("Profiles")]
     public class Profile : BaseEntity
