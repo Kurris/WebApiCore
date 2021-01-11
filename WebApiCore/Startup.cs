@@ -167,6 +167,8 @@ namespace WebApiCore
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("|StartUp:  " + DateTime.Now);
+            sb.AppendLine("|LoginProvider:  " + GlobalInvariant.SystemConfig.LoginProvider);
+            sb.AppendLine("|CacheProvider:  " + GlobalInvariant.SystemConfig.CacheProvider);
             sb.AppendLine("|Machine:  " + Environment.MachineName + "  " + Environment.OSVersion.Platform + "  " + Environment.OSVersion.VersionString);
             sb.AppendLine("|ContentRootPath:  " + env.ContentRootPath);
             sb.AppendLine("|IsDevelopment:  " + env.IsDevelopment());
