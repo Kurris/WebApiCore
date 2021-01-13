@@ -20,6 +20,11 @@ namespace WebApiCore.Lib.Utils.Config
         /// </summary>
         public JwtConfig JwtConfig { get; set; }
 
+        /// <summary>
+        /// HttpClient 设置
+        /// </summary>
+        public HttpClientConfig  HttpClientConfig { get; set; }
+
 
         /// <summary>
         /// 缓存引擎

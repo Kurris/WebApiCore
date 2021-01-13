@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheUnitTest", "CacheUnitT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Lib.CacheAbstractions", "WebApiCore.Lib.CacheAbstractions\WebApiCore.Lib.CacheAbstractions.csproj", "{069AB68B-E6F8-489D-A723-72F4E7B1CC10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiCore.Lib.Model", "WebApiCore.Lib.Model\WebApiCore.Lib.Model.csproj", "{91944E40-68F7-4F98-A827-AABE55BA13F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore.Lib.Model", "WebApiCore.Lib.Model\WebApiCore.Lib.Model.csproj", "{91944E40-68F7-4F98-A827-AABE55BA13F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

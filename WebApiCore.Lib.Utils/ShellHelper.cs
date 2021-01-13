@@ -40,10 +40,12 @@ namespace WebApiCore.Lib.Utils
         {
             string output = string.Empty;
 
-            var info = new ProcessStartInfo();
-            info.FileName = fileName;
-            info.Arguments = args;
-            info.RedirectStandardOutput = true;
+            var info = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = args,
+                RedirectStandardOutput = true
+            };
 
             using (var process = Process.Start(info))
             {

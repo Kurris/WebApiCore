@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity;
@@ -12,6 +11,7 @@ namespace WebApiCore.Controllers.SystemManage
     [ApiController]
     public class UserController : ControllerBase
     {
+
         public IUserService UserService { get; set; }
 
         [HttpPost]

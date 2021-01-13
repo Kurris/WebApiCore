@@ -41,6 +41,7 @@ namespace WebApiCore
             GlobalInvariant.Configuration = Configuration;
 
             services.AddSignalR();
+            services.AddHttpClient();
             services.AddControllers().AddControllersAsServices().AddNewtonsoftJson(x =>
             {
                 x.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
