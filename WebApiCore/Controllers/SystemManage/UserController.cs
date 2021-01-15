@@ -4,6 +4,8 @@ using WebApiCore.Business.Abstractions;
 using WebApiCore.CustomClass;
 using WebApiCore.Data.Entity;
 using WebApiCore.Lib.Model;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace WebApiCore.Controllers.SystemManage
 {
@@ -13,6 +15,29 @@ namespace WebApiCore.Controllers.SystemManage
     {
 
         public IUserService UserService { get; set; }
+
+
+        [HttpGet]
+        public async Task<TData<object>> GetUserWithPagination([FromQuery] int pageSize, [FromQuery] int pageIndex)
+        {
+            var page = new Pagination()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize
+            };
+            var users = await UserService.FindWithPagination(page);
+
+            return new TData<object>
+            {
+                Status = users.Status,
+                Message = users.Message,
+                Data = new
+                {
+                    total = page.Total,
+                    data = users.Data
+                }
+            };
+        }
 
         [HttpPost]
         public async Task<TData<User>> Login([FromBody] User user)

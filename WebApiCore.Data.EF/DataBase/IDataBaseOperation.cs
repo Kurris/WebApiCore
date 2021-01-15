@@ -183,10 +183,20 @@ namespace WebApiCore.Data.EF.DataBase
         /// 更新
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="wherePredicate">Where表达式/param>
-        /// <param name="setPredicates">SQL中的SET赋值表达式</param>
+        /// <param name="setPredicates">set条件</param>
+        /// <param name="wherePredicate">where条件</param>
+        /// <returns></returns>
+        Task<int> UpdateAsync<T>(IEnumerable<Expression<Func<T, bool>>> setPredicates, Expression<Func<T, bool>> wherePredicate) where T : BaseEntity;
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="setPredicates">set条件</param>
+        /// <param name="wherePredicate">where条件</param>
+        /// <param name="keyValues">参数</param>
         /// <returns>返回受影响行<see cref="int"/></returns>
-        Task<int> UpdateAsync<T>(Expression<Func<T, bool>> wherePredicate, params Expression<Func<T, bool>>[] setPredicates) where T : BaseEntity;
+        Task<int> UpdateAsync<T>(IEnumerable<Expression<Func<T, bool>>> setPredicates, Expression<Func<T, bool>> wherePredicate, IDictionary<string, object> keyValues) where T : BaseEntity;
 
         /// <summary>
         /// 删除一个实体

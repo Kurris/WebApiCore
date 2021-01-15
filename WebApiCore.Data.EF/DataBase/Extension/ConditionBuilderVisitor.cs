@@ -9,10 +9,24 @@ namespace WebApiCore.Data.EF.DataBase.Extension
     /// </summary>
     internal class ConditionBuilderVisitor : ExpressionVisitor
     {
-        internal ConditionBuilderVisitor()
+        internal ConditionBuilderVisitor(string sqlType)
         {
+            _filedTagLeft = sqlType switch
+            {
+                "SqlServer" => " [",
+                "MySql" => " `",
+                _ => throw new NotSupportedException(sqlType)
+            };
 
+            _filedTagRight = sqlType switch
+            {
+                "SqlServer" => "] ",
+                "MySql" => "` ",
+                _ => throw new NotSupportedException(sqlType)
+            };
         }
+        private readonly string _filedTagLeft = string.Empty;
+        private readonly string _filedTagRight = string.Empty;
 
         private readonly Stack<string> _stringStack = new Stack<string>();
 
@@ -29,6 +43,7 @@ namespace WebApiCore.Data.EF.DataBase.Extension
             return condition;
         }
 
+
         /// <summary>
         /// 组合,带上Where 1=1 and
         /// </summary>
@@ -39,10 +54,13 @@ namespace WebApiCore.Data.EF.DataBase.Extension
 
             string condition = string.Concat(this._stringStack);
             this._stringStack.Clear();
-            return " WHERE 1=1 and" + condition;
+            return " WHERE 1=1 and " + condition;
         }
 
-
+        public override Expression Visit(Expression node)
+        {
+            return base.Visit(node);
+        }
 
         /// <summary>
         /// 二元表达式
@@ -56,9 +74,10 @@ namespace WebApiCore.Data.EF.DataBase.Extension
             this._stringStack.Push(" " + ConditionType(node.NodeType) + " ");
             base.Visit(node.Left);
             this._stringStack.Push("(");
-
             return node;
         }
+
+
 
 
         /// <summary>
@@ -70,14 +89,21 @@ namespace WebApiCore.Data.EF.DataBase.Extension
         {
             if (node.Expression is ParameterExpression)
             {
-                this._stringStack.Push(" [" + node.Member.Name + "] ");
+                this._stringStack.Push($" {_filedTagLeft}" + node.Member.Name + $"{_filedTagRight} ");
                 return node;
             }
-            else
+            else if (node.Expression is ConstantExpression)
             {
                 return this.VisitConstant(node.Expression as ConstantExpression);
             }
+            else
+            {
+                this._stringStack.Push($" {_filedTagLeft}" + node.Member.Name + $"{_filedTagRight} ");
+                return node;
+            }
         }
+
+
 
         /// <summary>
         /// 访问常量
@@ -88,11 +114,11 @@ namespace WebApiCore.Data.EF.DataBase.Extension
         {
             if (node.Type.Name.Contains("<>") && node.Type.Name.Contains("DisplayClass"))
             {
-                this._stringStack.Push(" '" + node.Type.GetFields()[0].GetValue(node.Value) + "' ");
+                this._stringStack.Push(" '" + node.Type.GetFields()[0].GetValue(node.Value) + $"' ");
             }
             else
             {
-                this._stringStack.Push(" '" + node.Value + "' ");
+                this._stringStack.Push(" '" + node.Value + $"' ");
             }
 
             return node;

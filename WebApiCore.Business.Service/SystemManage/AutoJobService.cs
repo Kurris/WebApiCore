@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApiCore.Business.Abstractions;
 using WebApiCore.Data.EF;
 using WebApiCore.Data.Entity;
+using WebApiCore.Lib.Utils.Extensions;
 
 using WebApiCore.Lib.AutoJob.Abstractions;
+using System.Linq.Expressions;
 
 namespace WebApiCore.Business.Service
 {
@@ -49,7 +52,10 @@ namespace WebApiCore.Business.Service
         {
             try
             {
-                await EFDB.Instance.UpdateAsync<AutoJobTask>(null, x => x.JobStatus == 0);
+                await EFDB.Instance.UpdateAsync(new List<Expression<Func<AutoJobTask, bool>>>()
+                {
+                    x => x.JobStatus == 0
+                }, null);
                 await JobCenter.StopAll();
                 return "任务停止成功";
             }
@@ -63,7 +69,11 @@ namespace WebApiCore.Business.Service
         {
             try
             {
-                await EFDB.Create().UpdateAsync<AutoJobTask>(x => x.AutoJobTaskId == id, x => x.JobStatus == 0);
+                await EFDB.Create().UpdateAsync(new List<Expression<Func<AutoJobTask, bool>>>()
+                {
+                    x => x.JobStatus == 0
+                }, x => x.AutoJobTaskId == id);
+
                 await JobCenter.StopJob(id);
                 return "任务停止成功";
             }

@@ -4,7 +4,7 @@ using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Business.Abstractions
 {
-    public interface IUserService
+    public interface IUserService :IBaseService<User>
     {
 
         /// <summary>

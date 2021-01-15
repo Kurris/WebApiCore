@@ -8,10 +8,11 @@ using WebApiCore.Data.EF;
 using WebApiCore.Lib.Utils;
 using WebApiCore.Lib.Model;
 using WebApiCore.Data.Entity;
+using System.Linq.Expressions;
 
 namespace WebApiCore.Business.Service
 {
-    public class UserService : IUserService
+    public class UserService : BaseService<User>, IUserService
     {
 
         /// <summary>
@@ -43,8 +44,12 @@ namespace WebApiCore.Business.Service
                     }
                     else
                     {
+                        DateTime? dtNow = DateTime.Now;
 
-                        await op.RunSqlAsync("UPDATE Users SET lastlogin=@lastlogin", new Dictionary<string, object>() { ["lastlogin"] = DateTime.Now });
+                        await op.UpdateAsync(new List<Expression<Func<User, bool>>>()
+                        {
+                            x=>x.LastLogin==dtNow
+                        }, x => x.UserName == userName);
 
                         user.LastLogin = DateTime.Now;
                         obj.Message = "登陆成功";

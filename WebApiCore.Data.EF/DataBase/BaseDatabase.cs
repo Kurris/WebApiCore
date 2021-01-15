@@ -19,8 +19,11 @@ namespace WebApiCore.Data.EF.DataBase
     internal abstract class BaseDatabaseImp : IDataBaseOperation
     {
 
+        private readonly string _provider;
+
         internal BaseDatabaseImp(string provider, string connStr)
         {
+            _provider = provider;
             DbContext = new MyDbContext(provider, connStr);
         }
 
@@ -216,7 +219,7 @@ namespace WebApiCore.Data.EF.DataBase
         {
             string tableName = FindPrimaryKeyWithTable<T>().table;
 
-            ConditionBuilderVisitor visitor = new ConditionBuilderVisitor();
+            ConditionBuilderVisitor visitor = new ConditionBuilderVisitor(_provider);
             visitor.Visit(predicate);
 
             return await this.RunSqlAsync($"Delete From {tableName} {visitor.CombineWithWhere()}");
@@ -239,6 +242,7 @@ namespace WebApiCore.Data.EF.DataBase
         private async Task<(int total, IEnumerable<T> list)> FindListAsync<T>(IQueryable<T> tmpdata, string sortColumn, bool isAsc,
                                                                               int pageSize, int pageIndex) where T : BaseEntity
         {
+            if (string.IsNullOrEmpty(sortColumn)) sortColumn = FindPrimaryKey<T>();
             tmpdata = DBExtension.PaginationSort(tmpdata, sortColumn, isAsc);
 
             var list = await tmpdata.ToListAsync();
@@ -307,18 +311,17 @@ WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
 
             return await GetOperationReuslt();
         }
-        public virtual async Task<int> UpdateAsync<T>(Expression<Func<T, bool>> wherePredicate, params Expression<Func<T, bool>>[] setPredicates) where T : BaseEntity
+        public virtual async Task<int> UpdateAsync<T>(IEnumerable<Expression<Func<T, bool>>> setPredicates, Expression<Func<T, bool>> wherePredicate) where T : BaseEntity
         {
-
             string tableName = FindPrimaryKeyWithTable<T>().table;
 
-            ConditionBuilderVisitor whereCondition = new ConditionBuilderVisitor();
+            ConditionBuilderVisitor whereCondition = new ConditionBuilderVisitor(_provider);
             whereCondition.Visit(wherePredicate);
             string whereString = whereCondition.CombineWithWhere();
 
             string setStrings = string.Join(",", setPredicates.Select(x =>
             {
-                ConditionBuilderVisitor setCondition = new ConditionBuilderVisitor();
+                ConditionBuilderVisitor setCondition = new ConditionBuilderVisitor(_provider);
                 setCondition.Visit(x);
                 return setCondition.Combine();
 
@@ -329,6 +332,30 @@ WHERE T2.ROWNUM BETWEEN  {numLeft} AND {numRight};";
 
             return await this.RunSqlAsync(sql);
         }
+        public virtual async Task<int> UpdateAsync<T>(IEnumerable<Expression<Func<T, bool>>> setPredicates, Expression<Func<T, bool>> wherePredicate, IDictionary<string, object> keyValues) where T : BaseEntity
+        {
+
+            string tableName = FindPrimaryKeyWithTable<T>().table;
+
+            ConditionBuilderVisitor whereCondition = new ConditionBuilderVisitor(_provider);
+            whereCondition.Visit(wherePredicate);
+            string whereString = whereCondition.CombineWithWhere();
+
+            string setStrings = string.Join(",", setPredicates.Select(x =>
+            {
+                ConditionBuilderVisitor setCondition = new ConditionBuilderVisitor(_provider);
+                setCondition.Visit(x);
+                return setCondition.Combine();
+
+            })).TrimStart('(', ' ').TrimEnd(')', ' ');
+
+
+            string sql = $@"UPDATE {tableName} SET {setStrings} {whereString}";
+
+            return await this.RunSqlAsync(sql, keyValues);
+        }
+
+
         #endregion
 
         #region 添加

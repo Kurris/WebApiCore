@@ -14,19 +14,14 @@ namespace WebApiCore.Controllers.ThirdPart
     [ApiController]
     public class BingController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpfactory;
         private readonly string _baseUrl = "https://www.bing.com";
-
-        public BingController(IHttpClientFactory httpfactory)
-        {
-            this._httpfactory = httpfactory;
-        }
+        public IHttpClientFactory  HttpClientFactory { get; set; }
 
 
         [HttpGet]
         public async Task<string> GetDayImage()
         {
-            string json = await _httpfactory.GetClient().GetStringAsync("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1");
+            string json = await HttpClientFactory.GetClient().GetStringAsync("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1");
             var jobj = JsonHelper.ToJObject(json);
             string url = jobj["images"][0].Value<string>("url");
 
