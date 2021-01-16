@@ -84,11 +84,15 @@ namespace WebApiCore
                             {
                                 string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
                                 string tokenName = GlobalInvariant.SystemConfig.JwtConfig.TokenName;
+
+                                if (!context.HttpContext.Request.Path.StartsWithSegments("/api")) loginProvider = "Signalr";
+
                                 context.Token = loginProvider switch
                                 {
                                     "WebApi" => context.Request.Headers[tokenName].ParseToStr(),
                                     "Session" => context.Token = context.HttpContext.Session.GetString(tokenName),
                                     "Cookie" => context.Request.Cookies[tokenName].ParseToStr(),
+                                    "Signalr" => context.Request.Query["access_token"],
                                     _ => throw new NotSupportedException(loginProvider)
                                 };
                                 return Task.CompletedTask;

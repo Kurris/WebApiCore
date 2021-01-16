@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using WebApiCore.CustomClass;
+using WebApiCore.Lib.Utils;
 
 /*npm install @microsoft/signalr
  *import * as signalR from '@microsoft/signalr'
@@ -32,21 +33,34 @@ namespace WebApiCore.Hubs
         /// Method to be call by frontend
         /// </summary>
         /// <returns></returns>
-        public async Task Dosomething()
+        public async Task GetCpuValue()
         {
-            for (int i = 0; i < 100; i++)
+            while (true)
             {
-                await Task.Delay(3000);
-                await Clients.All.SendAsync("ReceiveUpdate", new Random().Next(0, 10));
+                try
+                {
+                    await Clients.Caller.SendAsync("setCpuValue", OSHelper.GetCPURate());
+                }
+                catch
+                {
+                }
+                await Task.Delay(1500);
             }
-
-            await Clients.All.SendAsync("Done");
         }
 
-        public override async Task OnConnectedAsync()
+        public async Task GetMemoryValue()
         {
-            string connId = Context.ConnectionId;
-            await Clients.Client(connId).SendAsync("someFunc");
+            while (true)
+            {
+                try
+                {
+                    await Clients.Caller.SendAsync("setMemoryValue", OSHelper.GetOSRunTime());
+                }
+                catch
+                {
+                }
+                await Task.Delay(1000);
+            }
         }
     }
 }

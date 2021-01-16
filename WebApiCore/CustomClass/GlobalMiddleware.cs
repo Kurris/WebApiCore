@@ -28,6 +28,8 @@ namespace WebApiCore.CustomClass
             {
                 await _next(context);
 
+                if (context.WebSockets.IsWebSocketRequest) return;
+
                 if (!context.User.Identity.IsAuthenticated
                  && !context.Request.Path.StartsWithSegments("/api/User/Login")//登录和注册不需要验证
                  && !context.Request.Path.StartsWithSegments("/api/User/SignUp"))

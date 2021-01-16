@@ -27,7 +27,7 @@ namespace WebApiCore.Lib.Utils
                 MemoryMetrics memoryMetrics = helper.GetMetrics();
                 computerInfo.TotalRAM = Math.Ceiling(memoryMetrics.Total / 1024).ToString() + " GB";
                 computerInfo.RAMRate = Math.Ceiling(100 * memoryMetrics.Used / memoryMetrics.Total).ToString() + " %";
-                computerInfo.CPURate = Math.Ceiling(Convert.ToDouble(GetCPURate())) + " %";
+                computerInfo.CPURate = GetCPURate();
                 computerInfo.RunTime = GetOSRunTime();
 
                 return computerInfo;
@@ -38,10 +38,13 @@ namespace WebApiCore.Lib.Utils
             }
         }
 
-
+        /// <summary>
+        /// 获取CPU使用率
+        /// </summary>
+        /// <returns></returns>
         public static string GetCPURate()
         {
-            string cpuRate = string.Empty;
+            string cpuRate;
             if (IsUnix)
             {
                 string output = ShellHelper.Bash("top -b -n1 | grep \"Cpu(s)\" | awk '{print $2 + $4}'");
@@ -52,7 +55,8 @@ namespace WebApiCore.Lib.Utils
                 string output = ShellHelper.Cmd("wmic", "cpu get LoadPercentage");
                 cpuRate = output.Replace("LoadPercentage", string.Empty).Trim();
             }
-            return cpuRate;
+
+            return Math.Ceiling(Convert.ToDouble(cpuRate)) + " %";
         }
 
         /// <summary>
@@ -139,7 +143,7 @@ namespace WebApiCore.Lib.Utils
     /// <summary>
     /// 内存指标
     /// </summary>
-    internal class MemoryMetrics
+    public class MemoryMetrics
     {
         public double Total { get; set; }
         public double Used { get; set; }
