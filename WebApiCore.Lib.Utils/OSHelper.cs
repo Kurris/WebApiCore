@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using WebApiCore.Lib.Utils.Extensions;
+using WebApiCore.Lib.Model;
 
 namespace WebApiCore.Lib.Utils
 {
@@ -11,26 +12,24 @@ namespace WebApiCore.Lib.Utils
     /// </summary>
     public class OSHelper
     {
-        /// <summary>
-        /// 判断是否为Unix
-        /// </summary>
-        public static bool IsUnix { get => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux); }
+        private static readonly OSMetrics _osMetrics = new OSMetrics();
 
-#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
-        public static async Task<OSInfo> GetOSInfo()
-#pragma warning restore CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
+        public static OSMetrics GetOSMetrics()
         {
-            OSInfo computerInfo = new OSInfo();
             try
             {
-                MemoryMetricsHelper helper = new MemoryMetricsHelper();
-                MemoryMetrics memoryMetrics = helper.GetMetrics();
-                computerInfo.TotalRAM = Math.Ceiling(memoryMetrics.Total / 1024).ToString() + " GB";
-                computerInfo.RAMRate = Math.Ceiling(100 * memoryMetrics.Used / memoryMetrics.Total).ToString() + " %";
-                computerInfo.CPURate = GetCPURate();
-                computerInfo.RunTime = GetOSRunTime();
+                _osMetrics.Memory = GetMemoryMetrics();
+                _osMetrics.Cpu = GetCpuMetrics();
+                _osMetrics.RunTime = DateTimeHelper.GetDateTime(Environment.TickCount64);
 
-                return computerInfo;
+                //return new OSInfo()
+                //{
+                //    TotalRAM = Math.Ceiling(memoryMetrics.Total / 1024).ToString() + " GB",
+                //    RAMRate = Math.Ceiling(100 * memoryMetrics.Used / memoryMetrics.Total).ToString() + " %",
+                //    CPURate = GetCPURate(),
+                //    RunTime = GetRunTime(),
+                //};
+                return _osMetrics;
             }
             catch
             {
@@ -42,10 +41,10 @@ namespace WebApiCore.Lib.Utils
         /// 获取CPU使用率
         /// </summary>
         /// <returns></returns>
-        public static string GetCPURate()
+        private static string GetCPURate()
         {
             string cpuRate;
-            if (IsUnix)
+            if (_osMetrics.IsUnix)
             {
                 string output = ShellHelper.Bash("top -b -n1 | grep \"Cpu(s)\" | awk '{print $2 + $4}'");
                 cpuRate = output.Trim();
@@ -60,116 +59,77 @@ namespace WebApiCore.Lib.Utils
         }
 
         /// <summary>
-        /// 获取OX运行时间
+        /// 获取内存信息
         /// </summary>
         /// <returns></returns>
-        public static string GetOSRunTime()
+        private static MemoryMetrics GetMemoryMetrics()
         {
-            string runTime = string.Empty;
-            try
-            {
-                if (IsUnix)
-                {
-                    string output = ShellHelper.Bash("uptime -s");
-                    output = output.Trim();
-                    runTime = DateTimeHelper.UnixTimeToString((DateTime.Now - output.ParseToDateTime())
-                                            .TotalMilliseconds.ParseToStr().Split('.').First().ParseToLong());
-                }
-                else
-                {
-                    string output = ShellHelper.Cmd("wmic", "OS get LastBootUpTime/Value");
-                    string[] outputArr = output.Split("=", StringSplitOptions.RemoveEmptyEntries);
-                    if (outputArr.Length == 2)
-                    {
-                        runTime = DateTimeHelper.UnixTimeToString((DateTime.Now - outputArr[1].Split('.')[0].ParseToDateTime())
-                                                .TotalMilliseconds.ParseToStr().Split('.')[0].ParseToLong());
-                    }
-                }
-
-                return runTime;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-    }
-
-
-
-
-
-    internal class MemoryMetricsHelper
-    {
-        public MemoryMetrics GetMetrics()
-        {
-            if (OSHelper.IsUnix)
+            if (_osMetrics.IsUnix)
             {
                 return GetUnixMetrics();
             }
             return GetWindowsMetrics();
+
+            MemoryMetrics GetWindowsMetrics()
+            {
+                string output = ShellHelper.Cmd("wmic", "OS get FreePhysicalMemory,TotalVisibleMemorySize /Value");
+
+                var lines = output.Trim().Split("\n");
+                var freeMemoryParts = lines[0].Split("=", StringSplitOptions.RemoveEmptyEntries);
+                var totalMemoryParts = lines[1].Split("=", StringSplitOptions.RemoveEmptyEntries);
+
+                double total = Math.Round(double.Parse(totalMemoryParts[1]) / 1024, 0);
+                double free = Math.Round(double.Parse(freeMemoryParts[1]) / 1024, 0);
+
+                var metrics = new MemoryMetrics
+                {
+                    Total = Math.Ceiling(total / 1024) + " GB",
+                    Free = Math.Ceiling(free / 1024) + " GB",
+                    Used = Math.Round((total - free) / total * 100,0) + " %"
+                };
+
+                return metrics;
+            }
+
+            MemoryMetrics GetUnixMetrics()
+            {
+                string output = ShellHelper.Bash("free -m");
+
+                var lines = output.Split("\n");
+                var memory = lines[1].Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+                double total = double.Parse(memory[1]);
+                double used = double.Parse(memory[2]);
+
+                var metrics = new MemoryMetrics
+                {
+                    Total = Math.Ceiling(total / 1024) + " GB",
+                    Used = Math.Ceiling(used / 1024) + " GB",
+                    Free = (total - used) / 1024 + " GB"
+                };
+
+                return metrics;
+            }
         }
-        private MemoryMetrics GetWindowsMetrics()
+
+        private static CpuMetrics GetCpuMetrics()
         {
-            string output = ShellHelper.Cmd("wmic", "OS get FreePhysicalMemory,TotalVisibleMemorySize /Value");
+            var cpu = new CpuMetrics();
+            string cpuRate;
+            if (_osMetrics.IsUnix)
+            {
+                string output = ShellHelper.Bash("top -b -n1 | grep \"Cpu(s)\" | awk '{print $2 + $4}'");
+                cpuRate = output.Trim();
+            }
+            else
+            {
+                cpu.CpuName = ShellHelper.Cmd("wmic", "cpu get Name").Replace("Name", string.Empty).Trim();
+                cpu.CoreCount = Convert.ToInt32(ShellHelper.Cmd("wmic", "cpu get NumberOfCores").Replace("NumberOfCores", string.Empty).Trim());
+                cpu.ThreadCount = Convert.ToInt32(ShellHelper.Cmd("wmic", "cpu get ThreadCount").Replace("ThreadCount", string.Empty).Trim());
+                cpu.Used = ShellHelper.Cmd("wmic", "cpu get LoadPercentage").Replace("LoadPercentage", string.Empty).Trim() + " %";
+            }
 
-            var lines = output.Trim().Split("\n");
-            var freeMemoryParts = lines[0].Split("=", StringSplitOptions.RemoveEmptyEntries);
-            var totalMemoryParts = lines[1].Split("=", StringSplitOptions.RemoveEmptyEntries);
-
-            var metrics = new MemoryMetrics();
-            metrics.Total = Math.Round(double.Parse(totalMemoryParts[1]) / 1024, 0);
-            metrics.Free = Math.Round(double.Parse(freeMemoryParts[1]) / 1024, 0);
-            metrics.Used = metrics.Total - metrics.Free;
-
-            return metrics;
+            return cpu;
         }
-        private MemoryMetrics GetUnixMetrics()
-        {
-            string output = ShellHelper.Bash("free -m");
-
-            var lines = output.Split("\n");
-            var memory = lines[1].Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-            var metrics = new MemoryMetrics();
-            metrics.Total = double.Parse(memory[1]);
-            metrics.Used = double.Parse(memory[2]);
-            metrics.Free = double.Parse(memory[3]);
-
-            return metrics;
-        }
-    }
-
-    /// <summary>
-    /// 内存指标
-    /// </summary>
-    public class MemoryMetrics
-    {
-        public double Total { get; set; }
-        public double Used { get; set; }
-        public double Free { get; set; }
-    }
-
-    /// <summary>
-    /// OS信息
-    /// </summary>
-    public class OSInfo
-    {
-        /// <summary>
-        /// CPU使用率
-        /// </summary>
-        public string CPURate { get; set; }
-        /// <summary>
-        /// 总内存
-        /// </summary>
-        public string TotalRAM { get; set; }
-        /// <summary>
-        /// 内存使用率
-        /// </summary>
-        public string RAMRate { get; set; }
-        /// <summary>
-        /// 系统运行时间
-        /// </summary>
-        public string RunTime { get; set; }
     }
 }

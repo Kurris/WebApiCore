@@ -267,44 +267,6 @@ namespace WebApiCore.Lib.Utils.Extensions
             }
         }
 
-        /// <summary>
-        /// 将string转换为DateTime，若转换失败，则返回默认值。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        public static DateTime ParseToDateTime(this string str, DateTime? defaultValue)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(str))
-                {
-                    return defaultValue.GetValueOrDefault();
-                }
-                if (str.Contains("-") || str.Contains("/"))
-                {
-                    return DateTime.Parse(str);
-                }
-                else
-                {
-                    int length = str.Length;
-                    return length switch
-                    {
-                        4 => DateTime.ParseExact(str, "yyyy", System.Globalization.CultureInfo.CurrentCulture),
-                        6 => DateTime.ParseExact(str, "yyyyMM", System.Globalization.CultureInfo.CurrentCulture),
-                        8 => DateTime.ParseExact(str, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture),
-                        10 => DateTime.ParseExact(str, "yyyyMMddHH", System.Globalization.CultureInfo.CurrentCulture),
-                        12 => DateTime.ParseExact(str, "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture),
-                        14 => DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture),
-                        _ => DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture),
-                    };
-                }
-            }
-            catch
-            {
-                return defaultValue.GetValueOrDefault();
-            }
-        }
         #endregion
 
         #region 转换为string

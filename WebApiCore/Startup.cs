@@ -83,9 +83,12 @@ namespace WebApiCore
                             OnMessageReceived = context =>
                             {
                                 string loginProvider = GlobalInvariant.SystemConfig.LoginProvider;
-                                string tokenName = GlobalInvariant.SystemConfig.JwtConfig.TokenName;
+                                if (!context.Request.Path.StartsWithSegments("/api"))
+                                {
+                                    loginProvider = "Signalr";
+                                }
 
-                                if (!context.HttpContext.Request.Path.StartsWithSegments("/api")) loginProvider = "Signalr";
+                                string tokenName = GlobalInvariant.SystemConfig.JwtConfig.TokenName;
 
                                 context.Token = loginProvider switch
                                 {
@@ -143,7 +146,7 @@ namespace WebApiCore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<SystemHub>("/System");
             });
 
             GlobalInvariant.ServiceProvider = app.ApplicationServices;
