@@ -14,6 +14,10 @@ namespace WebApiCore.Lib.Utils
     {
         private static readonly OSMetrics _osMetrics = new OSMetrics();
 
+        /// <summary>
+        /// 获取OS信息
+        /// </summary>
+        /// <returns></returns>
         public static OSMetrics GetOSMetrics()
         {
             try
@@ -22,40 +26,12 @@ namespace WebApiCore.Lib.Utils
                 _osMetrics.Cpu = GetCpuMetrics();
                 _osMetrics.RunTime = DateTimeHelper.GetDateTime(Environment.TickCount64);
 
-                //return new OSInfo()
-                //{
-                //    TotalRAM = Math.Ceiling(memoryMetrics.Total / 1024).ToString() + " GB",
-                //    RAMRate = Math.Ceiling(100 * memoryMetrics.Used / memoryMetrics.Total).ToString() + " %",
-                //    CPURate = GetCPURate(),
-                //    RunTime = GetRunTime(),
-                //};
                 return _osMetrics;
             }
             catch
             {
                 return null;
             }
-        }
-
-        /// <summary>
-        /// 获取CPU使用率
-        /// </summary>
-        /// <returns></returns>
-        private static string GetCPURate()
-        {
-            string cpuRate;
-            if (_osMetrics.IsUnix)
-            {
-                string output = ShellHelper.Bash("top -b -n1 | grep \"Cpu(s)\" | awk '{print $2 + $4}'");
-                cpuRate = output.Trim();
-            }
-            else
-            {
-                string output = ShellHelper.Cmd("wmic", "cpu get LoadPercentage");
-                cpuRate = output.Replace("LoadPercentage", string.Empty).Trim();
-            }
-
-            return Math.Ceiling(Convert.ToDouble(cpuRate)) + " %";
         }
 
         /// <summary>
@@ -104,7 +80,7 @@ namespace WebApiCore.Lib.Utils
                 var metrics = new MemoryMetrics
                 {
                     Total = Math.Ceiling(total / 1024) + " GB",
-                    Used = Math.Ceiling(used / 1024) + " GB",
+                    Used = Math.Round((used / total) * 100, 0) + " %",
                     Free = (total - used) / 1024 + " GB"
                 };
 
@@ -112,14 +88,22 @@ namespace WebApiCore.Lib.Utils
             }
         }
 
+        /// <summary>
+        /// 获取CPU信息
+        /// </summary>
+        /// <returns></returns>
         private static CpuMetrics GetCpuMetrics()
         {
             var cpu = new CpuMetrics();
-            string cpuRate;
+
             if (_osMetrics.IsUnix)
             {
-                string output = ShellHelper.Bash("top -b -n1 | grep \"Cpu(s)\" | awk '{print $2 + $4}'");
-                cpuRate = output.Trim();
+                var cpuName = ShellHelper.Bash("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c").Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                cpu.CoreCount = Convert.ToInt32(cpuName[0].Trim());
+                cpuName[0] = string.Empty;
+                cpu.CpuName = string.Join(" ", cpuName).TrimStart().Trim();
+                cpu.ThreadCount = Convert.ToInt32(ShellHelper.Bash("grep 'processor' /proc/cpuinfo | sort -u | wc -l").Trim());
+                cpu.Used = ShellHelper.Bash("top -b -n1 | grep \"Cpu(s)\" | awk '{print $2 + $4}'").Trim() + " %";
             }
             else
             {

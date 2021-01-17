@@ -15,7 +15,8 @@ namespace WebApiCore.Hubs
             {
                 try
                 {
-                    await Clients.Caller.SendAsync("setOSMetrics", OSHelper.GetOSMetrics());
+                    var os = OSHelper.GetOSMetrics();
+                    await Clients.Caller.SendAsync("setOSMetrics", os);
                 }
                 catch
                 {
