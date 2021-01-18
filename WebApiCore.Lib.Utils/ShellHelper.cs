@@ -12,22 +12,19 @@ namespace WebApiCore.Lib.Utils
         public static string Bash(string command)
         {
             var escapedArgs = command.Replace("\"", "\\\"");
-            var process = new Process()
+            var info = new ProcessStartInfo
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/bash",
-                    Arguments = $"-c \"{escapedArgs}\"",
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                }
+                FileName = "/bin/bash",
+                Arguments = $"-c \"{escapedArgs}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
             };
-            process.Start();
-            string result = process.StandardOutput.ReadToEnd();
+
+            using var process = Process.Start(info);
+            string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-            process.Dispose();
-            return result;
+            return output;
         }
 
         /// <summary>
@@ -38,8 +35,6 @@ namespace WebApiCore.Lib.Utils
         /// <returns></returns>
         public static string Cmd(string fileName, string args)
         {
-            string output = string.Empty;
-
             var info = new ProcessStartInfo
             {
                 FileName = fileName,
@@ -47,10 +42,9 @@ namespace WebApiCore.Lib.Utils
                 RedirectStandardOutput = true
             };
 
-            using (var process = Process.Start(info))
-            {
-                output = process.StandardOutput.ReadToEnd();
-            }
+            using var process = Process.Start(info);
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
             return output;
         }
     }

@@ -61,7 +61,7 @@ namespace WebApiCore.Lib.Utils
                 {
                     Total = Math.Ceiling(total / 1024) + " GB",
                     Free = Math.Ceiling(free / 1024) + " GB",
-                    Used = Math.Round((total - free) / total * 100,0) + " %"
+                    Used = Math.Round((total - free) / total * 100, 0) + " %"
                 };
 
                 return metrics;
@@ -81,7 +81,7 @@ namespace WebApiCore.Lib.Utils
                 {
                     Total = Math.Ceiling(total / 1024) + " GB",
                     Used = Math.Round((used / total) * 100, 0) + " %",
-                    Free = (total - used) / 1024 + " GB"
+                    Free = Math.Ceiling((total - used) / 1024) + " GB"
                 };
 
                 return metrics;

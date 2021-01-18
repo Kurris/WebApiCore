@@ -21,6 +21,8 @@ using WebApiCore.Hubs;
 using WebApiCore.Lib.Utils;
 using WebApiCore.Lib.Utils.Extensions;
 using WebApiCore.Lib.Utils.Config;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace WebApiCore
 {
@@ -130,6 +132,12 @@ namespace WebApiCore
                 GlobalInvariant.SystemConfig.IsDebug = true;
                 app.UseDeveloperExceptionPage();
             }
+            CultureInfo cultureInfo = new CultureInfo("zh-CN");
+            cultureInfo.DateTimeFormat.AMDesignator = string.Empty;
+            cultureInfo.DateTimeFormat.PMDesignator = string.Empty;
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             app.UseSwagger();
             app.UseSwaggerUI(option =>
